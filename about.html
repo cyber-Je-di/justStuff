@@ -11,7 +11,49 @@
 <body class="bg-slate-50 font-sans text-slate-900">
     <a href="#main-content" class="skip-link">Skip to content</a>
 
-    <div id="navbar-placeholder"></div>
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div class="relative">
+                            <img src="static/logo.png" alt="Craw Hammer Logo"
+                                class="h-12 w-12 rounded-full aspect-square object-cover border-2 border-slate-100 shadow-sm group-hover:border-orange-500 transition-colors duration-300">
+                            <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-black text-blue-900 leading-none tracking-tighter">CRAW HAMMER</span>
+                            <span class="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">Trades School</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-slate-600 font-medium hover:text-orange-500 transition">Home</a>
+                    <a href="programs.html" class="text-slate-600 font-medium hover:text-orange-500 transition">Programs</a>
+                    <a href="about.html" class="text-blue-900 font-semibold hover:text-orange-500">About Us</a>
+                    <a href="admissions.html" class="text-slate-600 font-medium hover:text-orange-500">Admissions</a>
+                    <a href="contact.html" class="text-slate-600 font-medium hover:text-orange-500">Contact</a>
+                    <a href="apply.html" class="ml-4 bg-orange-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-orange-700">APPLY NOW</a>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" class="text-blue-900 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+                <div id="mobile-menu" class="mobile-menu hidden md:hidden bg-white border-t border-slate-100 px-4 py-6 space-y-4 shadow-lg absolute left-0 right-0 mt-20">
+                    <a href="index.html" class="block text-blue-900 font-bold">Home</a>
+                    <a href="programs.html" class="block text-slate-600 font-medium">Programs</a>
+                    <a href="about.html" class="block text-blue-900 font-semibold">About Us</a>
+                    <a href="admissions.html" class="block text-slate-600 font-medium">Admissions</a>
+                    <a href="contact.html" class="block text-slate-600 font-medium">Contact</a>
+                    <a href="apply.html" class="block bg-orange-600 text-white px-4 py-2 rounded-lg text-center font-bold">APPLY NOW</a>
+                </div>
+            </div>
+        </div>
+    </nav>
     
     <section id="main-content" class="relative bg-blue-900 pt-32 pb-24 overflow-hidden">
         <div class="absolute inset-0 z-0">
@@ -20,159 +62,226 @@
         </div>
         
         <div class="max-w-7xl mx-auto px-4 relative z-10 text-center">
-            <nav class="flex justify-center space-x-2 text-blue-300 text-xs font-bold uppercase tracking-widest mb-6">
-                <a href="index.html" class="hover:text-white">Home</a>
-                <span>/</span>
-                <span class="text-orange-500">Our Story</span>
-            </nav>
-            <h1 class="text-5xl md:text-7xl font-black text-white leading-tight">
-                Shaping the Hands <br> <span class="text-orange-500 italic">That Build Zambia</span>
+            <span class="bg-orange-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">Our Motto</span>
+            <h1 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tight mb-6">
+                Training for a <span class="text-orange-500">Better Tomorrow</span>
             </h1>
-            <p class="text-blue-100 mt-8 text-lg max-w-3xl mx-auto leading-relaxed">
-                Based in the industrial heartland of the Copperbelt, Craw Hammer Trades School is more than an institution—it is a forge where ambition is transformed into expertise.
+            <p class="text-xl text-blue-100 max-w-3xl mx-auto font-medium">
+                Practical Skills for Jobs and Entrepreneurship — empowering individuals to build a future for themselves and Zambia.
             </p>
         </div>
     </section>
 
-    <div class="max-w-5xl mx-auto px-4 -mt-12 relative z-20">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 text-center">
-                <p class="text-3xl font-black text-blue-900">98%</p>
-                <p class="text-xs font-bold text-slate-500 uppercase">Trade Pass Rate</p>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 text-center">
-                <p class="text-3xl font-black text-orange-500">TEVETA</p>
-                <p class="text-xs font-bold text-slate-500 uppercase">Fully Accredited</p>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 text-center">
-                <p class="text-3xl font-black text-blue-900">500+</p>
-                <p class="text-xs font-bold text-slate-500 uppercase">Graduates Yearly</p>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 text-center">
-                <p class="text-3xl font-black text-orange-500">24/7</p>
-                <p class="text-xs font-bold text-slate-500 uppercase">Workshop Access</p>
-            </div>
-        </div>
-    </div>
-
-    <section class="py-24 max-w-7xl mx-auto px-4">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-            <div class="relative">
-                <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800" class="rounded-[3rem] shadow-2xl z-10 relative">
-                <div class="absolute -bottom-6 -right-6 w-64 h-64 bg-orange-500 rounded-[3rem] -z-0"></div>
-            </div>
-            <div class="space-y-12">
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div>
-                    <h2 class="text-sm font-black text-orange-500 uppercase tracking-widest mb-4">Our Purpose</h2>
-                    <h3 class="text-4xl font-extrabold text-blue-900 mb-6">Forging a Legacy of Excellence</h3>
-                    <p class="text-slate-600 leading-relaxed text-lg italic">
-                        "We don't just teach theories; we forge professionals. Our curriculum is designed to move beyond the classroom, placing students directly into high-intensity workshops."
-                    </p>
-                </div>
-                
-                <div class="grid sm:grid-cols-2 gap-8">
-                    <div class="space-y-4">
-                        <h4 class="font-black text-blue-900 uppercase text-sm border-l-4 border-blue-900 pl-4">The Mission</h4>
-                        <p class="text-sm text-slate-600">Empowering Zambian youth with practical skills and an entrepreneurial mindset to thrive globally.</p>
+                    <h2 class="text-3xl font-black text-blue-900 uppercase tracking-tight mb-6">Our Background</h2>
+                    <div class="space-y-4 text-slate-600 leading-relaxed">
+                        <p>
+                            Craw Hammer Trades School was born in the 1990s, following the privatization of ZCCM, where it originally operated as a youth training and development centre. This foundation gave the school strong roots, supported by ZCCM Nchanga Division, and continues to benefit our community today.
+                        </p>
+                        <p>
+                            Located in the township, most of our students are children and dependants of miners. We also offer part-time programmes for miners and are looking to extend our services to other companies in the informal sector.
+                        </p>
                     </div>
-                    <div class="space-y-4">
-                        <h4 class="font-black text-blue-900 uppercase text-sm border-l-4 border-orange-500 pl-4">The Vision</h4>
-                        <p class="text-sm text-slate-600">To be Zambia's leading center for technical innovation, producing the pioneers of tomorrow's industry.</p>
+                    
+                    <div class="mt-8 grid sm:grid-cols-3 gap-4">
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <i class="fas fa-building text-orange-600 mb-2"></i>
+                            <p class="text-xs font-bold text-blue-900 uppercase">Own Infrastructure</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <i class="fas fa-tools text-orange-600 mb-2"></i>
+                            <p class="text-xs font-bold text-blue-900 uppercase">Technical Expertise</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <i class="fas fa-user-tie text-orange-600 mb-2"></i>
+                            <p class="text-xs font-bold text-blue-900 uppercase">Qualified Staff</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800" class="rounded-[2rem] shadow-2xl" alt="Training facility">
+                    <div class="absolute -bottom-6 -right-6 bg-orange-600 p-8 rounded-2xl text-white hidden md:block">
+                        <p class="text-3xl font-black">30+</p>
+                        <p class="text-xs font-bold uppercase tracking-widest">Years of Excellence</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="py-24 bg-blue-900 text-white overflow-hidden relative">
+    <section class="py-20 bg-blue-900 text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 relative z-10">
+            <div class="bg-white/5 backdrop-blur-sm p-10 rounded-[2rem] border border-white/10">
+                <div class="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-eye text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 uppercase tracking-tight">Our Vision</h3>
+                <blockquote class="text-xl text-blue-100 italic leading-relaxed">
+                    “Every person of mature age acquires a skill that enhances their potential and contributes to better living conditions.”
+                </blockquote>
+                <p class="mt-4 text-slate-400 text-sm">
+                    We aspire to empower individuals with practical skills that not only transform their lives but also strengthen communities and industries across Zambia.
+                </p>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-sm p-10 rounded-[2rem] border border-white/10">
+                <div class="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-bullseye text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 uppercase tracking-tight">Our Mission</h3>
+                <p class="text-blue-100 mb-6">
+                    To provide high-quality skills training that promotes the full growth of each participant, preparing them for meaningful involvement in national development.
+                </p>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-check-circle text-orange-500 mt-1"></i>
+                        <span>Delivering total quality in skills training</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-check-circle text-orange-500 mt-1"></i>
+                        <span>Ensuring that graduates are ready for employment and entrepreneurship</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-check-circle text-orange-500 mt-1"></i>
+                        <span>Supporting national development through skilled and competent individuals</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-black uppercase">Why Craw Hammer?</h2>
-                <p class="text-blue-300 mt-4">The Copperbelt's premier destination for vocational excellence.</p>
+                <h2 class="text-3xl font-black text-blue-900 uppercase tracking-tight">Our Core Values</h2>
+                <p class="text-slate-500 mt-2">The principles that guide our training and professional conduct</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="md:col-span-2 bg-white/5 border border-white/10 p-10 rounded-3xl hover:bg-white/10 transition">
-                    <i class="fas fa-certificate text-4xl text-orange-500 mb-6"></i>
-                    <h4 class="text-2xl font-bold mb-4">TEVETA Accredited</h4>
-                    <p class="text-blue-200 leading-relaxed">Our programs are fully registered and accredited by the Technical Education, Vocational and Entrepreneurship Training Authority, ensuring your certification is recognized nationwide and internationally.</p>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h4 class="font-bold text-blue-900 mb-2">Respect</h4>
+                    <p class="text-xs text-slate-500">For human dignity, rights, and equality for all.</p>
                 </div>
-                <div class="bg-orange-600 p-10 rounded-3xl text-white">
-                    <i class="fas fa-map-marked-alt text-4xl mb-6"></i>
-                    <h4 class="text-2xl font-bold mb-4">Strategic Location</h4>
-                    <p class="text-orange-100 text-sm">Situated in the Copperbelt, we are at the doorstep of Zambia’s industrial hub, providing unique access to industrial attachments.</p>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="font-bold text-blue-900 mb-2">Development</h4>
+                    <p class="text-xs text-slate-500">Personal growth drives national development.</p>
                 </div>
-                <div class="bg-white/5 border border-white/10 p-10 rounded-3xl hover:bg-white/10 transition">
-                    <i class="fas fa-tools text-4xl text-orange-500 mb-6"></i>
-                    <h4 class="text-2xl font-bold mb-4">Industry-Standard Facilities</h4>
-                    <p class="text-blue-200 text-sm">Workshops equipped with modern machinery that mirrors the mining, manufacturing, and fashion industries.</p>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h4 class="font-bold text-blue-900 mb-2">Client Focus</h4>
+                    <p class="text-xs text-slate-500">Students are at the center of all activities.</p>
                 </div>
-                <div class="md:col-span-2 bg-slate-800 border border-white/10 p-10 rounded-3xl">
-                    <i class="fas fa-lightbulb text-4xl text-orange-500 mb-6"></i>
-                    <h4 class="text-2xl font-bold mb-4">Entrepreneurship Focused</h4>
-                    <p class="text-blue-200">Every student is trained in business management. We don't just want you to find a job; we want to give you the tools to start your own company.</p>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 class="font-bold text-blue-900 mb-2">Ethics</h4>
+                    <p class="text-xs text-slate-500">Ensuring integrity and high standards.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search-dollar"></i>
+                    </div>
+                    <h4 class="font-bold text-blue-900 mb-2">Transparency</h4>
+                    <p class="text-xs text-slate-500">Maintaining honesty and trust in delivery.</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                <div class="max-w-xl">
-                    <h2 class="text-4xl font-black text-blue-900 uppercase leading-tight">The "Hammer" <br><span class="text-orange-500">Principles</span></h2>
-                </div>
-                <p class="text-slate-500 font-medium">Our core values are the foundation of every professional we forge.</p>
-            </div>
-
-            <div class="grid md:grid-cols-4 gap-px bg-slate-200 rounded-3xl overflow-hidden border border-slate-200">
-                <div class="bg-white p-10 hover:bg-orange-50 transition group">
-                    <span class="text-5xl font-black text-slate-100 group-hover:text-orange-200 transition">01</span>
-                    <h4 class="text-xl font-bold text-blue-900 mt-4 mb-2">Precision</h4>
-                    <p class="text-sm text-slate-600">In every weld, every circuit, and every stitch, we strive for perfection.</p>
-                </div>
-                <div class="bg-white p-10 hover:bg-orange-50 transition group">
-                    <span class="text-5xl font-black text-slate-100 group-hover:text-orange-200 transition">02</span>
-                    <h4 class="text-xl font-bold text-blue-900 mt-4 mb-2">Integrity</h4>
-                    <p class="text-sm text-slate-600">Building trust through transparency, ethical training, and verified certifications.</p>
-                </div>
-                <div class="bg-white p-10 hover:bg-orange-50 transition group">
-                    <span class="text-5xl font-black text-slate-100 group-hover:text-orange-200 transition">03</span>
-                    <h4 class="text-xl font-bold text-blue-900 mt-4 mb-2">Innovation</h4>
-                    <p class="text-sm text-slate-600">Adapting trades to include modern technology, from ICT to sustainable energy.</p>
-                </div>
-                <div class="bg-white p-10 hover:bg-orange-50 transition group">
-                    <span class="text-5xl font-black text-slate-100 group-hover:text-orange-200 transition">04</span>
-                    <h4 class="text-xl font-bold text-blue-900 mt-4 mb-2">Resilience</h4>
-                    <p class="text-sm text-slate-600">Trained to be tough, reliable, and ready for any challenge in the field.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-24 max-w-6xl mx-auto px-4">
-        <div class="bg-slate-50 rounded-[4rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 border border-slate-200">
-            <div class="w-48 h-48 md:w-64 md:h-64 shrink-0">
-                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400" class="w-full h-full object-cover rounded-full border-8 border-white shadow-xl">
-            </div>
-            <div class="relative">
-                <i class="fas fa-quote-left text-7xl text-blue-900/5 absolute -top-10 -left-10"></i>
-                <p class="text-2xl font-medium text-blue-900 leading-relaxed mb-8 italic">
-                    "At Craw Hammer, we believe that the strength of a nation lies in its skilled workforce. Our doors are open to those who are ready to work hard, learn fast, and build a future for themselves and for Zambia. Let’s get to work."
+            <div class="mt-12 bg-orange-50 border border-orange-100 p-6 rounded-2xl text-center">
+                <p class="text-orange-800 font-medium">
+                    By adhering to these values, Craw Hammer Trades School maintains a competitive advantage and delivers training of the highest standard.
                 </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-16">
                 <div>
-                    <h5 class="text-xl font-black text-blue-900 uppercase">Executive Principal</h5>
-                    <p class="text-orange-600 font-bold text-sm tracking-widest uppercase">Craw Hammer Trades School</p>
+                    <h3 class="text-2xl font-black text-blue-900 uppercase mb-6">Why We Stand Out</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                            <i class="fas fa-graduation-cap text-orange-600"></i>
+                            <span class="font-semibold">Practical, industry-ready skills</span>
+                        </li>
+                        <li class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                            <i class="fas fa-certificate text-orange-600"></i>
+                            <span class="font-semibold">TEVETA aligned & Nationally recognized</span>
+                        </li>
+                        <li class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                            <i class="fas fa-briefcase text-orange-600"></i>
+                            <span class="font-semibold">Employment & Entrepreneurship paths</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black text-blue-900 uppercase mb-6">Student & Community Impact</h3>
+                    <div class="space-y-4 text-slate-600">
+                        <p>Empowered generations of students with technical and vocational skills while supporting miners, youth, and members of the informal sector.</p>
+                        <p class="font-bold text-blue-900 italic">"Our graduates leave fully prepared to start their own businesses, gain employment, or advance their careers."</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="bg-blue-900 py-20 text-center">
-        <h2 class="text-white text-3xl font-bold mb-8">Ready to start your trade journey?</h2>
-        <a href="apply.html" class="inline-block bg-orange-600 text-white px-12 py-4 rounded-full font-black hover:bg-orange-700 transition shadow-2xl">APPLY FOR 2026 INTAKE</a>
+    <section class="bg-blue-900 py-20 text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 relative z-10">
+            <h2 class="text-white text-3xl md:text-4xl font-black mb-8 uppercase">Start Your Journey Today</h2>
+            <div class="grid sm:grid-cols-2 gap-6 mb-12">
+                <div class="bg-white/10 p-6 rounded-2xl border border-white/10">
+                    <i class="fas fa-phone text-orange-500 text-2xl mb-4"></i>
+                    <p class="text-white font-bold">+260 76 1700608</p>
+                    <p class="text-blue-200 text-sm">+260 97 7304759</p>
+                </div>
+                <div class="bg-white/10 p-6 rounded-2xl border border-white/10">
+                    <i class="fas fa-envelope text-orange-500 text-2xl mb-4"></i>
+                    <p class="text-white font-bold">crawhammer.marketing@gmail.com</p>
+                    <p class="text-blue-200 text-sm">Official School Email</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center items-center gap-6">
+                <a href="apply.html" class="bg-orange-600 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-orange-700 transition transform hover:-translate-y-1 shadow-xl shadow-orange-900/20">
+                    Apply Online
+                </a>
+                
+                <a href="https://www.google.com/maps/search/?api=1&query=Craw+Hammer+Trades+School+Chingola" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="flex items-center gap-3 bg-white text-blue-900 px-8 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-slate-100 transition transform hover:-translate-y-1 group">
+                    <span>Visit Campus</span>
+                    <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center relative overflow-hidden">
+                        <span class="absolute inset-0 rounded-full bg-orange-500 animate-ping opacity-20"></span>
+                        <i class="fas fa-location-dot text-sm relative z-10"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
     </section>
 
-        <script src="js/main.js"></script>
+    <footer class="bg-slate-900 text-slate-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="https://www.facebook.com/share/14WbMKtH6jr/" class="hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+                <a href="https://wa.me/260761700608?text=Hi%20Craw%20Hammer%2C%20I%20would%20like%20to%20inquire%20about%20the%202026%20intake." class="hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
+            </div>
+            <p class="text-sm">© 2026 Craw Hammer Trades School. Training for a Better Tomorrow.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>
