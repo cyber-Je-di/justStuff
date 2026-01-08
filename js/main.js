@@ -58,10 +58,8 @@ function initializeMobileMenu() {
 
 // --- 2. Navbar Loading and Active Link Logic ---
 async function loadNavbar() {
-    console.log('Starting navbar load...');
     const placeholder = document.getElementById('navbar-placeholder');
     if (!placeholder) {
-        console.log('No navbar placeholder found.');
         return;
     }
 
@@ -70,7 +68,6 @@ async function loadNavbar() {
         if (!response.ok) throw new Error('Network response was not ok.');
         const navbarHtml = await response.text();
         placeholder.outerHTML = navbarHtml;
-        console.log('Navbar HTML injected.');
 
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         const navLinks = document.querySelectorAll('nav a[href]');
@@ -86,13 +83,10 @@ async function loadNavbar() {
                 }
             }
         });
-        console.log('Active link styled.');
 
         initializeMobileMenu();
-        console.log('Mobile menu initialized.');
         // Signal that the navbar is ready
         document.body.classList.add('navbar-loaded');
-        console.log('navbar-loaded class added to body.');
     } catch (error) {
         console.error('Failed to load navbar:', error);
         if (placeholder) {
@@ -101,11 +95,31 @@ async function loadNavbar() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('DOMContentLoaded event fired.');
-    await loadNavbar();
+// --- 3. Footer Loading Logic ---
+async function loadFooter() {
+    const placeholder = document.getElementById('footer-placeholder');
+    if (!placeholder) {
+        return;
+    }
 
-    // --- 3. Smooth Scrolling ---
+    try {
+        const response = await fetch('footer.html');
+        if (!response.ok) throw new Error('Network response was not ok.');
+        const footerHtml = await response.text();
+        placeholder.outerHTML = footerHtml;
+        document.body.classList.add('footer-loaded');
+    } catch (error) {
+        console.error('Failed to load footer:', error);
+        if (placeholder) {
+            placeholder.innerHTML = '<p class="text-center text-red-500">Failed to load footer.</p>';
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await Promise.all([loadNavbar(), loadFooter()]);
+
+    // --- 4. Smooth Scrolling ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -139,7 +153,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // --- 4. Scroll-to-Reveal Animation ---
+    // --- 5. Scroll-to-Reveal Animation ---
     const observerOptions = {
         threshold: 0.1
     };
@@ -154,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, observerOptions);
 
     const animatedSections = Array.from(document.querySelectorAll('main section, section')).filter((el) => {
-        return el.closest('nav') === null && el.clientHeight > 40;
+        return el.closest('nav') === null && el.closest('footer') === null && el.clientHeight > 40;
     });
     animatedSections.forEach(section => {
         section.classList.add('transition-all', 'duration-800', 'opacity-0', 'translate-y-6');
