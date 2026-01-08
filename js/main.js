@@ -111,10 +111,8 @@ function initializeMobileMenu() {
 
 // --- 2. Navbar Loading and Active Link Logic ---
 async function loadNavbar() {
-    console.log('Starting navbar load...');
     const placeholder = document.getElementById('navbar-placeholder');
     if (!placeholder) {
-        console.log('No navbar placeholder found.');
         return;
     }
 
@@ -123,7 +121,6 @@ async function loadNavbar() {
         if (!response.ok) throw new Error('Network response was not ok.');
         const navbarHtml = await response.text();
         placeholder.outerHTML = navbarHtml;
-        console.log('Navbar HTML injected.');
 
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         const navLinks = document.querySelectorAll('nav a[href]');
@@ -139,7 +136,6 @@ async function loadNavbar() {
                 }
             }
         });
-        console.log('Active link styled.');
 
         // Initialize the mobile menu AFTER the HTML has been injected
         initializeMobileMenu();
@@ -196,7 +192,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // --- 4. Scroll-to-Reveal Animation ---
+    // --- 5. Scroll-to-Reveal Animation ---
     const observerOptions = {
         threshold: 0.1
     };
@@ -211,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, observerOptions);
 
     const animatedSections = Array.from(document.querySelectorAll('main section, section')).filter((el) => {
-        return el.closest('nav') === null && el.clientHeight > 40;
+        return el.closest('nav') === null && el.closest('footer') === null && el.clientHeight > 40;
     });
 
     animatedSections.forEach(section => {
