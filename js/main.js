@@ -12,9 +12,7 @@ const navbarTemplate = `
                 <a href="index.html" class="flex items-center gap-3 group">
                     <div class="relative">
                         <img src="static/logo.png" alt="Craw Hammer Logo"
-                            class="h-12 w-12 rounded-full aspect-square object-cover border-2 border-slate-100 shadow-sm group-hover:border-orange-500 transition-colors duration-300">
-                        <span
-                            class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+                            class="h-14 w-14 rounded-full aspect-square object-cover border-2 border-slate-100 shadow-sm group-hover:border-orange-500 transition-colors duration-300">
                     </div>
                     <div class="flex flex-col">
                         <span class="text-xl font-black text-blue-900 leading-none tracking-tighter">CRAW
@@ -29,10 +27,10 @@ const navbarTemplate = `
                 <a href="index.html" class="text-slate-600 font-medium hover:text-orange-500 transition">Home</a>
                 <a href="programs.html" class="text-slate-600 font-medium hover:text-orange-500 transition">Programs</a>
                 <a href="about.html" class="text-slate-600 font-medium hover:text-orange-500">About Us</a>
-                <a href="admissions.html" class="text-slate-600 font-medium hover:text-orange-500">Admissions</a>
+                <a href="updates.html" class="text-slate-600 font-medium hover:text-orange-500">News &amp; Updates</a>
                 <a href="contact.html" class="text-slate-600 font-medium hover:text-orange-500">Contact</a>
                 <a href="apply.html"
-                    class="ml-4 bg-orange-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-blue-900 transition shadow-lg">APPLY
+                    class="ml-4 bg-orange-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-blue-900 transition shadow-lg btn-glow">APPLY
                     NOW</a>
             </div>
 
@@ -46,9 +44,9 @@ const navbarTemplate = `
                 <a href="index.html" class="block text-blue-900 font-bold">Home</a>
                 <a href="programs.html" class="block text-slate-600 font-medium">Programs</a>
                 <a href="about.html" class="block text-slate-600 font-medium">About Us</a>
-                <a href="admissions.html" class="block text-slate-600 font-medium">Admissions</a>
+                <a href="updates.html" class="block text-slate-600 font-medium">News &amp; Updates</a>
                 <a href="contact.html" class="block text-slate-600 font-medium">Contact</a>
-                <a href="apply.html" class="block bg-orange-600 text-white px-4 py-2 rounded-lg text-center font-bold">APPLY NOW</a>
+                <a href="apply.html" class="block bg-orange-600 text-white px-4 py-2 rounded-lg text-center font-bold btn-glow">APPLY NOW</a>
             </div>
         </div>
     </div>
@@ -215,3 +213,116 @@ document.addEventListener('DOMContentLoaded', async () => {
         observer.observe(section);
     });
 });
+
+// --- Counter Animation ---
+function initializeCounters() {
+    const counters = document.querySelectorAll('.counter[data-target]');
+    
+    const countUp = (element) => {
+        const target = parseInt(element.getAttribute('data-target'), 10);
+        const duration = 2500; // 2.5 seconds
+        const startTime = Date.now();
+        
+        // Determine format based on target value or parent context
+        const parentText = element.parentElement.textContent.toLowerCase();
+        let suffix = '';
+        let isPercentage = false;
+        let isSpecial = false;
+        
+        if (parentText.includes('rate') || parentText.includes('learning') || target === 95 || target === 100) {
+            suffix = '%';
+            isPercentage = true;
+        } else if (target === 24) {
+            suffix = '/7';
+            isSpecial = true;
+        } else if (target === 30 || target >= 1000) {
+            suffix = '+';
+        }
+        
+        const animate = () => {
+            const now = Date.now();
+            const elapsed = now - startTime;
+            
+            if (elapsed >= duration) {
+                // Animation complete
+                const displayValue = target.toLocaleString();
+                element.textContent = displayValue + suffix;
+                return;
+            }
+            
+            const progress = elapsed / duration;
+            const current = Math.floor(target * progress);
+            element.textContent = current + suffix;
+            
+            requestAnimationFrame(animate);
+        };
+        
+        animate();
+    };
+    
+    // Use Intersection Observer to trigger counters when they come into view
+    const observerOptions = { threshold: 0.5 };
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                countUp(entry.target);
+                counterObserver.unobserve(entry.target); // Only run once
+            }
+        });
+    }, observerOptions);
+    
+    counters.forEach(counter => counterObserver.observe(counter));
+}
+
+// Initialize counters when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCounters);
+} else {
+    initializeCounters();
+}
+
+// --- Scroll-triggered animations ---
+function initializeScrollAnimations() {
+    const items = document.querySelectorAll('.animate-on-scroll[data-anim], [data-anim]');
+    if (!items || items.length === 0) return;
+
+    const onEnter = (el, animName) => {
+        // normalize: allow either a utility class name or 'fade-in' etc.
+        el.classList.add(animName);
+    };
+
+    const onLeave = (el, animName) => {
+        // remove animation classes only when element re-enters
+        if (!el.dataset.once) {
+            el.classList.remove(animName);
+        }
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const el = entry.target;
+            const animName = el.getAttribute('data-anim') || 'fade-in';
+            if (entry.isIntersecting) {
+                onEnter(el, animName);
+                if (el.dataset.once === 'true') observer.unobserve(el);
+            } else {
+                onLeave(el, animName);
+            }
+        });
+    }, { threshold: 0.35 });
+
+    items.forEach(it => {
+        // set initial invisible state for non-splash animations
+        const a = it.getAttribute('data-anim') || 'fade-in';
+        if (!a.includes('splash')) it.classList.add('disappear');
+        observer.observe(it);
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeScrollAnimations);
+} else {
+    initializeScrollAnimations();
+}
+
+

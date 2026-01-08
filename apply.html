@@ -3,102 +3,765 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Application | Craw Hammer Trades School</title>
+    <title>Join Craw Hammer | Admissions & Application</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="css/site.css" rel="stylesheet">
 </head>
-<body class="bg-slate-100 font-sans text-slate-900">
+<body class="bg-slate-50 font-sans text-slate-900">
     <a href="#main-content" class="skip-link">Skip to content</a>
 
-    <div id="navbar-placeholder"></div>
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div class="relative">
+                            <img src="static/logo.png" alt="Craw Hammer Logo"
+                                class="h-14 w-14 rounded-full aspect-square object-cover border-2 border-slate-100 shadow-sm group-hover:border-orange-500 transition-colors duration-300">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-black text-blue-900 leading-none tracking-tighter">CRAW HAMMER</span>
+                            <span class="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">Trades School</span>
+                        </div>
+                    </a>
+                </div>
 
-    <div class="bg-blue-900 py-12 text-center text-white">
-        <h1 class="text-3xl font-extrabold uppercase tracking-widest">Student Enrollment</h1>
-        <p class="text-blue-200 mt-2">Begin your journey toward a professional trade today.</p>
-    </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-slate-600 font-medium hover:text-orange-500 transition">Home</a>
+                    <a href="programs.html" class="text-slate-600 font-medium hover:text-orange-500 transition">Programs</a>
+                    <a href="about.html" class="text-slate-600 font-medium hover:text-orange-500">About Us</a>
+                    <a href="updates.html" class="text-slate-600 font-medium hover:text-orange-500">News &amp; Updates</a>
+                    <a href="contact.html" class="text-slate-600 font-medium hover:text-orange-500">Contact</a>
+                    <a href="apply.html" class="ml-4 btn-glow bg-orange-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-blue-900 transition shadow-lg">APPLY NOW</a>
+                </div>
 
-    <div id="main-content" class="max-w-3xl mx-auto px-4 -mt-8 pb-20">
-        <form class="bg-white shadow-2xl rounded-2xl p-8 md:p-12 space-y-8">
-            
-            <div>
-                <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
-                    <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">1</span>
-                    Personal Details
-                </h2>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Full Name (As on NRC)</label>
-                        <input type="text" placeholder="John Banda" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">NRC Number</label>
-                        <input type="text" placeholder="000000/00/1" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
-                        <input type="email" placeholder="example@mail.com" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number (WhatsApp)</label>
-                        <input type="tel" placeholder="+260 9xx xxxxxx" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" class="text-blue-900 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+                <div id="mobile-menu" class="mobile-menu hidden md:hidden bg-white border-t border-slate-100 px-4 py-6 space-y-4 shadow-lg absolute left-0 right-0 mt-20">
+                    <a href="index.html" class="block text-blue-900 font-bold">Home</a>
+                    <a href="programs.html" class="block text-slate-600 font-medium">Programs</a>
+                    <a href="about.html" class="block text-slate-600 font-medium">About Us</a>
+                    <a href="updates.html" class="block text-slate-600 font-medium">News &amp; Updates</a>
+                    <a href="contact.html" class="block text-slate-600 font-medium">Contact</a>
+                    <a href="apply.html" class="block btn-glow bg-orange-600 text-white px-4 py-2 rounded-lg text-center font-bold">APPLY NOW</a>
                 </div>
             </div>
-
-            <hr class="border-slate-100">
-
-            <div>
-                <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
-                    <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">2</span>
-                    Program Selection
-                </h2>
-                <div class="space-y-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Desired Trade Program</label>
-                    <select class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-                        <option>Metal Fabrication & Welding</option>
-                        <option>Power Electrical</option>
-                        <option>Automotive Mechanics</option>
-                        <option>ICT & Computer Studies</option>
-                        <option>Food Production</option>
-                        <option>Fashion & Design</option>
-                    </select>
-                </div>
-            </div>
-
-            <hr class="border-slate-100">
-
-            <div>
-                <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
-                    <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">3</span>
-                    Document Upload
-                </h2>
-                <div class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-blue-500 transition">
-                    <i class="fas fa-cloud-upload-alt text-4xl text-slate-400 mb-4"></i>
-                    <p class="text-slate-600">Upload NRC and Results (PDF or Image)</p>
-                    <input type="file" class="hidden" id="fileUpload">
-                    <button type="button" onclick="document.getElementById('fileUpload').click()" class="mt-4 bg-slate-100 text-slate-700 px-6 py-2 rounded-lg font-semibold hover:bg-slate-200">Select Files</button>
-                </div>
-            </div>
-
-            <div class="pt-6">
-                <button type="submit" class="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-700 transition shadow-lg shadow-orange-200">
-                    SUBMIT APPLICATION
-                </button>
-                <p class="text-center text-slate-500 mt-4 text-sm">
-                    <i class="fas fa-lock mr-1"></i> Your data is securely processed in accordance with TEVETA standards.
-                </p>
-            </div>
-        </form>
-
-        <div class="text-center mt-8">
-            <a href="index.html" class="text-blue-900 font-semibold hover:underline">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Homepage
-            </a>
         </div>
-    </div>
+    </nav>
+
+    <header class="bg-blue-900 py-20 text-center text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight">Join Craw Hammer</h1>
+            <p class="text-blue-200 mt-4 max-w-2xl mx-auto">Application Form for January 2026 Intake. Training for a better tomorrow.</p>
+        </div>
+    </header>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 py-16">
+        <div class="grid lg:grid-cols-3 gap-12">
+            
+            <div class="lg:col-span-2 space-y-16">
+                <section id="application-form" class="bg-white shadow-2xl rounded-2xl p-8 md:p-12 space-y-8 border border-slate-100">
+                    <div class="flex justify-between items-start border-b pb-6">
+                        <h2 class="text-3xl font-black text-blue-900 uppercase">Application Form</h2>
+                        <span class="text-xs font-mono bg-slate-100 px-3 py-1 rounded">FORM NO. CHTS-2026</span>
+                    </div>
+
+                    <form class="space-y-10">
+                        <div>
+                            <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">1</span>
+                                Personal Details
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="md:col-span-1">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Surname</label>
+                                    <input id="surname" name="surname" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                                <div class="md:col-span-1">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">First Name</label>
+                                    <input id="firstname" name="firstname" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Gender</label>
+                                    <select id="gender" name="gender" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none bg-white">
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Date of Birth</label>
+                                    <input id="dob" name="dob" type="date" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">NRC Number</label>
+                                    <input id="nrc" name="nrc" type="text" placeholder="000000/00/1" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nationality</label>
+                                    <input id="nationality" name="nationality" type="text" value="Zambian" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Residential Address</label>
+                                    <textarea id="address" name="address" rows="2" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Cell No.</label>
+                                    <input id="cell" name="cell" type="tel" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                                    <input id="email" name="email" type="email" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-slate-100">
+
+                        <div>
+                            <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">2</span>
+                                Education Background
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Last School Attended</label>
+                                    <input id="lastSchool" name="lastSchool" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Education Attained (e.g Grade 12)</label>
+                                    <input id="educationAttained" name="educationAttained" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Year Completed</label>
+                                    <input id="yearCompleted" name="yearCompleted" type="number" placeholder="2024" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Previous Qualifications (If Any)</label>
+                                    <input id="prevQualifications" name="prevQualifications" type="text" placeholder="Institution - Qualification - Year" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-slate-100">
+
+                        <div>
+                            <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">3</span>
+                                Course of Choice
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-3">Primary Choice (1st Choice)</label>
+                                    <div class="space-y-2 max-h-60 overflow-y-auto border p-4 rounded-lg bg-slate-50">
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                            <input type="radio" name="choice1" value="Electrical" class="w-4 h-4 text-orange-500">
+                                            <span class="text-sm">Electrical Technology/Engineering</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                            <input type="radio" name="choice1" value="Metal" class="w-4 h-4 text-orange-500">
+                                            <span class="text-sm">Metal Fabrication</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                            <input type="radio" name="choice1" value="Auto" class="w-4 h-4 text-orange-500">
+                                            <span class="text-sm">Automotive Mechanics</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                            <input type="radio" name="choice1" value="Computer" class="w-4 h-4 text-orange-500">
+                                            <span class="text-sm">Computer Studies</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                            <input type="radio" name="choice1" value="Food" class="w-4 h-4 text-orange-500">
+                                            <span class="text-sm">Food Production</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                            <input type="radio" name="choice1" value="Tailoring" class="w-4 h-4 text-orange-500">
+                                            <span class="text-sm">Designing, Cutting & Tailoring</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                            <input type="radio" name="choice1" value="Carpentry" class="w-4 h-4 text-orange-500">
+                                            <span class="text-sm">Carpentry & Joinery</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-3">Second Choice (2nd Choice)</label>
+                                        <select id="choice2" name="choice2" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none bg-white">
+                                        <option value="">-- Select Alternate --</option>
+                                        <option>Electrical Technology</option>
+                                        <option>Metal Fabrication</option>
+                                        <option>Automotive Mechanics</option>
+                                        <option>Computer Studies</option>
+                                        <option>Food Production</option>
+                                        <option>Designing, Cutting & Tailoring</option>
+                                        <option>Carpentry & Joinery</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-slate-100">
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h2 class="text-xl font-bold text-blue-900 mb-6">Mode of Study</h2>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
+                                        <input type="radio" name="mode" value="FullTime"> <span class="text-sm">Full Time</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
+                                        <input type="radio" name="mode" value="PartTime"> <span class="text-sm">Part Time</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
+                                        <input type="radio" name="mode" value="Distance"> <span class="text-sm">Distance</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
+                                        <input type="radio" name="mode" value="ShortIntensive"> <span class="text-sm">Short Intensive</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-blue-900 mb-6">Level of Study</h2>
+                                <div class="space-y-3">
+                                        <select id="levelSelect" name="level" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none bg-white">
+                                        <optgroup label="General Levels">
+                                            <option>Trade Test Level - I</option>
+                                            <option>Trade Test Level - II</option>
+                                            <option>Trade Test Level - III</option>
+                                            <option>Certificate</option>
+                                            <option>Craft Certificate</option>
+                                        </optgroup>
+                                        <optgroup label="Advanced (Technician) Levels">
+                                            <option>Advanced Certificate Level I</option>
+                                            <option>Advanced Certificate Level II</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-slate-100">
+
+                        <div>
+                            <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">4</span>
+                                Sponsor's Details
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Sponsor's Name</label>
+                                    <input id="sponsorName" name="sponsorName" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Cell No.</label>
+                                    <input id="sponsorCell" name="sponsorCell" type="tel" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Postal Address</label>
+                                    <input id="sponsorPostal" name="sponsorPostal" type="text" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Occupation</label>
+                                    <input type="text" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Relationship to Applicant</label>
+                                    <input id="sponsorRelation" name="sponsorRelation" type="text" placeholder="e.g. Father, Employer" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-6">
+                            <div id="attachments-wrapper" class="mt-6">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Attach Documents</label>
+                                <div id="dropzone" class="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center bg-slate-50">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
+                                    <p class="text-sm text-slate-500">Drag & drop files here or <label for="attachments" class="text-blue-900 underline cursor-pointer">browse</label>. Allowed: PDF, JPG, PNG, DOC, DOCX.</p>
+                                    <input id="attachments" name="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="sr-only" />
+                                    <div id="attachments-list" class="mt-3 text-sm text-slate-600">No files selected.</div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-700 transition shadow-lg shadow-orange-200 uppercase">
+                                Submit 2026 Application
+                            </button>
+                            <p class="text-center text-slate-500 mt-4 text-xs italic">
+                                By submitting, you agree to attach certified copies of results or certificates upon request[cite: 6].
+                            </p>
+                        </div>
+                    </form>
+                </section>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div class="sticky top-24 space-y-6">
+                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+                        <h3 class="text-xl font-bold text-blue-900 mb-6 uppercase tracking-tight">Required Documents</h3>
+                        <p class="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">Attach copies of:</p>
+                        <ul class="space-y-4 text-slate-600 text-sm">
+                            <li class="flex gap-2"><i class="fas fa-check text-green-500 mt-1"></i> School Results or Certificates [cite: 6]</li>
+                            <li class="flex gap-2"><i class="fas fa-check text-green-500 mt-1"></i> National Registration Card (NRC)</li>
+                            <li class="flex gap-2"><i class="fas fa-check text-green-500 mt-1"></i> 2 x Passport Photos</li>
+                            <li class="flex gap-2"><i class="fas fa-check text-green-500 mt-1"></i> Medical Fitness Certificate</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-orange-50 p-8 rounded-[2rem] border border-orange-100">
+                        <h4 class="font-bold text-orange-800 uppercase text-xs tracking-widest mb-2">Admissions Office</h4>
+                        <p class="text-sm text-blue-900 font-bold">P.O BOX 10194, CHINGOLA [cite: 1]</p>
+                        <p class="text-slate-600 text-xs mt-2">Cell: 260 76 1700608 / +260 97 7304759</p>
+                    </div>
+
+                    <div class="bg-blue-900 rounded-[2rem] p-8 text-white">
+                        <h3 class="text-xl font-bold mb-6 italic text-orange-400">"Training for a Better Tomorrow"</h3>
+                        <div class="space-y-4">
+                            <a href="#" class="flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-orange-500 transition border border-white/5">
+                                    <span class="text-sm">Download Fee Structure</span>
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </a>
+                            <a href="static/APPLICATION%20FORMS%202023.doc" download class="mt-3 flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-slate-100 transition border border-white/5">
+                                <span class="text-sm">Download Physical Application Form</span>
+                                <i class="fas fa-file-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-300 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+                <div class="space-y-4">
+                    <div class="text-2xl font-bold text-white flex items-center">
+
+                        <span>CRAW HAMMER TRADES</span>
+                    </div>
+                    <p class="text-sm leading-relaxed">
+                        Empowering Zambia's next generation of technical experts through hands-on vocational excellence
+                        and entrepreneurial training.
+                    </p>
+                    <div class="flex space-x-4 pt-2">
+                        <a href="https://www.facebook.com/share/14WbMKtH6jr/" target="_blank"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+
+                        <a href="https://www.instagram.com/crawhammertrades?igsh=YmFpYXY4dHR0d21l" target="_blank"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:text-white transition shadow-md">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+
+                        <a href="https://wa.me/260761700608?text=Hi%20Craw%20Hammer%2C%20I%20would%20like%20to%20inquire%20about%20the%202026%20intake."
+                            target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition shadow-lg">
+                            <i class="fab fa-whatsapp text-lg"></i>
+                        </a>
+
+                        <a href="#"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+
+                        <a href="#"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4
+                        class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">
+                        Quick Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="programs.html" class="hover:text-orange-500 transition">All Programs</a></li>
+                        <li><a href="updates.html" class="hover:text-orange-500 transition">Updates 2026</a></li>
+                        <li><a href="fees.html" class="hover:text-orange-500 transition">Fee Structure</a></li>
+
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">
+                        Contact Us</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-orange-500"></i>
+                            <a href="https://maps.google.com/?cid=13974701755064329229&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ"
+                                target="_blank" rel="noopener noreferrer"
+                                class="hover:text-orange-500 transition duration-300">
+                                <span>Plot 268, Nchanga North, Chingola, Zambia</span>
+                            </a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-3 text-orange-500"></i>
+                            <span>260 76 1700608 / +260 97 7304759</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-orange-500"></i>
+                            <span>crawhammer.marketing@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">
+                        Stay Updated
+                    </h4>
+                    <p class="text-xs mb-4">Join our WhatsApp broadcast for intake alerts and short course updates.</p>
+
+                    <div class="flex flex-col space-y-3">
+                        <a href="https://wa.me/260761700608?text=I%20want%20to%20subscribe%20to%20Craw%20Hammer%20updates.%20Please%20save%20my%20number."
+                            target="_blank"
+                            class="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 shadow-lg">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                            <span class="text-sm uppercase tracking-tight">Subscribe via WhatsApp</span>
+                        </a>
+
+                        <div class="pt-2">
+                            <p class="text-[10px] text-slate-500 uppercase mb-2">Or via Email</p>
+                            <form class="flex gap-2">
+                                <input type="email" placeholder="Email"
+                                    class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-orange-500 transition text-white w-full">
+                                <button
+                                    class="bg-slate-700 hover:bg-orange-600 text-white px-3 py-2 rounded-lg transition">
+                                    <i class="fas fa-paper-plane text-xs"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div
+                class="border-t border-slate-800 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-xs space-y-4 md:space-y-0">
+                <p>&copy; 2026 Craw Hammer Trades School. All Rights Reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                    <span class="text-slate-500">Accredited by TEVETA</span>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="js/main.js"></script>
-    <div id="footer-placeholder"></div>
+    <script>
+        // Application form: validation + review modal + submit to backend with attachments
+        (function () {
+            const form = document.querySelector('#application-form form');
+            if (!form) return;
+
+            // ensure a multiple file input exists; create it if missing
+            let attachmentsInput = form.querySelector('input[name="attachments"]');
+            if (!attachmentsInput) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mt-4';
+                wrapper.innerHTML = '<label class="block font-medium">Attach documents (multiple allowed)</label>' +
+                    '<input id="attachments" name="attachments" type="file" multiple class="mt-1 block w-full" />';
+                // insert before the form's submit button if possible
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn && submitBtn.parentNode) submitBtn.parentNode.insertBefore(wrapper, submitBtn);
+                else form.appendChild(wrapper);
+                attachmentsInput = form.querySelector('input[name="attachments"]');
+            }
+
+            // attachments UI: show selected files and support drag & drop
+            (function attachmentsUi() {
+                const dropzone = document.getElementById('dropzone');
+                const list = document.getElementById('attachments-list');
+                if (!attachmentsInput || !dropzone || !list) return;
+
+                function renderFiles() {
+                    const files = attachmentsInput.files;
+                    if (!files || files.length === 0) {
+                        list.textContent = 'No files selected.';
+                        return;
+                    }
+                    const ul = document.createElement('ul');
+                    ul.className = 'space-y-1';
+                    for (let i = 0; i < files.length; i++) {
+                        const f = files[i];
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center';
+                        li.innerHTML = `<span class="truncate">${f.name} <span class="text-xs text-slate-400">(${Math.round(f.size/1024)} KB)</span></span>`;
+                        ul.appendChild(li);
+                    }
+                    list.innerHTML = '';
+                    list.appendChild(ul);
+                    const clear = document.createElement('button');
+                    clear.type = 'button';
+                    clear.className = 'mt-2 text-xs text-red-600 underline';
+                    clear.textContent = 'Remove all';
+                    clear.addEventListener('click', () => {
+                        const dt = new DataTransfer();
+                        attachmentsInput.files = dt.files;
+                        renderFiles();
+                    });
+                    list.appendChild(clear);
+                }
+
+                attachmentsInput.addEventListener('change', renderFiles);
+
+                dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('bg-slate-100'); });
+                dropzone.addEventListener('dragleave', (e) => { dropzone.classList.remove('bg-slate-100'); });
+                dropzone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropzone.classList.remove('bg-slate-100');
+                    const dt = e.dataTransfer;
+                    if (dt && dt.files && dt.files.length) {
+                        const dataTransfer = new DataTransfer();
+                        for (let i = 0; i < dt.files.length; i++) dataTransfer.items.add(dt.files[i]);
+                        attachmentsInput.files = dataTransfer.files;
+                        renderFiles();
+                    }
+                });
+
+                // initial render if files preselected
+                renderFiles();
+            })();
+
+            // Replace or populate the nationality input with a country dropdown
+            (function populateNationality() {
+                const natEl = document.getElementById('nationality');
+                if (!natEl) return;
+                const countries = [
+                    'Zambia','Zimbabwe','South Africa','Botswana','Namibia','Mozambique','Malawi','Tanzania','Kenya','Uganda',
+                    'Nigeria','Ghana','Sierra Leone','Liberia','Cameroon','Egypt','Morocco','Algeria','Tunisia','Sudan',
+                    'United Kingdom','United States','Canada','Australia','New Zealand','India','Pakistan','Bangladesh',
+                    'China','Japan','South Korea','Germany','France','Italy','Spain','Portugal','Brazil','Argentina','Chile',
+                    'Netherlands','Belgium','Sweden','Norway','Denmark','Finland','Russia'
+                ];
+
+                const select = document.createElement('select');
+                select.id = natEl.id;
+                select.name = natEl.name || 'nationality';
+                select.className = natEl.className;
+
+                countries.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    select.appendChild(opt);
+                });
+
+                const initial = (natEl.value || '').trim();
+                if (initial) {
+                    const match = Array.from(select.options).find(o => o.value.toLowerCase() === initial.toLowerCase());
+                    if (match) match.selected = true;
+                    else {
+                        const opt = document.createElement('option'); opt.value = initial; opt.textContent = initial; opt.selected = true; select.insertBefore(opt, select.firstChild);
+                    }
+                }
+
+                natEl.parentNode.replaceChild(select, natEl);
+            })();
+
+            // Auto-insert slashes into NRC input to format XXXXXX/XX/X and restrict to digits
+            (function nrcFormatter() {
+                const nrcEl = document.getElementById('nrc');
+                if (!nrcEl) return;
+
+                function formatNRC(value) {
+                    const digits = (value || '').replace(/\D/g, '').slice(0, 9);
+                    if (digits.length <= 6) return digits;
+                    if (digits.length <= 8) return digits.slice(0, 6) + '/' + digits.slice(6);
+                    return digits.slice(0, 6) + '/' + digits.slice(6, 8) + '/' + digits.slice(8, 9);
+                }
+
+                nrcEl.addEventListener('input', (e) => {
+                    const formatted = formatNRC(nrcEl.value);
+                    nrcEl.value = formatted;
+                    // move caret to end
+                    try { nrcEl.setSelectionRange(formatted.length, formatted.length); } catch (err) {}
+                });
+
+                nrcEl.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Tab') return;
+                    if (!/\d/.test(e.key)) e.preventDefault();
+                });
+            })();
+            function showError(el, msg) {
+                clearError(el);
+                const node = document.createElement('p');
+                node.className = 'text-red-500 text-sm mt-1';
+                node.textContent = msg;
+                el.insertAdjacentElement('afterend', node);
+            }
+
+            function clearError(el) {
+                const next = el.nextElementSibling;
+                if (next && next.classList && next.classList.contains('text-red-500')) next.remove();
+            }
+
+            function validateNRC(value) {
+                return /^\d{6}\/\d{2}\/\d{1}$/.test(value.trim());
+            }
+
+            function validateEmail(value) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+            }
+
+            function validatePhone(value) {
+                const digits = value.replace(/\D/g, '');
+                if (digits.length === 12 && digits.startsWith('260')) return true; // +260XXXXXXXXX
+                if (digits.length === 10 && digits.startsWith('0')) return true; // 0XXXXXXXXX
+                return false;
+            }
+
+            function gatherData() {
+                const data = {};
+                data.surname = document.getElementById('surname').value.trim();
+                data.firstname = document.getElementById('firstname').value.trim();
+                data.gender = document.getElementById('gender') ? document.getElementById('gender').value : '';
+                data.dob = document.getElementById('dob') ? document.getElementById('dob').value : '';
+                data.nrc = document.getElementById('nrc').value.trim();
+                data.address = document.getElementById('address').value.trim();
+                data.cell = document.getElementById('cell').value.trim();
+                data.email = document.getElementById('email').value.trim();
+                data.choice1 = (document.querySelector('input[name="choice1"]:checked') || {}).value || '';
+                data.choice2 = document.getElementById('choice2') ? document.getElementById('choice2').value : '';
+                data.mode = (document.querySelector('input[name="mode"]:checked') || {}).value || '';
+                data.level = document.getElementById('levelSelect') ? document.getElementById('levelSelect').value : '';
+                data.sponsorName = document.getElementById('sponsorName') ? document.getElementById('sponsorName').value.trim() : '';
+                data.sponsorCell = document.getElementById('sponsorCell') ? document.getElementById('sponsorCell').value.trim() : '';
+                data.sponsorRelation = document.getElementById('sponsorRelation') ? document.getElementById('sponsorRelation').value.trim() : '';
+                return data;
+            }
+
+            function buildReviewHtml(d) {
+                return `
+                <div class="bg-white rounded-xl shadow-xl max-w-3xl w-full p-6">
+                    <h3 class="text-xl font-bold mb-4">Review your application</h3>
+                    <div class="space-y-2 text-sm text-slate-700 mb-4">
+                        <div><strong>Name:</strong> ${d.surname} ${d.firstname}</div>
+                        <div><strong>NRC:</strong> ${d.nrc}</div>
+                        <div><strong>Date of Birth:</strong> ${d.dob}</div>
+                        <div><strong>Gender:</strong> ${d.gender}</div>
+                        <div><strong>Address:</strong> ${d.address}</div>
+                        <div><strong>Cell:</strong> ${d.cell}</div>
+                        <div><strong>Email:</strong> ${d.email}</div>
+                        <div><strong>Primary Choice:</strong> ${d.choice1}</div>
+                        <div><strong>Second Choice:</strong> ${d.choice2}</div>
+                        <div><strong>Mode:</strong> ${d.mode}</div>
+                        <div><strong>Level:</strong> ${d.level}</div>
+                        <div><strong>Sponsor:</strong> ${d.sponsorName} (${d.sponsorRelation})</div>
+                        <div><strong>Sponsor Cell:</strong> ${d.sponsorCell}</div>
+                        <div><strong>Attachments:</strong> ${attachmentsInput.files.length} file(s) attached</div>
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button id="review-edit" class="px-4 py-2 rounded border">Edit</button>
+                        <button id="review-confirm" class="px-4 py-2 rounded bg-blue-900 text-white">Confirm &amp; Submit</button>
+                    </div>
+                </div>
+                `;
+            }
+
+            function openReviewModal(data) {
+                const overlay = document.createElement('div');
+                overlay.id = 'review-modal';
+                overlay.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-[200] p-4';
+                overlay.innerHTML = buildReviewHtml(data);
+                document.body.appendChild(overlay);
+
+                document.getElementById('review-edit').addEventListener('click', () => {
+                    overlay.remove();
+                });
+
+                document.getElementById('review-confirm').addEventListener('click', async () => {
+                    overlay.querySelector('#review-confirm').disabled = true;
+                    overlay.querySelector('#review-confirm').textContent = 'Submitting...';
+                    try {
+                        const res = await submitApplication();
+                        overlay.remove();
+                        if (res && res.ok) {
+                            showSuccess('Application submitted successfully. Thank you!');
+                            form.reset();
+                        } else {
+                            const error = res && (await res.json().catch(()=>({}))).error || 'Submission failed';
+                            showErrorBanner(error);
+                        }
+                    } catch (err) {
+                        overlay.remove();
+                        showErrorBanner('Submission failed: ' + err.message);
+                    }
+                });
+            }
+
+            function showSuccess(msg) {
+                const el = document.createElement('div');
+                el.className = 'fixed bottom-6 right-6 bg-green-600 text-white px-4 py-2 rounded shadow';
+                el.textContent = msg;
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 6000);
+            }
+
+            function showErrorBanner(msg) {
+                const el = document.createElement('div');
+                el.className = 'fixed bottom-6 right-6 bg-red-600 text-white px-4 py-2 rounded shadow';
+                el.textContent = msg;
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 8000);
+            }
+
+            async function submitApplication() {
+                const formData = new FormData(form);
+                // include files explicitly (if browser doesn't pick up empty-name inputs)
+                const files = attachmentsInput.files;
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('attachments', files[i], files[i].name);
+                }
+
+                // POST to server endpoint
+                return fetch('/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+
+            function onSubmit(e) {
+                e.preventDefault();
+                let valid = true;
+
+                // Clear previous errors
+                ['surname','firstname','nrc','cell','email','address'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) clearError(el);
+                });
+
+                const nrcEl = document.getElementById('nrc');
+                if (!validateNRC(nrcEl.value)) { showError(nrcEl, 'NRC must be in format XXXXXX/XX/X, numbers only.'); valid = false; }
+
+                const emailEl = document.getElementById('email');
+                if (emailEl.value && !validateEmail(emailEl.value)) { showError(emailEl, 'Enter a valid email address.'); valid = false; }
+
+                const cellEl = document.getElementById('cell');
+                if (!validatePhone(cellEl.value)) { showError(cellEl, 'Enter a valid cell number (0XXXXXXXXX or +260XXXXXXXXX).'); valid = false; }
+
+                // required fields check
+                ['surname','firstname','address'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && !el.value.trim()) { showError(el, 'This field is required.'); valid = false; }
+                });
+
+                if (!valid) return;
+
+                const data = gatherData();
+                openReviewModal(data);
+            }
+
+            form.addEventListener('submit', onSubmit);
+        })();
+    </script>
 </body>
 </html>

@@ -33,7 +33,11 @@
                             </div>
                             <div>
                                 <p class="text-xs text-slate-400 font-bold uppercase">Call Us</p>
-                                <p class="text-slate-700 font-medium">+260 76 1700608 / +260 97 7304759</p>
+                                <p class="text-slate-700 font-medium">
+                                    <a href="tel:+260761700608" class="hover:underline">+260 76 1700608</a>
+                                    &nbsp;/&nbsp;
+                                    <a href="tel:+260977304759" class="hover:underline">+260 97 7304759</a>
+                                </p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
@@ -51,7 +55,9 @@
                             </div>
                             <div>
                                 <p class="text-xs text-slate-400 font-bold uppercase">Visit Campus</p>
-                                <p class="text-slate-700 font-medium leading-relaxed">FVGF+9CV, Chingola,<br>Copperbelt, Zambia</p>
+                                <p class="text-slate-700 font-medium leading-relaxed">
+                                    <a href="https://maps.google.com/?cid=13974701755064329229&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ" target="_blank" class="hover:underline">Plot 268, Nchanga North, Chingola,<br>Copperbelt, Zambia</a>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -72,7 +78,7 @@
                     <h3 class="text-2xl font-black text-blue-900 mb-2">Send us a Message</h3>
                     <p class="text-slate-500 mb-8">Fill out the form below and an admissions officer will contact you within 24 hours.</p>
                     
-                    <form action="#" class="grid md:grid-cols-2 gap-6">
+                    <form id="contact-form" action="#" class="grid md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-xs font-bold text-slate-400 uppercase">Full Name</label>
                             <input type="text" placeholder="Enter your name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
@@ -97,8 +103,8 @@
                             <textarea rows="4" placeholder="How can we help you?" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"></textarea>
                         </div>
                         <div class="md:col-span-2">
-                            <button class="w-full bg-blue-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
-                                SUBMIT INQUIRY <i class="fas fa-paper-plane ml-2"></i>
+                            <button id="contact-submit" type="submit" class="w-full bg-blue-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
+                                SEND MESSAGE <i class="fas fa-paper-plane ml-2"></i>
                             </button>
                         </div>
                     </form>
@@ -128,6 +134,178 @@
         </a>
 
         <script src="js/main.js"></script>
-    <div id="footer-placeholder"></div>
+        <script>
+            (function(){
+                const form = document.getElementById('contact-form');
+                if (!form) return;
+
+                function getFormData(){
+                    const inputs = form.querySelectorAll('input, textarea, select');
+                    const data = {};
+                    inputs.forEach(i => { if (i.name || i.placeholder) data[i.name || i.placeholder] = i.value; });
+                    return data;
+                }
+
+                function openWhatsApp(text){
+                    const phone = '260761700608';
+                    const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+                    window.open(url, '_blank');
+                }
+
+                function openMail(to, subject, body){
+                    const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    window.location.href = mailto;
+                }
+
+                form.addEventListener('submit', function(e){
+                    e.preventDefault();
+                    const name = form.querySelector('input[type="text"]').value || '';
+                    const phone = form.querySelector('input[type="tel"]').value || '';
+                    const program = form.querySelector('select') ? form.querySelector('select').value : '';
+                    const message = form.querySelector('textarea').value || '';
+
+                    const body = `Name: ${name}\nPhone: ${phone}\nProgram: ${program}\n\nMessage:\n${message}`;
+
+                    // Show choice modal
+                    const modal = document.createElement('div');
+                    modal.className = 'fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4';
+                    modal.innerHTML = `
+                        <div class="max-w-lg w-full bg-white rounded-xl p-6">
+                            <h3 class="text-lg font-bold mb-3">Send message via</h3>
+                            <div class="flex gap-3 mb-4">
+                                <button id="via-ws" class="flex-1 bg-green-600 text-white px-4 py-3 rounded">WhatsApp</button>
+                                <button id="via-mail" class="flex-1 bg-slate-700 text-white px-4 py-3 rounded">Email</button>
+                            </div>
+                            <div class="text-right"><button id="via-cancel" class="text-sm text-slate-500">Cancel</button></div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+
+                    modal.querySelector('#via-ws').addEventListener('click', () => { openWhatsApp(body); modal.remove(); });
+                    modal.querySelector('#via-mail').addEventListener('click', () => { openMail('crawhammer.marketing@gmail.com', `Enquiry from ${name}`, body); modal.remove(); });
+                    modal.querySelector('#via-cancel').addEventListener('click', () => modal.remove());
+                });
+            })();
+        </script>
+        <footer class="bg-slate-900 text-slate-300 pt-16 pb-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+                    <div class="space-y-4">
+                        <div class="text-2xl font-bold text-white flex items-center">
+
+                            <span>CRAW HAMMER TRADES</span>
+                        </div>
+                        <p class="text-sm leading-relaxed">
+                            Empowering Zambia's next generation of technical experts through hands-on vocational excellence
+                            and entrepreneurial training.
+                        </p>
+                        <div class="flex space-x-4 pt-2">
+                            <a href="https://www.facebook.com/share/14WbMKtH6jr/" target="_blank"
+                                class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+
+                            <a href="https://www.instagram.com/crawhammertrades?igsh=YmFpYXY4dHR0d21l" target="_blank"
+                                class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:text-white transition shadow-md">
+                                <i class="fab fa-instagram text-lg"></i>
+                            </a>
+
+                            <a href="https://wa.me/260761700608?text=Hi%20Craw%20Hammer%2C%20I%20would%20like%20to%20inquire%20about%20the%202026%20intake."
+                                target="_blank" rel="noopener noreferrer"
+                                class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition shadow-lg">
+                                <i class="fab fa-whatsapp text-lg"></i>
+                            </a>
+
+                            <a href="#"
+                                class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+
+                            <a href="#"
+                                class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4
+                            class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">
+                            Quick Links</h4>
+                        <ul class="space-y-3 text-sm">
+                            <li><a href="programs.html" class="hover:text-orange-500 transition">All Programs</a></li>
+                            <li><a href="updates.html" class="hover:text-orange-500 transition">Updates 2026</a></li>
+                            <li><a href="fees.html" class="hover:text-orange-500 transition">Fee Structure</a></li>
+
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4
+                            class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">
+                            Contact Us</h4>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex items-start">
+                                <i class="fas fa-map-marker-alt mt-1 mr-3 text-orange-500"></i>
+                                <a href="https://maps.google.com/?cid=13974701755064329229&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ"
+                                    target="_blank" rel="noopener noreferrer"
+                                    class="hover:text-orange-500 transition duration-300">
+                                    <span>Plot 268, Nchanga North, Chingola, Zambia</span>
+                                </a>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone-alt mr-3 text-orange-500"></i>
+                                <span>260 76 1700608 / +260 97 7304759</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope mr-3 text-orange-500"></i>
+                                <span>crawhammer.marketing@gmail.com</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4
+                            class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">
+                            Stay Updated
+                        </h4>
+                        <p class="text-xs mb-4">Join our WhatsApp broadcast for intake alerts and short course updates.</p>
+
+                        <div class="flex flex-col space-y-3">
+                            <a href="https://wa.me/260761700608?text=I%20want%20to%20subscribe%20to%20Craw%20Hammer%20updates.%20Please%20save%20my%20number."
+                                target="_blank"
+                                class="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 shadow-lg">
+                                <i class="fab fa-whatsapp text-xl"></i>
+                                <span class="text-sm uppercase tracking-tight">Subscribe via WhatsApp</span>
+                            </a>
+
+                            <div class="pt-2">
+                                <p class="text-[10px] text-slate-500 uppercase mb-2">Or via Email</p>
+                                <form class="flex gap-2">
+                                    <input type="email" placeholder="Email"
+                                        class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-orange-500 transition text-white w-full">
+                                    <button
+                                        class="bg-slate-700 hover:bg-orange-600 text-white px-3 py-2 rounded-lg transition">
+                                        <i class="fas fa-paper-plane text-xs"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div
+                    class="border-t border-slate-800 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-xs space-y-4 md:space-y-0">
+                    <p>&copy; 2026 Craw Hammer Trades School. All Rights Reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="hover:text-white">Privacy Policy</a>
+                        <a href="#" class="hover:text-white">Terms of Service</a>
+                        <span class="text-slate-500">Accredited by TEVETA</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </body>
     </html>

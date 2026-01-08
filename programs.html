@@ -6,11 +6,15 @@
     <title>Academic Programs | Craw Hammer Trades School</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
     <style>
-        .dept-tab.active { @apply border-orange-500 bg-orange-50 text-blue-900 shadow-sm; }
-        .course-content { display: none; }
-        .course-content.active { display: block; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .program-card { transition: all 0.3s ease; }
+        .program-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 40; }
+        .modal-overlay.open { display: flex; align-items: center; justify-content: center; }
+        .modal-content { max-height: 85vh; overflow-y: auto; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-overlay.open .modal-content { animation: fadeIn 0.3s ease-out; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900">
@@ -26,174 +30,240 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-12">
-        <div class="flex flex-col lg:flex-row gap-8">
-            
-            <aside class="lg:w-1/3 space-y-2">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 px-4">Major Courses</h3>
-                <button onclick="showDept('metal')" class="dept-tab active w-full text-left px-6 py-4 rounded-xl border-2 border-transparent transition-all flex justify-between items-center group">
-                    <span class="font-bold">Metal Fabrication & Welding</span>
-                    <i class="fas fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                </button>
-                <button onclick="showDept('electrical')" class="dept-tab w-full text-left px-6 py-4 rounded-xl border-2 border-transparent transition-all flex justify-between items-center group">
-                    <span class="font-bold">Electrical Technology</span>
-                    <i class="fas fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                </button>
-                <button onclick="showDept('auto')" class="dept-tab w-full text-left px-6 py-4 rounded-xl border-2 border-transparent transition-all flex justify-between items-center group">
-                    <span class="font-bold">Automotive Engineering</span>
-                    <i class="fas fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                </button>
-                <button onclick="showDept('ict')" class="dept-tab w-full text-left px-6 py-4 rounded-xl border-2 border-transparent transition-all flex justify-between items-center group">
-                    <span class="font-bold">Computer Studies</span>
-                    <i class="fas fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                </button>
-                <button onclick="showDept('food')" class="dept-tab w-full text-left px-6 py-4 rounded-xl border-2 border-transparent transition-all flex justify-between items-center group">
-                    <span class="font-bold">Food Production</span>
-                    <i class="fas fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                </button>
-                <button onclick="showDept('carpentry')" class="dept-tab w-full text-left px-6 py-4 rounded-xl border-2 border-transparent transition-all flex justify-between items-center group">
-                    <span class="font-bold">Carpentry & Joinery</span>
-                    <i class="fas fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                </button>
-                <button onclick="showDept('tailoring')" class="dept-tab w-full text-left px-6 py-4 rounded-xl border-2 border-transparent transition-all flex justify-between items-center group">
-                    <span class="font-bold">Designing & Tailoring</span>
-                    <i class="fas fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                </button>
-            </aside>
+        <!-- Program Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            <!-- Metal Fabrication Card -->
+            <div onclick="openModal('metal')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
+                <div class="bg-orange-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-faucet-drip"></i></div>
+                <h3 class="text-xl font-bold text-blue-900 mb-3">Metal Fabrication & Welding</h3>
+                <p class="text-slate-600 text-sm mb-4">Master specialized joining, structural fabrication, and industry-standard safety protocols for Zambia's industrial sector.</p>
+                <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
+                    Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
 
-            <div class="lg:w-2/3 bg-white rounded-3xl p-8 shadow-sm border border-slate-200 min-h-[600px]">
+            <!-- Electrical Card -->
+            <div onclick="openModal('electrical')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
+                <div class="bg-blue-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-bolt"></i></div>
+                <h3 class="text-xl font-bold text-blue-900 mb-3">Electrical Technology</h3>
+                <p class="text-slate-600 text-sm mb-4">Electrical systems, wiring, and industrial power maintenance for residential and commercial electrical works.</p>
+                <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
+                    Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+
+            <!-- Automotive Card -->
+            <div onclick="openModal('auto')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
+                <div class="bg-slate-700 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-car"></i></div>
+                <h3 class="text-xl font-bold text-blue-900 mb-3">Automotive Engineering</h3>
+                <p class="text-slate-600 text-sm mb-4">Vehicle diagnostics, engine repair, and auto-mechanics tailored for the modern transport sector.</p>
+                <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
+                    Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+
+            <!-- ICT Card -->
+            <div onclick="openModal('ict')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
+                <div class="bg-blue-400 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-laptop-code"></i></div>
+                <h3 class="text-xl font-bold text-blue-900 mb-3">Computer Studies</h3>
+                <p class="text-slate-600 text-sm mb-4">Digital tools, hardware repair, and networking fundamentals for the modern workplace.</p>
+                <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
+                    Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+
+            <!-- Food Production Card -->
+            <div onclick="openModal('food')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
+                <div class="bg-green-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-utensils"></i></div>
+                <h3 class="text-xl font-bold text-blue-900 mb-3">Food Production</h3>
+                <p class="text-slate-600 text-sm mb-4">Culinary arts, kitchen management, and food safety training for chefs and hospitality professionals.</p>
+                <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
+                    Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+
+            <!-- Carpentry Card -->
+            <div onclick="openModal('carpentry')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
+                <div class="bg-yellow-700 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-hammer"></i></div>
+                <h3 class="text-xl font-bold text-blue-900 mb-3">Carpentry & Joinery</h3>
+                <p class="text-slate-600 text-sm mb-4">Woodcraft, furniture design, and roofing structures for construction and timber industry.</p>
+                <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
+                    Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+
+            <!-- Tailoring Card -->
+            <div onclick="openModal('tailoring')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
+                <div class="bg-pink-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-scissors"></i></div>
+                <h3 class="text-xl font-bold text-blue-900 mb-3">Designing & Tailoring</h3>
+                <p class="text-slate-600 text-sm mb-4">Pattern drafting, garment construction, and fashion design for industrial or entrepreneurial success.</p>
+                <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
+                    Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Program Details -->
+        <div id="programModal" class="modal-overlay" onclick="closeModal(event)">
+            <div class="modal-content bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 p-8" onclick="event.stopPropagation()">
+                <button onclick="closeModal()" class="float-right text-slate-400 hover:text-slate-600 text-2xl mb-4">
+                    <i class="fas fa-times"></i>
+                </button>
                 
-                <div id="metal" class="course-content active">
+                <!-- Metal Fabrication -->
+                <div id="metal-detail" class="course-detail hidden">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-orange-500 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-orange-200"><i class="fas fa-faucet-drip"></i></div>
-                        <h2 class="text-3xl font-black text-blue-900 uppercase">Metal Fabrication & Welding</h2>
+                        <div class="bg-orange-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-faucet-drip"></i></div>
+                        <h2 class="text-2xl font-black text-blue-900 uppercase">Metal Fabrication & Welding</h2>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Essential training for Zambia's industrial sector. Our students master specialized joining techniques, structural fabrication, and industry-standard safety protocols.</p>
-                    
-                    <div class="space-y-6">
-                        <div class="border-l-4 border-orange-500 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Trade Test Certificate (Level I, II, III)</h4>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Essential training for Zambia's industrial sector. Our students master specialized joining techniques, structural fabrication, and industry-standard safety protocols.</p>
+                    <p class="text-slate-600 mb-4"><strong>Key Learning:</strong> Blueprint reading, oxy-acetylene cutting, MIG/TIG welding, plate and structural fabrication, and industrial safety practices. Assessment combines practical trade tests and short theory modules.</p>
+                    <p class="text-slate-600 mb-6"><strong>Career Outcomes:</strong> Structural fabricator, weld technician, workshop supervisor, or self-employed fabricator. Employers include mining contractors, construction firms and local fabrication shops.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-bold text-blue-900">Trade Test Certificate (Level I, II, III)</h4>
                             <p class="text-sm text-slate-500">Duration: 3-12 Months | Entry: Primary/Grade 7 or 9 Certificate</p>
                         </div>
-                        <div class="border-l-4 border-blue-900 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Craft Certificate</h4>
+                        <div class="border-l-4 border-blue-900 pl-4">
+                            <h4 class="font-bold text-blue-900">Craft Certificate</h4>
                             <p class="text-sm text-slate-500">Duration: 2 Years | Entry: Grade 12 Certificate</p>
                         </div>
-                        <div class="border-l-4 border-blue-900 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Advanced Certificate (Technician)</h4>
+                        <div class="border-l-4 border-blue-900 pl-4">
+                            <h4 class="font-bold text-blue-900">Advanced Certificate (Technician)</h4>
                             <p class="text-sm text-slate-500">Duration: 2 Years 8 Months | Entry: 5 Credits (incl. Maths, English, Science)</p>
                         </div>
                     </div>
-                    <a href="apply.html" class="mt-10 block w-full bg-blue-900 text-white text-center py-4 rounded-xl font-bold hover:bg-orange-600 transition">ENROLL FOR METAL FABRICATION</a>
+                    <a href="apply.html" class="btn-glow block w-full bg-orange-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-900 transition">ENROLL NOW</a>
                 </div>
 
-                <div id="electrical" class="course-content">
+                <!-- Electrical -->
+                <div id="electrical-detail" class="course-detail hidden">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-blue-600 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-blue-200"><i class="fas fa-bolt"></i></div>
-                        <h2 class="text-3xl font-black text-blue-900 uppercase">Electrical Technology</h2>
+                        <div class="bg-blue-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-bolt"></i></div>
+                        <h2 class="text-2xl font-black text-blue-900 uppercase">Electrical Technology</h2>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Focuses on electrical systems, wiring, and industrial power maintenance. Graduates are equipped for both residential and commercial electrical works.</p>
-                    <div class="space-y-6">
-                        <div class="border-l-4 border-orange-500 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Trade Test Level I, II, III</h4>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Focuses on electrical systems, wiring, and industrial power maintenance. Graduates are equipped for both residential and commercial electrical works.</p>
+                    <p class="text-slate-600 mb-4"><strong>Key Learning:</strong> Electrical safety, domestic and three-phase wiring, motor controls, basic PLC concepts and fault-finding techniques. Training includes hands-on labs and simulated fault exercises.</p>
+                    <p class="text-slate-600 mb-6"><strong>Career Outcomes:</strong> Residential/commercial electrician, maintenance technician, or site electrical supervisor. Graduates are prepared for installation, maintenance and commissioning roles.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-bold text-blue-900">Trade Test Level I, II, III</h4>
                             <p class="text-sm text-slate-500">Duration: 1 Year total | Entry: Grade 7 or 9 Certificate</p>
                         </div>
-                        <div class="border-l-4 border-blue-900 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Craft Certificate</h4>
+                        <div class="border-l-4 border-blue-900 pl-4">
+                            <h4 class="font-bold text-blue-900">Craft Certificate</h4>
                             <p class="text-sm text-slate-500">Duration: 2 Years | Entry: Grade 12 Certificate</p>
                         </div>
-                        <div class="border-l-4 border-blue-900 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Advanced Certificate (Technician)</h4>
+                        <div class="border-l-4 border-blue-900 pl-4">
+                            <h4 class="font-bold text-blue-900">Advanced Certificate (Technician)</h4>
                             <p class="text-sm text-slate-500">Duration: 2 Years 8 Months | Entry: 5 Credits (incl. Maths, English, Science)</p>
                         </div>
                     </div>
-                    <a href="apply.html" class="mt-10 block w-full bg-blue-900 text-white text-center py-4 rounded-xl font-bold hover:bg-orange-600 transition">ENROLL FOR ELECTRICAL</a>
+                    <a href="apply.html" class="btn-glow block w-full bg-orange-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-900 transition">ENROLL NOW</a>
                 </div>
 
-                <div id="auto" class="course-content">
+                <!-- Automotive -->
+                <div id="auto-detail" class="course-detail hidden">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-slate-700 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-slate-200"><i class="fas fa-car"></i></div>
-                        <h2 class="text-3xl font-black text-blue-900 uppercase">Automotive Engineering</h2>
+                        <div class="bg-slate-700 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-car"></i></div>
+                        <h2 class="text-2xl font-black text-blue-900 uppercase">Automotive Engineering</h2>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Gain hands-on skills in vehicle diagnostics, engine repair, and auto-mechanics tailored for the modern transport sector.</p>
-                    <div class="border-l-4 border-orange-500 pl-6 py-2">
-                        <h4 class="font-bold text-lg text-blue-900">Trade Test Certificate Level III</h4>
-                        <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
-                    </div>
-                    <a href="apply.html" class="mt-10 block w-full bg-blue-900 text-white text-center py-4 rounded-xl font-bold hover:bg-orange-600 transition">ENROLL FOR AUTOMOTIVE</a>
-                </div>
-
-                <div id="ict" class="course-content">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-blue-400 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-blue-100"><i class="fas fa-laptop-code"></i></div>
-                        <h2 class="text-3xl font-black text-blue-900 uppercase">Computer Studies</h2>
-                    </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Master the digital tools of the modern workplace, from office productivity suites to hardware repair and networking fundamentals.</p>
-                    <div class="space-y-6">
-                        <div class="border-l-4 border-orange-500 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Trade Test Level I, II, III</h4>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Gain hands-on skills in vehicle diagnostics, engine repair, and auto-mechanics tailored for the modern transport sector.</p>
+                    <p class="text-slate-600 mb-4"><strong>Key Learning:</strong> Engine systems, fuel systems, brakes, suspension, electrical diagnostics, and workshop management. Students use diagnostic tools and participate in real-vehicle servicing.</p>
+                    <p class="text-slate-600 mb-6"><strong>Career Outcomes:</strong> Vehicle technician, diagnostic specialist, fleet maintenance, or small-business automotive workshop owner.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-bold text-blue-900">Trade Test Certificate Level III</h4>
                             <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
                         </div>
-                        <div class="border-l-4 border-blue-900 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Certificate in Computer Studies</h4>
+                    </div>
+                    <a href="apply.html" class="btn-glow block w-full bg-orange-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-900 transition">ENROLL NOW</a>
+                </div>
+
+                <!-- ICT -->
+                <div id="ict-detail" class="course-detail hidden">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="bg-blue-400 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-laptop-code"></i></div>
+                        <h2 class="text-2xl font-black text-blue-900 uppercase">Computer Studies</h2>
+                    </div>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Master the digital tools of the modern workplace, from office productivity suites to hardware repair and networking fundamentals.</p>
+                    <p class="text-slate-600 mb-4"><strong>Key Learning:</strong> PC hardware repair, basic networking, Linux fundamentals, cloud basics, office productivity and introductory programming. Emphasis on applied labs and certifications.</p>
+                    <p class="text-slate-600 mb-6"><strong>Career Outcomes:</strong> IT support technician, network administrator junior roles, office systems admin, or freelance computer technician.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-bold text-blue-900">Trade Test Level I, II, III</h4>
+                            <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
+                        </div>
+                        <div class="border-l-4 border-blue-900 pl-4">
+                            <h4 class="font-bold text-blue-900">Certificate in Computer Studies</h4>
                             <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 12 Certificate</p>
                         </div>
                     </div>
-                    <a href="apply.html" class="mt-10 block w-full bg-blue-900 text-white text-center py-4 rounded-xl font-bold hover:bg-orange-600 transition">ENROLL FOR COMPUTER STUDIES</a>
+                    <a href="apply.html" class="btn-glow block w-full bg-orange-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-900 transition">ENROLL NOW</a>
                 </div>
 
-                <div id="food" class="course-content">
+                <!-- Food Production -->
+                <div id="food-detail" class="course-detail hidden">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-green-600 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-green-200"><i class="fas fa-utensils"></i></div>
-                        <h2 class="text-3xl font-black text-blue-900 uppercase">Food Production</h2>
+                        <div class="bg-green-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-utensils"></i></div>
+                        <h2 class="text-2xl font-black text-blue-900 uppercase">Food Production</h2>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Training the next generation of chefs and hospitality professionals in culinary arts, kitchen management, and food safety.</p>
-                    <div class="space-y-6">
-                        <div class="border-l-4 border-orange-500 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Trade Test Level I, II, III</h4>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Training the next generation of chefs and hospitality professionals in culinary arts, kitchen management, and food safety.</p>
+                    <p class="text-slate-600 mb-4"><strong>Key Learning:</strong> Commercial food preparation, menu planning, nutrition, HACCP food safety, and small-kitchen management. Practical cookery sessions form the bulk of assessment.</p>
+                    <p class="text-slate-600 mb-6"><strong>Career Outcomes:</strong> Chef de partie, kitchen supervisor, catering entrepreneur, or hospitality support staff.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-bold text-blue-900">Trade Test Level I, II, III</h4>
                             <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
                         </div>
-                        <div class="border-l-4 border-blue-900 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Craft Certificate</h4>
+                        <div class="border-l-4 border-blue-900 pl-4">
+                            <h4 class="font-bold text-blue-900">Craft Certificate</h4>
                             <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 12 Certificate</p>
                         </div>
-                        <div class="border-l-4 border-blue-900 pl-6 py-2">
-                            <h4 class="font-bold text-lg text-blue-900">Diploma in Food Production</h4>
+                        <div class="border-l-4 border-blue-900 pl-4">
+                            <h4 class="font-bold text-blue-900">Diploma in Food Production</h4>
                             <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 12 Certificate with 5 Credits or better</p>
                         </div>
                     </div>
-                    <a href="apply.html" class="mt-10 block w-full bg-blue-900 text-white text-center py-4 rounded-xl font-bold hover:bg-orange-600 transition">ENROLL FOR FOOD PRODUCTION</a>
+                    <a href="apply.html" class="btn-glow block w-full bg-orange-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-900 transition">ENROLL NOW</a>
                 </div>
 
-                <div id="carpentry" class="course-content">
+                <!-- Carpentry -->
+                <div id="carpentry-detail" class="course-detail hidden">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-yellow-700 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-yellow-200"><i class="fas fa-hammer"></i></div>
-                        <h2 class="text-3xl font-black text-blue-900 uppercase">Carpentry & Joinery</h2>
+                        <div class="bg-yellow-700 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-hammer"></i></div>
+                        <h2 class="text-2xl font-black text-blue-900 uppercase">Carpentry & Joinery</h2>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Specialized training in woodcraft, furniture design, and roofing structures. Perfect for those entering the construction or timber industry.</p>
-                    <div class="border-l-4 border-orange-500 pl-6 py-2">
-                        <h4 class="font-bold text-lg text-blue-900">Trade Test Level I, II, III</h4>
-                        <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Specialized training in woodcraft, furniture design, and roofing structures. Perfect for those entering the construction or timber industry.</p>
+                    <p class="text-slate-600 mb-4"><strong>Key Learning:</strong> Joinery techniques, furniture assembly, timber estimation, finishing and basic CNC/lathe operation where available. Emphasis on precision and safety.</p>
+                    <p class="text-slate-600 mb-6"><strong>Career Outcomes:</strong> Carpenter, furniture maker, site joiner, or small-scale furniture business owner.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-bold text-blue-900">Trade Test Level I, II, III</h4>
+                            <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
+                        </div>
                     </div>
-                    <div class="mt-8 bg-slate-50 p-6 rounded-2xl">
-                        <h4 class="font-bold text-xs uppercase mb-2 text-slate-400">Core Skills:</h4>
-                        <p class="text-sm text-slate-700">Furniture Construction • Roofing Layouts • Timber Selection • Wood Lathe Operation</p>
-                    </div>
-                    <a href="apply.html" class="mt-10 block w-full bg-blue-900 text-white text-center py-4 rounded-xl font-bold hover:bg-orange-600 transition">ENROLL FOR CARPENTRY</a>
+                    <p class="text-sm text-slate-500 mb-4"><strong>Core Skills:</strong> Furniture Construction • Roofing Layouts • Timber Selection • Wood Lathe Operation</p>
+                    <a href="apply.html" class="btn-glow block w-full bg-orange-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-900 transition">ENROLL NOW</a>
                 </div>
 
-                <div id="tailoring" class="course-content">
+                <!-- Tailoring -->
+                <div id="tailoring-detail" class="course-detail hidden">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-pink-500 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-pink-100"><i class="fas fa-scissors"></i></div>
-                        <h2 class="text-3xl font-black text-blue-900 uppercase">Designing & Tailoring</h2>
+                        <div class="bg-pink-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-scissors"></i></div>
+                        <h2 class="text-2xl font-black text-blue-900 uppercase">Designing & Tailoring</h2>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Turn creativity into a profession. Learn pattern drafting, garment construction, and fashion design for industrial or entrepreneurial success.</p>
-                    <div class="border-l-4 border-orange-500 pl-6 py-2">
-                        <h4 class="font-bold text-lg text-blue-900">Trade Test Level I, II, III</h4>
-                        <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
+                    <p class="text-slate-600 mb-6 leading-relaxed">Turn creativity into a profession. Learn pattern drafting, garment construction, and fashion design for industrial or entrepreneurial success.</p>
+                    <p class="text-slate-600 mb-4"><strong>Key Learning:</strong> Pattern drafting, industrial and bespoke garment construction, textile selection, and small-business tailoring operations.</p>
+                    <p class="text-slate-600 mb-6"><strong>Career Outcomes:</strong> Professional tailor, fashion entrepreneur, production cutter, or quality control in garment workshops.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-bold text-blue-900">Trade Test Level I, II, III</h4>
+                            <p class="text-sm text-slate-500">Duration: 1 Year | Entry: Grade 7 or 9 Certificate</p>
+                        </div>
                     </div>
-                    <a href="apply.html" class="mt-10 block w-full bg-blue-900 text-white text-center py-4 rounded-xl font-bold hover:bg-orange-600 transition">ENROLL FOR TAILORING</a>
+                    <a href="apply.html" class="btn-glow block w-full bg-orange-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-900 transition">ENROLL NOW</a>
                 </div>
-
             </div>
         </div>
 
@@ -203,22 +273,133 @@
         </div>
     </main>
 
-    <div id="footer-placeholder"></div>
+    <footer class="bg-slate-900 text-slate-300 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+                <div class="space-y-4">
+                    <div class="text-2xl font-bold text-white flex items-center">
+                        <span>CRAW HAMMER TRADES</span>
+                    </div>
+                    <p class="text-sm leading-relaxed">
+                        Empowering Zambia's next generation of technical experts through hands-on vocational excellence
+                        and entrepreneurial training.
+                    </p>
+                    <div class="flex space-x-4 pt-2">
+                        <a href="https://www.facebook.com/share/14WbMKtH6jr/" target="_blank"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/crawhammertrades?igsh=YmFpYXY4dHR0d21l" target="_blank"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:text-white transition shadow-md">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="https://wa.me/260761700608?text=Hi%20Craw%20Hammer%2C%20I%20would%20like%20to%20inquire%20about%20the%202026%20intake."
+                            target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition shadow-lg">
+                            <i class="fab fa-whatsapp text-lg"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">Quick Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="programs.html" class="hover:text-orange-500 transition">All Programs</a></li>
+                        <li><a href="updates.html" class="hover:text-orange-500 transition">Updates 2026</a></li>
+                        <li><a href="fees.html" class="hover:text-orange-500 transition">Fee Structure</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">Contact Us</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-orange-500"></i>
+                            <a href="https://maps.google.com/?cid=13974701755064329229&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ"
+                                target="_blank" rel="noopener noreferrer"
+                                class="hover:text-orange-500 transition duration-300">
+                                <span>Plot 268, Nchanga North, Chingola, Zambia</span>
+                            </a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-3 text-orange-500"></i>
+                            <span>260 76 1700608 / +260 97 7304759</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-orange-500"></i>
+                            <span>crawhammer.marketing@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6 border-b border-orange-500 w-max pb-1">Stay Updated</h4>
+                    <p class="text-xs mb-4">Join our WhatsApp broadcast for intake alerts and short course updates.</p>
+                    <div class="flex flex-col space-y-3">
+                        <a href="https://wa.me/260761700608?text=I%20want%20to%20subscribe%20to%20Craw%20Hammer%20updates.%20Please%20save%20my%20number."
+                            target="_blank"
+                            class="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 shadow-lg">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                            <span class="text-sm uppercase tracking-tight">Subscribe via WhatsApp</span>
+                        </a>
+                        <div class="pt-2">
+                            <p class="text-[10px] text-slate-500 uppercase mb-2">Or via Email</p>
+                            <form class="flex gap-2">
+                                <input type="email" placeholder="Email"
+                                    class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-orange-500 transition text-white w-full">
+                                <button class="bg-slate-700 hover:bg-orange-600 text-white px-3 py-2 rounded-lg transition">
+                                    <i class="fas fa-paper-plane text-xs"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-xs space-y-4 md:space-y-0">
+                <p>&copy; 2026 Craw Hammer Trades School. All Rights Reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                    <span class="text-slate-500">Accredited by TEVETA</span>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        function showDept(deptId) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.dept-tab').forEach(btn => btn.classList.remove('active'));
-            // Remove active class from all content
-            document.querySelectorAll('.course-content').forEach(content => content.classList.remove('active'));
-            
-            // Add active to current button
-            event.currentTarget.classList.add('active');
-            
-            // Show current content
-            const target = document.getElementById(deptId);
-            target.classList.add('active');
+        function openModal(programId) {
+            const modal = document.getElementById('programModal');
+            // Hide all details
+            document.querySelectorAll('.course-detail').forEach(el => el.classList.add('hidden'));
+            // Show selected detail
+            const detail = document.getElementById(programId + '-detail');
+            if (detail) detail.classList.remove('hidden');
+            // Open modal
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
+
+        function closeModal(event) {
+            if (event && event.target.id !== 'programModal') return;
+            const modal = document.getElementById('programModal');
+            modal.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
     </script>
     <script src="js/main.js"></script>
 </body>
