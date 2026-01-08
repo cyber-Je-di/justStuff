@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Application | Craw Hammer Trades School</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans text-slate-900">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-blue-900 flex items-center">
+                        <i class="fas fa-cog fa-spin mr-2 text-orange-500"></i>
+                        <span>CRAW HAMMER</span>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-blue-900 font-semibold hover:text-orange-500">Home</a>
+                    <a href="index.html#programs" class="text-slate-600 hover:text-orange-500">Programs</a>
+                    <a href="admissions.html" class="text-slate-600 hover:text-orange-500">Admissions</a>
+                    <a href="about.html" class="text-slate-600 hover:text-orange-500">About Us</a>
+                    <a href="apply.html" class="ml-4 bg-orange-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-orange-700">APPLY NOW</a>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" class="text-blue-900 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+                <div id="mobile-menu" class="mobile-menu hidden md:hidden bg-white border-t border-slate-100 px-4 py-6 space-y-4 shadow-lg absolute left-0 right-0 mt-20">
+                    <a href="index.html" class="block text-blue-900 font-bold">Home</a>
+                    <a href="index.html#programs" class="block text-slate-600 font-medium">Programs</a>
+                    <a href="admissions.html" class="block text-slate-600 font-medium">Admissions</a>
+                    <a href="about.html" class="block text-slate-600 font-medium">About Us</a>
+                    <a href="apply.html" class="block bg-orange-600 text-white px-4 py-2 rounded-lg text-center font-bold">APPLY NOW</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="main-content" class="max-w-4xl mx-auto px-4 py-12">
+        <div class="mb-8 flex justify-between items-center max-w-xs mx-auto text-sm font-bold text-slate-400">
+            <span class="text-blue-900">1. Fill</span>
+            <div class="h-1 flex-1 mx-4 bg-blue-900 rounded"></div>
+            <span class="text-blue-900">2. Review</span>
+            <div class="h-1 flex-1 mx-4 bg-slate-300 rounded"></div>
+            <span>3. Finish</span>
+        </div>
+
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+            <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
+                <h2 class="text-xl font-bold">Review Your Details</h2>
+                <button onclick="window.history.back()" class="text-sm bg-blue-800 px-4 py-2 rounded hover:bg-blue-700">Edit Info</button>
+            </div>
+
+            <div class="p-8 grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest">Personal Info</h3>
+                    <div>
+                        <p class="text-slate-500 text-sm">Full Name</p>
+                        <p class="font-semibold">John Banda</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">NRC Number</p>
+                        <p class="font-semibold">000000/00/1</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Contact</p>
+                        <p class="font-semibold">+260 977 123456</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Selected Trade</p>
+                        <span class="inline-block bg-blue-100 text-blue-900 px-3 py-1 rounded-full text-sm font-bold mt-1">Metal Fabrication & Welding</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest">Document Preview</h3>
+                    <div class="aspect-[4/3] bg-slate-200 rounded-xl border-2 border-slate-300 flex items-center justify-center relative overflow-hidden group">
+                        <div class="text-center p-6">
+                            <i class="fas fa-file-pdf text-5xl text-red-500 mb-2"></i>
+                            <p class="text-xs font-bold text-slate-600">NRC_AND_RESULTS.pdf</p>
+                        </div>
+                        <div class="absolute inset-0 bg-blue-900/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <button class="bg-white text-blue-900 px-4 py-2 rounded font-bold text-sm shadow-lg">
+                                <i class="fas fa-eye mr-2"></i>View Full Document
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8 bg-slate-50 border-t border-slate-100">
+                <div class="flex items-start mb-6">
+                    <input type="checkbox" id="confirm" class="mt-1 mr-3 w-5 h-5 rounded border-slate-300 text-blue-900">
+                    <label for="confirm" class="text-sm text-slate-600 leading-snug">
+                        I confirm that all information entered is accurate. I understand that providing false documents will lead to automatic disqualification.
+                    </label>
+                </div>
+                
+                <button onclick="showSuccess()" class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg">
+                    CONFIRM & SUBMIT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="hidden fixed inset-0 bg-blue-900/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-4xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-blue-900">Application Received!</h2>
+            <p class="text-slate-600 mt-4">Thank you, <span class="font-bold text-blue-900">John</span>. Your application for <span class="font-bold text-blue-900">Metal Fabrication</span> has been submitted successfully.</p>
+            
+            <div class="mt-8 p-4 bg-orange-50 border border-orange-100 rounded-xl text-left">
+                <p class="text-xs font-bold text-orange-800 uppercase mb-2">Next Steps:</p>
+                <ul class="text-sm text-slate-700 space-y-2">
+                    <li><i class="fas fa-envelope mr-2 text-orange-500"></i> Check your email for a confirmation.</li>
+                    <li><i class="fas fa-phone mr-2 text-orange-500"></i> Our admissions officer will call you within 48 hours.</li>
+                </ul>
+            </div>
+
+            <a href="index.html" class="block mt-8 w-full border-2 border-blue-900 text-blue-900 py-3 rounded-xl font-bold hover:bg-blue-900 hover:text-white transition">
+                Return to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function showSuccess() {
+            if(document.getElementById('confirm').checked) {
+                document.getElementById('successModal').classList.remove('hidden');
+            } else {
+                alert("Please check the confirmation box to proceed.");
+            }
+        }
+    </script>
+    <script src="js/main.js"></script>
+</body>
+</html>
