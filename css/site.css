@@ -7,6 +7,11 @@
   /* Legacy aliases (kept for compatibility) */
   --brand-blue: var(--sky);
   --accent: var(--green);
+  
+  /* Glassmorphism colors */
+  --glass-light: rgba(255, 255, 255, 0.15);
+  --glass-dark: rgba(0, 0, 0, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
 }
 /* Import Open Sans and set default font */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
@@ -47,6 +52,130 @@ html, body, input, button, textarea, select {
 .btn-glow:hover {
   animation: glowHover 0.6s ease-out forwards;
   transform: translateY(-2px);
+}
+
+/* ============ FLOATING ACTION BUTTON (FAB) ANIMATION ============ */
+@keyframes floatingFab {
+  0%, 100% {
+    transform: translateY(0px);
+    box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+  }
+  50% {
+    transform: translateY(-15px);
+    box-shadow: 0 15px 35px rgba(249, 115, 22, 0.6);
+  }
+}
+
+.fab-float {
+  animation: floatingFab 3s ease-in-out infinite;
+}
+
+/* ============ GLASSMORPHISM (iOS 16+ STYLE) ============ */
+/* Base glass effect with backdrop blur */
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: inherit;
+  cursor: text;
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  outline: none;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  cursor: text;
+}
+
+/* Input field cursor and focus styles */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  cursor: text !important;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="tel"]:hover,
+input[type="date"]:hover,
+input[type="number"]:hover,
+textarea:hover,
+select:hover {
+  cursor: text !important;
+  border-color: rgba(249, 115, 22, 0.5) !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  cursor: text !important;
+  border-color: rgb(249, 115, 22) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1) !important;
+}
+
+/* Enhance form input visibility */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  transition: all 0.2s ease;
 }
 
 /* ============ CARD & ELEMENT ANIMATIONS ============ */
@@ -219,22 +348,45 @@ a, button, input, select, textarea { transition: all .18s ease-in-out; }
   z-index: 40;
 }
 .mobile-menu.open{
-  max-height: 80vh;
+  max-height: 100vh;
   opacity: 1;
   transform: translateY(0);
+  overflow-y: auto;
 }
 
 .mobile-menu a {
   display: block !important;
-  padding: 12px 0;
+  padding: 14px 12px;
   font-weight: 500;
-  color: #374151;
+  color: #475569;
+  font-size: 0.95rem;
+  border-radius: 0.375rem;
+  margin-bottom: 4px;
+}
+
+.mobile-menu a:hover {
+  background-color: #fef3c7;
+  color: #1e3a8a;
 }
 
 .mobile-menu a[href="index.html"] {
   color: #1e3a8a;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.mobile-menu a[href="apply.html"] {
+  background-color: #ea580c;
+  color: white;
   font-weight: bold;
-  padding-top: 0;
+  padding: 14px 12px;
+  margin-top: 12px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.mobile-menu a[href="apply.html"]:hover {
+  background-color: #c2410c;
 }
 
 /* Floating home button micro-interactions */

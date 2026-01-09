@@ -20,19 +20,23 @@
 
     <div id="navbar-placeholder"></div>
 
-    <header class="bg-blue-900 pt-32 pb-20 text-center text-white relative">
+    <header class="bg-blue-900 py-12 sm:py-16 lg:py-20 text-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-40 z-0">
+            <img src="static/programs/reception.jpeg" class="w-full h-full object-cover grayscale">
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-900/60 to-blue-900"></div>
+        </div>
         <div class="max-w-7xl mx-auto px-4 relative z-10">
-            <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tight">Get In Touch</h1>
-            <p class="text-blue-200 mt-4 max-w-xl mx-auto">Have questions about admissions or our trade programs? Our team is ready to help you start your journey.</p>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight">Get In Touch</h1>
+            <p class="text-blue-200 mt-3 sm:mt-4 max-w-xl mx-auto text-sm sm:text-base">Have questions about admissions or our trade programs? Our team is ready to help you start your journey.</p>
         </div>
     </header>
 
     <main id="main-content" class="max-w-7xl mx-auto px-4 py-16 -mt-12 relative z-20">
-        <div class="grid lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
-            <div class="lg:col-span-1 space-y-6">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="text-xl font-bold text-blue-900 mb-6 border-b pb-4">Contact Info</h3>
+            <div class="md:col-span-2 lg:col-span-1 space-y-6">
+                <div class="glass-card p-8 rounded-3xl">
+                    <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-6 border-b pb-4">Contact Info</h3>
                     <div class="space-y-6">
                         <div class="flex items-start gap-4">
                             <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center shrink-0">
@@ -53,7 +57,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-slate-400 font-bold uppercase">Email Us</p>
-                                <p class="text-slate-700 font-medium">crawhammer.marketing@gmail.com</p>
+                                <p class="text-slate-700 font-medium"><a href="mailto:crawhammer.marketing@gmail.com" class="hover:underline hover:text-orange-600 transition">crawhammer.marketing@gmail.com</a></p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
@@ -71,7 +75,7 @@
                 </div>
 
                 <div class="bg-blue-900 p-8 rounded-3xl text-white shadow-xl">
-                    <h4 class="font-bold mb-4 uppercase text-orange-500 text-sm tracking-widest">Office Hours</h4>
+                    <h4 class="font-bold mb-4 uppercase text-orange-500 text-xs sm:text-sm tracking-widest">Office Hours</h4>
                     <ul class="space-y-3 text-sm">
                         <li class="flex justify-between border-b border-white/10 pb-2"><span>Mon - Fri</span> <span>08:00 - 17:00</span></li>
                         <li class="flex justify-between border-b border-white/10 pb-2"><span>Saturday</span> <span>09:00 - 13:00</span></li>
@@ -80,9 +84,9 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-2">
-                <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 h-full">
-                    <h3 class="text-2xl font-black text-blue-900 mb-2">Send us a Message</h3>
+            <div class="md:col-span-2 lg:col-span-2">
+                <div class="glass-card p-8 sm:p-10 rounded-3xl h-full">
+                    <h3 class="text-2xl sm:text-3xl font-black text-blue-900 mb-2">Send us a Message</h3>
                     <p class="text-slate-500 mb-8">Fill out the form below and an admissions officer will contact you within 24 hours.</p>
                     
                     <form id="contact-form" action="#" class="grid md:grid-cols-2 gap-6">
@@ -120,10 +124,10 @@
 
         </div>
 
-        <section class="mt-16 bg-white p-4 rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-            <div class="w-full h-[450px] rounded-2xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
+        <section class="mt-16 glass p-4 rounded-3xl overflow-hidden">
+            <div class="w-full h-[250px] sm:h-[350px] lg:h-[450px] rounded-2xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3869.60533534567!2d27.8713571!3d-12.5240144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x196b068133b890b1%3A0x1d01dd3480a3240d!2sCraw%20Hummer%20Trades%20School!5e0!3m2!1sen!2szm!4v1700000000000!5m2!1sen!2szm" 
+                    src="https://maps.google.com/maps?q=Craw+Hammer+Trades+School+Chingola&t=&z=13&ie=UTF8&iwloc=&output=embed" 
                     width="100%" 
                     height="100%" 
                     style="border:0;" 
@@ -133,12 +137,6 @@
             </div>
         </section>
     </main>
-
-        <!-- Quick back-to-home floating button -->
-        <a href="index.html" aria-label="Back to home"
-           class="fixed bottom-6 right-6 bg-blue-900 text-white p-3 rounded-full shadow-lg hover:bg-orange-600 transition z-50">
-            <i class="fas fa-home"></i>
-        </a>
 
         <script src="js/main.js"></script>
         <script>
@@ -177,7 +175,7 @@
                     const modal = document.createElement('div');
                     modal.className = 'fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4';
                     modal.innerHTML = `
-                        <div class="max-w-lg w-full bg-white rounded-xl p-6">
+                        <div class="max-w-lg w-full glass-card rounded-2xl p-6">
                             <h3 class="text-lg font-bold mb-3">Send message via</h3>
                             <div class="flex gap-3 mb-4">
                                 <button id="via-ws" class="flex-1 bg-green-600 text-white px-4 py-3 rounded">WhatsApp</button>

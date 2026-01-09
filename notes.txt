@@ -1,3 +1,15 @@
-$ Change font type to opensans or moserat 
-$Change motto font.
+    <a href="https://maps.google.com/?q=Craw+Hammer+Trades+School+Chingola" target="_blank" rel="noopener noreferrer"
+        class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[9999] group flex flex-row-reverse items-center gap-3">
 
+        <div
+            class="w-14 h-14 md:w-16 md:h-16 bg-orange-500 text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.5)] hover:scale-110 hover:bg-orange-600 transition-all duration-300 relative">
+            <span class="absolute inset-0 rounded-full bg-orange-500 animate-ping opacity-20"></span>
+
+            <i class="fas fa-location-dot text-xl md:text-2xl relative z-10"></i>
+        </div>
+
+        <span
+            class="hidden sm:block bg-blue-900 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none uppercase tracking-wider border border-white/20 whitespace-nowrap">
+            Visit Campus
+        </span>
+    </a>

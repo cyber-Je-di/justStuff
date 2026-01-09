@@ -43,21 +43,23 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     if (!fields.nrc) errors.push('nrc');
     if (errors.length) return res.status(400).json({ error: `Missing required fields: ${errors.join(', ')}` });
 
-    // Sanitize and trim fields
+    // Validate NRC BEFORE sanitization (to preserve slashes)
+    const nrcOk = /^\d{6}\/\d{2}\/\d{1}$/.test(fields.nrc) || /^\d{9}$/.test(fields.nrc);
+    if (!nrcOk) return res.status(400).json({ error: 'Invalid NRC format. Expected 123456/78/9 or 123456789' });
+
+    // Sanitize and trim fields (but don't escape slashes in NRC)
+    const nrcValue = fields.nrc;
     Object.keys(fields).forEach(k => {
       if (typeof fields[k] === 'string') {
         fields[k] = validator.escape(validator.trim(fields[k]));
       }
     });
+    fields.nrc = validator.trim(nrcValue); // Keep NRC without escaping
 
     // Email validation (if provided)
     if (fields.email && !validator.isEmail(fields.email)) {
       return res.status(400).json({ error: 'Invalid email address' });
     }
-
-    // NRC simple validation (expects digits and slashes, e.g. 123456/78/9)
-    const nrcOk = /^\d{6}\/\d{2}\/\d{1}$/.test(fields.nrc);
-    if (!nrcOk) return res.status(400).json({ error: 'Invalid NRC format. Expected 123456/78/9' });
 
     // Phone validation (simple): allow digits, spaces, + and -
     if (fields.phone && !/^[0-9+\-\s()]{7,20}$/.test(fields.phone)) {

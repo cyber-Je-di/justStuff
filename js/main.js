@@ -5,20 +5,19 @@
 
 /* Fallback navbar template (used when fetch() fails, e.g., file:// protocol) */
 const navbarTemplate = `
-<nav class="bg-white shadow-md sticky top-0 z-50">
+<nav class="glass sticky top-0 z-50 rounded-b-2xl mx-2 mt-2">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20 items-center">
             <div class="flex items-center">
                 <a href="index.html" class="flex items-center gap-3 group">
                     <div class="relative">
-                        <img src="static/logo.png" alt="Craw Hammer Logo"
+                        <img src="static/logo.png" alt="Craw Hammer Trades Logo"
                             class="h-14 w-14 rounded-full aspect-square object-cover border-2 border-slate-100 shadow-sm group-hover:border-orange-500 transition-colors duration-300">
                     </div>
                     <div class="flex flex-col">
                         <span class="text-xl font-black text-blue-900 leading-none tracking-tighter">CRAW
-                            HAMMER</span>
-                        <span class="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">Trades
-                            School</span>
+                            HAMMER TRADES</span>
+                        <span class="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">School</span>
                     </div>
                 </a>
             </div>
@@ -30,23 +29,29 @@ const navbarTemplate = `
                 <a href="updates.html" class="text-slate-600 font-medium hover:text-orange-500">News &amp; Updates</a>
                 <a href="contact.html" class="text-slate-600 font-medium hover:text-orange-500">Contact</a>
                 <a href="apply.html"
-                    class="ml-4 bg-orange-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-blue-900 transition shadow-lg btn-glow">APPLY
+                    class="ml-4 btn-glow bg-orange-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-blue-900 transition shadow-lg">APPLY
                     NOW</a>
             </div>
 
             <div class="md:hidden">
-                <button id="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" class="text-blue-900 focus:outline-none">
-                    <i class="fas fa-bars text-2xl"></i>
+                <button id="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" class="text-blue-900 focus:outline-none text-2xl">
+                    <i class="fas fa-bars"></i>
                 </button>
             </div>
 
-            <div id="mobile-menu" class="mobile-menu hidden md:hidden bg-white border-t border-slate-100 px-4 py-6 space-y-4 shadow-lg absolute left-0 right-0 mt-20">
-                <a href="index.html" class="block text-blue-900 font-bold">Home</a>
-                <a href="programs.html" class="block text-slate-600 font-medium">Programs</a>
-                <a href="about.html" class="block text-slate-600 font-medium">About Us</a>
-                <a href="updates.html" class="block text-slate-600 font-medium">News &amp; Updates</a>
-                <a href="contact.html" class="block text-slate-600 font-medium">Contact</a>
-                <a href="apply.html" class="block bg-orange-600 text-white px-4 py-2 rounded-lg text-center font-bold btn-glow">APPLY NOW</a>
+            <div id="mobile-menu" class="mobile-menu hidden md:hidden bg-white border-t-2 border-blue-900 px-4 py-5 space-y-0 shadow-lg absolute left-0 right-0 mt-20">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-300">
+                    <span class="text-xs font-bold text-blue-900 uppercase tracking-widest">Navigation</span>
+                    <button id="mobile-menu-close" class="text-blue-900 hover:text-orange-600 text-3xl focus:outline-none w-10 h-10 flex items-center justify-center rounded hover:bg-slate-100 transition" aria-label="Close menu">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <a href="index.html" class="block text-blue-900 font-bold py-4 px-3 bg-blue-50 rounded-lg mb-2 hover:bg-blue-100 transition border-l-4 border-orange-500">Home</a>
+                <a href="programs.html" class="block text-slate-700 font-medium py-3 px-3 hover:bg-orange-50 rounded transition">Programs</a>
+                <a href="about.html" class="block text-slate-700 font-medium py-3 px-3 hover:bg-orange-50 rounded transition">About Us</a>
+                <a href="updates.html" class="block text-slate-700 font-medium py-3 px-3 hover:bg-orange-50 rounded transition">News &amp; Updates</a>
+                <a href="contact.html" class="block text-slate-700 font-medium py-3 px-3 hover:bg-orange-50 rounded transition">Contact</a>
+                <a href="apply.html" class="block bg-orange-600 text-white px-4 py-4 rounded-lg text-center font-bold hover:bg-orange-700 transition mt-6 shadow-md">APPLY NOW</a>
             </div>
         </div>
     </div>
@@ -88,6 +93,22 @@ function initializeMobileMenu() {
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (mobileMenu.classList.contains('open')) closeMenu(); else openMenu();
+        });
+
+        // Handle close button click
+        const closeBtn = mobileMenu.querySelector('#mobile-menu-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeMenu();
+            });
+        }
+
+        // Close menu when clicking on a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeMenu();
+            });
         });
 
         // Close when clicking outside the menu on small screens

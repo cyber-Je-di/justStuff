@@ -22,71 +22,66 @@
             <span>3. Finish</span>
         </div>
 
-        <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+        <div class="bg-white rounded-3xl overflow-hidden shadow-lg">
             <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
                 <h2 class="text-xl font-bold">Review Your Details</h2>
-                <button onclick="window.history.back()" class="text-sm bg-blue-800 px-4 py-2 rounded hover:bg-blue-700">Edit Info</button>
+                <button id="edit-btn" class="text-sm bg-blue-800 px-4 py-2 rounded hover:bg-blue-700 transition">Edit Info</button>
             </div>
 
-            <div class="p-8 grid md:grid-cols-2 gap-8">
-                <div class="space-y-4">
-                    <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest">Personal Info</h3>
-                    <div>
-                        <p class="text-slate-500 text-sm">Full Name</p>
-                        <p class="font-semibold">John Banda</p>
-                    </div>
-                    <div>
-                        <p class="text-slate-500 text-sm">NRC Number</p>
-                        <p class="font-semibold">000000/00/1</p>
-                    </div>
-                    <div>
-                        <p class="text-slate-500 text-sm">Contact</p>
-                        <p class="font-semibold">+260 977 123456</p>
-                    </div>
-                    <div>
-                        <p class="text-slate-500 text-sm">Selected Trade</p>
-                        <span class="inline-block bg-blue-100 text-blue-900 px-3 py-1 rounded-full text-sm font-bold mt-1">Metal Fabrication & Welding</span>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest">Document Preview</h3>
-                    <div class="aspect-[4/3] bg-slate-200 rounded-xl border-2 border-slate-300 flex items-center justify-center relative overflow-hidden group">
-                        <div class="text-center p-6">
-                            <i class="fas fa-file-pdf text-5xl text-red-500 mb-2"></i>
-                            <p class="text-xs font-bold text-slate-600">NRC_AND_RESULTS.pdf</p>
+            <!-- Dynamic content will be loaded here -->
+            <div id="review-content" class="p-8">
+                <div class="flex items-center justify-center py-12">
+                    <div class="text-center">
+                        <div class="animate-spin mb-4">
+                            <i class="fas fa-spinner text-4xl text-blue-900"></i>
                         </div>
-                        <div class="absolute inset-0 bg-blue-900/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
-                            <button class="bg-white text-blue-900 px-4 py-2 rounded font-bold text-sm shadow-lg">
-                                <i class="fas fa-eye mr-2"></i>View Full Document
-                            </button>
-                        </div>
+                        <p class="text-slate-600">Loading your application...</p>
                     </div>
                 </div>
             </div>
 
-            <div class="p-8 bg-slate-50 border-t border-slate-100">
+            <div id="submit-section" class="p-8 bg-slate-50 border-t">
                 <div class="flex items-start mb-6">
-                    <input type="checkbox" id="confirm" class="mt-1 mr-3 w-5 h-5 rounded border-slate-300 text-blue-900">
-                    <label for="confirm" class="text-sm text-slate-600 leading-snug">
+                    <input type="checkbox" id="confirm" class="mt-1 mr-3 w-5 h-5 rounded border-2 border-slate-300 text-blue-900 cursor-pointer">
+                    <label for="confirm" class="text-sm text-slate-700 leading-snug cursor-pointer">
                         I confirm that all information entered is accurate. I understand that providing false documents will lead to automatic disqualification.
                     </label>
                 </div>
                 
-                <button onclick="showSuccess()" class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg">
-                    CONFIRM & SUBMIT
+                <button id="submit-btn" disabled class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-800 transition shadow-lg disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                    <span id="submit-text">CONFIRM & SUBMIT</span>
+                    <i id="submit-icon" class="fas fa-arrow-right hidden"></i>
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Loading Modal during submission -->
+    <div id="submitting-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-10 max-w-sm w-full text-center">
+            <div class="mb-6">
+                <div class="inline-block">
+                    <div class="animate-spin">
+                        <i class="fas fa-circle-notch text-5xl text-blue-900"></i>
+                    </div>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold text-blue-900 mb-2">Submitting Application</h2>
+            <p class="text-slate-600 mb-6">Please wait while we process your application...</p>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+                <div id="progress-bar" class="bg-blue-900 h-2 rounded-full transition-all duration-500 w-1/3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
     <div id="successModal" class="hidden fixed inset-0 bg-blue-900/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl">
+        <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center">
             <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-check text-4xl"></i>
             </div>
             <h2 class="text-2xl font-extrabold text-blue-900">Application Received!</h2>
-            <p class="text-slate-600 mt-4">Thank you, <span class="font-bold text-blue-900">John</span>. Your application for <span class="font-bold text-blue-900">Metal Fabrication</span> has been submitted successfully.</p>
+            <p id="success-message" class="text-slate-600 mt-4">Thank you! Your application has been submitted successfully.</p>
             
             <div class="mt-8 p-4 bg-orange-50 border border-orange-100 rounded-xl text-left">
                 <p class="text-xs font-bold text-orange-800 uppercase mb-2">Next Steps:</p>
@@ -102,15 +97,294 @@
         </div>
     </div>
 
+    <!-- Error Modal -->
+    <div id="errorModal" class="hidden fixed inset-0 bg-red-900/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center">
+            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-exclamation text-4xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-red-900">Submission Failed</h2>
+            <p id="error-message" class="text-slate-600 mt-4">An error occurred while submitting your application. Please try again.</p>
+            
+            <button onclick="closeErrorModal()" class="block mt-8 w-full bg-red-900 text-white py-3 rounded-xl font-bold hover:bg-red-800 transition">
+                Try Again
+            </button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
     <script>
-        function showSuccess() {
-            if(document.getElementById('confirm').checked) {
-                document.getElementById('successModal').classList.remove('hidden');
-            } else {
-                alert("Please check the confirmation box to proceed.");
+        let applicationData = {};
+        let applicationFiles = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadApplicationData();
+            setupEventListeners();
+        });
+
+        function loadApplicationData() {
+            try {
+                const data = sessionStorage.getItem('applicationData');
+                const files = sessionStorage.getItem('applicationFiles');
+                
+                if (!data) {
+                    window.location.href = 'apply.html';
+                    return;
+                }
+                
+                applicationData = JSON.parse(data);
+                applicationFiles = files ? JSON.parse(files) : [];
+                
+                renderReviewContent();
+            } catch (err) {
+                console.error('Error loading application data:', err);
+                window.location.href = 'apply.html';
             }
         }
+
+        function renderReviewContent() {
+            const d = applicationData;
+            const fileCount = applicationFiles.length;
+            
+            const contentHtml = `
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Personal Information</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Full Name</p>
+                                    <p class="font-semibold text-lg">${escapeHtml(d.surname || '')} ${escapeHtml(d.firstname || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">NRC Number</p>
+                                    <p class="font-semibold">${escapeHtml(d.nrc || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Nationality</p>
+                                    <p class="font-semibold">${escapeHtml(d.nationality || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Date of Birth</p>
+                                    <p class="font-semibold">${escapeHtml(d.dob || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Gender</p>
+                                    <p class="font-semibold">${escapeHtml(d.gender || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Contact Number</p>
+                                    <p class="font-semibold">${escapeHtml(d.cell || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Email</p>
+                                    <p class="font-semibold text-sm break-all">${escapeHtml(d.email || '')}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Address</h3>
+                            <p class="text-slate-700">${escapeHtml(d.address || '')}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Education & Program</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Last School</p>
+                                    <p class="font-semibold">${escapeHtml(d.lastSchool || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Education Attained</p>
+                                    <p class="font-semibold">${escapeHtml(d.educationAttained || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Year Completed</p>
+                                    <p class="font-semibold">${escapeHtml(d.yearCompleted || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Previous Qualifications</p>
+                                    <p class="font-semibold">${escapeHtml(d.prevQualifications || 'None')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Primary Choice</p>
+                                    <span class="inline-block bg-blue-100 text-blue-900 px-3 py-1 rounded-full text-sm font-bold mt-1">${escapeHtml(d.choice1 || '')}</span>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Second Choice</p>
+                                    <p class="font-semibold text-sm">${escapeHtml(d.choice2 || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Training Mode</p>
+                                    <p class="font-semibold">${escapeHtml(d.mode || '')}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Sponsor Information</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Sponsor Name</p>
+                                    <p class="font-semibold">${escapeHtml(d.sponsorName || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Relationship</p>
+                                    <p class="font-semibold">${escapeHtml(d.sponsorRelation || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Contact</p>
+                                    <p class="font-semibold">${escapeHtml(d.sponsorCell || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Occupation</p>
+                                    <p class="font-semibold">${escapeHtml(d.sponsorOccupation || 'Not specified')}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${fileCount > 0 ? `
+                        <div>
+                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Attachments</h3>
+                            <div class="space-y-2">
+                                ${applicationFiles.map((f, i) => `
+                                    <div class="flex items-center gap-2 p-3 bg-slate-100 rounded-lg">
+                                        <i class="fas fa-file text-blue-900"></i>
+                                        <span class="text-sm font-semibold text-slate-700 truncate">${escapeHtml(f.name)}</span>
+                                        <span class="text-xs text-slate-500 ml-auto whitespace-nowrap">${formatFileSize(f.size)}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('review-content').innerHTML = contentHtml;
+        }
+
+        function setupEventListeners() {
+            document.getElementById('confirm').addEventListener('change', (e) => {
+                document.getElementById('submit-btn').disabled = !e.target.checked;
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', submitApplication);
+            
+            document.getElementById('edit-btn').addEventListener('click', () => {
+                // Preserve data and go back to apply form
+                window.history.back();
+            });
+        }
+
+        async function submitApplication() {
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            
+            // Show submitting modal
+            document.getElementById('submitting-modal').classList.remove('hidden');
+            updateProgressBar();
+            
+            try {
+                const formData = new FormData();
+                
+                // Add all text fields
+                Object.keys(applicationData).forEach(key => {
+                    formData.append(key, applicationData[key] || '');
+                });
+                
+                // Add files - properly convert ArrayBuffer to Blob
+                for (const file of applicationFiles) {
+                    // If data is an ArrayBuffer, convert to Blob; if it's already a string (base64), handle accordingly
+                    let blob;
+                    if (file.data instanceof ArrayBuffer) {
+                        blob = new Blob([file.data], { type: file.type });
+                    } else if (typeof file.data === 'string') {
+                        // If it's a string, assume it's already in a usable format
+                        blob = new Blob([file.data], { type: file.type });
+                    } else {
+                        // Fallback
+                        blob = new Blob([file.data], { type: file.type || 'application/octet-stream' });
+                    }
+                    formData.append('attachments', blob, file.name);
+                }
+                
+                // Simulate progress
+                progressInterval = setInterval(() => {
+                    const current = parseInt(document.getElementById('progress-bar').style.width) || 33;
+                    if (current < 90) {
+                        document.getElementById('progress-bar').style.width = (current + Math.random() * 20) + '%';
+                    }
+                }, 300);
+                
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                clearInterval(progressInterval);
+                document.getElementById('progress-bar').style.width = '100%';
+                
+                if (response.ok) {
+                    // Delay showing success to make progress bar completion visible
+                    await new Promise(r => setTimeout(r, 500));
+                    
+                    document.getElementById('submitting-modal').classList.add('hidden');
+                    
+                    // Update success message with applicant name
+                    const name = applicationData.firstname || 'Applicant';
+                    const program = applicationData.choice1 || 'your selected program';
+                    document.getElementById('success-message').innerHTML = 
+                        `Thank you, <strong>${escapeHtml(name)}</strong>. Your application for <strong>${escapeHtml(program)}</strong> has been submitted successfully.`;
+                    
+                    document.getElementById('successModal').classList.remove('hidden');
+                    
+                    // Clear session data
+                    sessionStorage.removeItem('applicationData');
+                    sessionStorage.removeItem('applicationFiles');
+                } else {
+                    const error = await response.json().catch(() => ({}));
+                    throw new Error(error.error || 'Submission failed');
+                }
+            } catch (err) {
+                clearInterval(progressInterval);
+                document.getElementById('submitting-modal').classList.add('hidden');
+                document.getElementById('error-message').textContent = err.message || 'An error occurred. Please try again.';
+                document.getElementById('errorModal').classList.remove('hidden');
+                btn.disabled = false;
+            }
+        }
+
+        let progressInterval;
+        function updateProgressBar() {
+            document.getElementById('progress-bar').style.width = '33%';
+        }
+
+        function closeErrorModal() {
+            document.getElementById('errorModal').classList.add('hidden');
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
     </script>
-    <script src="js/main.js"></script>
 </body>
 </html>

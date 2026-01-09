@@ -17,9 +17,9 @@
     <style>
         .program-card { transition: all 0.3s ease; }
         .program-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 40; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
         .modal-overlay.open { display: flex; align-items: center; justify-content: center; }
-        .modal-content { max-height: 85vh; overflow-y: auto; }
+        .modal-content { max-height: 85vh; overflow-y: auto; position: relative; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .modal-overlay.open .modal-content { animation: fadeIn 0.3s ease-out; }
     </style>
@@ -28,11 +28,18 @@
 
     <div id="navbar-placeholder"></div>
 
-    <header class="bg-blue-900 py-16 text-center text-white">
-        <div class="max-w-4xl mx-auto px-4">
-            <span class="bg-orange-500 text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">TEVETA Accredited</span>
-            <h1 class="text-4xl md:text-5xl font-black mt-6 mb-4">ACADEMIC PROGRAMMES</h1>
-            <p class="text-blue-200">Enrolling now for June 2025 and January 2026 Intakes. Full-Time, Part-Time, and Distance options available.</p>
+    <header class="bg-blue-900 py-12 sm:py-16 lg:py-20 text-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-40 z-0">
+            <img src="static/programs/metalFab.jpeg" class="w-full h-full object-cover grayscale">
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-900/60 to-blue-900"></div>
+        </div>
+        <div class="max-w-4xl mx-auto px-4 relative z-10">
+            <div class="inline-flex items-center gap-2 bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-full font-bold tracking-widest text-xs uppercase mb-4 sm:mb-6 shadow-lg mx-auto block">
+                <i class="fas fa-certificate"></i>
+                <span>TEVETA Accredited</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 sm:mt-6 mb-3 sm:mb-4 uppercase">ACADEMIC PROGRAMMES</h1>
+            <p class="text-blue-200 text-sm sm:text-base">Enrolling now for June 2025 and January 2026 Intakes. Full-Time, Part-Time, and Distance options available.</p>
         </div>
     </header>
 
@@ -40,70 +47,70 @@
         <!-- Program Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             <!-- Metal Fabrication Card -->
-            <div onclick="openModal('metal')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
-                <div class="bg-orange-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-faucet-drip"></i></div>
-                <h3 class="text-xl font-bold text-blue-900 mb-3">Metal Fabrication & Welding</h3>
-                <p class="text-slate-600 text-sm mb-4">Master specialized joining, structural fabrication, and industry-standard safety protocols for Zambia's industrial sector.</p>
+            <div onclick="openModal('metal')" class="card-hover program-card cursor-pointer glass-card rounded-3xl p-6">
+                <div class="bg-orange-500 text-white w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-hammer"></i></div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-3">Metal Fabrication & Welding</h3>
+                <p class="text-slate-600 text-xs sm:text-sm mb-4">Master specialized joining, structural fabrication, and industry-standard safety protocols for Zambia's industrial sector.</p>
                 <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
                     Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </div>
 
             <!-- Electrical Card -->
-            <div onclick="openModal('electrical')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
-                <div class="bg-blue-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-bolt"></i></div>
-                <h3 class="text-xl font-bold text-blue-900 mb-3">Electrical Technology</h3>
-                <p class="text-slate-600 text-sm mb-4">Electrical systems, wiring, and industrial power maintenance for residential and commercial electrical works.</p>
+            <div onclick="openModal('electrical')" class="card-hover program-card cursor-pointer glass-card rounded-3xl p-6">
+                <div class="bg-blue-600 text-white w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-bolt"></i></div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-3">Electrical Technology</h3>
+                <p class="text-slate-600 text-xs sm:text-sm mb-4">Electrical systems, wiring, and industrial power maintenance for residential and commercial electrical works.</p>
                 <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
                     Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </div>
 
             <!-- Automotive Card -->
-            <div onclick="openModal('auto')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
-                <div class="bg-slate-700 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-car"></i></div>
-                <h3 class="text-xl font-bold text-blue-900 mb-3">Automotive Engineering</h3>
-                <p class="text-slate-600 text-sm mb-4">Vehicle diagnostics, engine repair, and auto-mechanics tailored for the modern transport sector.</p>
+            <div onclick="openModal('auto')" class="card-hover program-card cursor-pointer glass-card rounded-3xl p-6">
+                <div class="bg-slate-700 text-white w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-car"></i></div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-3">Automotive Engineering</h3>
+                <p class="text-slate-600 text-xs sm:text-sm mb-4">Vehicle diagnostics, engine repair, and auto-mechanics tailored for the modern transport sector.</p>
                 <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
                     Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </div>
 
             <!-- ICT Card -->
-            <div onclick="openModal('ict')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
-                <div class="bg-blue-400 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-laptop-code"></i></div>
-                <h3 class="text-xl font-bold text-blue-900 mb-3">Computer Studies</h3>
-                <p class="text-slate-600 text-sm mb-4">Digital tools, hardware repair, and networking fundamentals for the modern workplace.</p>
+            <div onclick="openModal('ict')" class="card-hover program-card cursor-pointer glass-card rounded-3xl p-6">
+                <div class="bg-blue-400 text-white w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-laptop-code"></i></div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-3">Computer Studies</h3>
+                <p class="text-slate-600 text-xs sm:text-sm mb-4">Digital tools, hardware repair, and networking fundamentals for the modern workplace.</p>
                 <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
                     Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </div>
 
             <!-- Food Production Card -->
-            <div onclick="openModal('food')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
-                <div class="bg-green-600 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-utensils"></i></div>
-                <h3 class="text-xl font-bold text-blue-900 mb-3">Food Production</h3>
-                <p class="text-slate-600 text-sm mb-4">Culinary arts, kitchen management, and food safety training for chefs and hospitality professionals.</p>
+            <div onclick="openModal('food')" class="card-hover program-card cursor-pointer glass-card rounded-3xl p-6">
+                <div class="bg-green-600 text-white w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-utensils"></i></div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-3">Food Production</h3>
+                <p class="text-slate-600 text-xs sm:text-sm mb-4">Culinary arts, kitchen management, and food safety training for chefs and hospitality professionals.</p>
                 <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
                     Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </div>
 
             <!-- Carpentry Card -->
-            <div onclick="openModal('carpentry')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
-                <div class="bg-yellow-700 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-hammer"></i></div>
-                <h3 class="text-xl font-bold text-blue-900 mb-3">Carpentry & Joinery</h3>
-                <p class="text-slate-600 text-sm mb-4">Woodcraft, furniture design, and roofing structures for construction and timber industry.</p>
+            <div onclick="openModal('carpentry')" class="card-hover program-card cursor-pointer glass-card rounded-3xl p-6">
+                <div class="bg-yellow-700 text-white w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-hammer"></i></div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-3">Carpentry & Joinery</h3>
+                <p class="text-slate-600 text-xs sm:text-sm mb-4">Woodcraft, furniture design, and roofing structures for construction and timber industry.</p>
                 <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
                     Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </div>
 
             <!-- Tailoring Card -->
-            <div onclick="openModal('tailoring')" class="card-hover program-card cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-orange-500">
-                <div class="bg-pink-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-scissors"></i></div>
-                <h3 class="text-xl font-bold text-blue-900 mb-3">Designing & Tailoring</h3>
-                <p class="text-slate-600 text-sm mb-4">Pattern drafting, garment construction, and fashion design for industrial or entrepreneurial success.</p>
+            <div onclick="openModal('tailoring')" class="card-hover program-card cursor-pointer glass-card rounded-3xl p-6">
+                <div class="bg-pink-500 text-white w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-lg mb-4 icon-bounce"><i class="fas fa-scissors"></i></div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900 mb-3">Designing & Tailoring</h3>
+                <p class="text-slate-600 text-xs sm:text-sm mb-4">Pattern drafting, garment construction, and fashion design for industrial or entrepreneurial success.</p>
                 <div class="flex items-center text-orange-600 font-semibold text-sm hover:text-orange-700 transition group">
                     Learn More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </div>
@@ -113,14 +120,14 @@
         <!-- Modal for Program Details -->
         <div id="programModal" class="modal-overlay" onclick="closeModal(event)">
             <div class="modal-content bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 p-8" onclick="event.stopPropagation()">
-                <button onclick="closeModal()" class="float-right text-slate-400 hover:text-slate-600 text-2xl mb-4">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-3xl w-10 h-10 flex items-center justify-center" aria-label="Close modal">
                     <i class="fas fa-times"></i>
                 </button>
                 
                 <!-- Metal Fabrication -->
                 <div id="metal-detail" class="course-detail hidden">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-orange-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-faucet-drip"></i></div>
+                        <div class="bg-orange-500 text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-hammer"></i></div>
                         <h2 class="text-2xl font-black text-blue-900 uppercase">Metal Fabrication & Welding</h2>
                     </div>
                     <p class="text-slate-600 mb-6 leading-relaxed">Essential training for Zambia's industrial sector. Our students master specialized joining techniques, structural fabrication, and industry-standard safety protocols.</p>
