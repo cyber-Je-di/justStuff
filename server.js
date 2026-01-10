@@ -293,12 +293,6 @@ Bank Account: 0596204400114
 === ATTACHED FILES ===
 ${attachments.map(f => `${f.originalname} (${Math.round(f.size / 1024)} KB)`).join('\n')}
     `;
-    lines.push(`Zanaco Account: 0596204400114`);
-    lines.push('');
-    lines.push('=== ATTACHED FILES ===');
-    attachments.forEach(f => {
-      lines.push(`${f.originalname} (${Math.round(f.size / 1024)} KB)`);
-    });
 
     // Check SMTP configuration exists
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
@@ -347,54 +341,51 @@ ${attachments.map(f => `${f.originalname} (${Math.round(f.size / 1024)} KB)`).jo
       attachments: emailAttachments
     };
 
-    // ===== EMAIL SENDING (Non-blocking - Fire and Forget) =====
-    // Send email in background without blocking the response
-    // This allows the user to get immediate feedback while email sends asynchronously
-    (async () => {
-      try {
-        const dns = require('dns').promises;
-        try {
-          const info = await transporter.sendMail(mailOptions);
-          if (NODE_ENV === 'development') {
-            console.log('Email sent:', info.messageId);
-          }
-        } catch (sendErr) {
-          console.error('Email send error:', sendErr.code || sendErr.message);
-          
-          // If IPv6 network error, retry with IPv4 address resolution
-          if (sendErr && sendErr.code === 'ENETUNREACH') {
-            try {
-              const lookup = await dns.lookup(process.env.SMTP_HOST, { family: 4 });
-              if (lookup && lookup.address) {
-                if (NODE_ENV === 'development') {
-                  console.log('Retrying SMTP send using IPv4 address');
-                }
-                const ipv4Transporter = createTransport(lookup.address);
-                ipv4Transporter.options.tls = ipv4Transporter.options.tls || {};
-                ipv4Transporter.options.tls.servername = process.env.SMTP_HOST;
-                const info2 = await ipv4Transporter.sendMail(mailOptions);
-                if (NODE_ENV === 'development') {
-                  console.log('Email sent on IPv4 retry:', info2.messageId);
-                }
-              } else {
-                throw sendErr;
-              }
-            } catch (retryErr) {
-              console.error('Email retry failed:', retryErr.message);
-            }
-          } else {
-            // Log but don't crash - application is already submitted
-            console.error('Failed to send confirmation email, but application was received');
-          }
-        }
-      } catch (err) {
-        // Silently log - user has already received success response
-        console.error('Background email task error:', err.message);
-      }
-    })();
+    // ===== EMAIL SENDING (Blocking - Wait for completion) =====
+    // Send email and wait for result before responding
+    let emailSent = false;
+    let emailError = null;
 
-    // Immediate response to user - don't wait for email to complete
-    res.json({ ok: true });
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      emailSent = true;
+      if (NODE_ENV === 'development') {
+        console.log('Email sent successfully:', info.messageId);
+      }
+    } catch (sendErr) {
+      emailError = sendErr.code || sendErr.message;
+      console.error('Email send error:', emailError);
+      console.error('Full error:', sendErr);
+      
+      // Retry with different approach if DNS error
+      if (sendErr && (sendErr.code === 'EDNS' || sendErr.code === 'ENOTFOUND')) {
+        try {
+          console.log('Retrying email send after DNS error...');
+          // Wait a moment and retry
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          const retryInfo = await transporter.sendMail(mailOptions);
+          emailSent = true;
+          emailError = null;
+          console.log('Email sent on retry:', retryInfo.messageId);
+        } catch (retryErr) {
+          console.error('Email retry also failed:', retryErr.message);
+          emailError = retryErr.message;
+        }
+      }
+    }
+
+    // Response with email status
+    if (emailSent) {
+      res.json({ ok: true, emailSent: true });
+    } else {
+      // Application was received but email failed
+      res.json({ 
+        ok: true, 
+        emailSent: false, 
+        message: 'Application received. Email confirmation could not be sent. Your application has been submitted to our admissions team.',
+        technicalError: emailError
+      });
+    }
   } catch (err) {
     console.error('Submit error:', err.message);
     // Return generic error in production (security), detailed in development (debugging)

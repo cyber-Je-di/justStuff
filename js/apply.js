@@ -1,7 +1,11 @@
-// Enhanced Application Form Handler
+// Enhanced Application Form Handler with Comprehensive Validation
 (function () {
     const form = document.querySelector('#application-form form') || document.querySelector('#main-form');
     if (!form) return;
+
+    // Store form state for edit functionality
+    window.formSubmitted = false;
+    window.currentFormData = null;
 
     // ===== DYNAMIC SUBJECT PICKER (MOBILE) =====
     (function mobileSubjectPicker() {
@@ -538,8 +542,8 @@
             return;
         }
 
-        // Gather and submit
-        gatherAndSubmit();
+        // Save to session and redirect to review page
+        saveAndReview();
     });
 
     // Extract subjects and grades from both desktop table and mobile picker
@@ -594,7 +598,10 @@
         return subjects;
     }
 
-    function gatherAndSubmit() {
+    // Global storage for files that survives page navigation
+    window.persistedApplicationFiles = null;
+
+    async function saveAndReview() {
         // Extract subjects from table and populate hidden field
         const subjects = extractSubjectsFromTable();
         document.getElementById('subjectsGrades').value = JSON.stringify(subjects);
@@ -646,80 +653,143 @@
             zanacoBankAccount: '0596204400114'
         };
 
+        // Store data in session storage
         sessionStorage.setItem('applicationData', JSON.stringify(data));
-
-        // Collect files - use FormData directly to send files without ArrayBuffer conversion
-        const formData = new FormData();
         
-        // Add all form fields
-        Object.keys(data).forEach(key => {
-            formData.append(key, data[key]);
-        });
+        // Get File objects from input elements
+        const proofOfPaymentFile = document.getElementById('proofOfPayment').files[0] || null;
+        const resultsCertFile = document.getElementById('resultsCert').files[0] || null;
+        const attachmentsFiles = Array.from(document.getElementById('attachments').files || []);
         
-        // Add files directly as Blobs (faster than ArrayBuffer)
-        const proofEl = document.getElementById('proofOfPayment');
-        const resultsCertEl = document.getElementById('resultsCert');
-        const attachmentsEl = document.getElementById('attachments');
-
-        if (proofEl && proofEl.files.length) formData.append('attachments', proofEl.files[0]);
-        if (resultsCertEl && resultsCertEl.files.length) formData.append('attachments', resultsCertEl.files[0]);
-        if (attachmentsEl && attachmentsEl.files.length) {
-            for (let i = 0; i < attachmentsEl.files.length; i++) {
-                formData.append('attachments', attachmentsEl.files[i]);
+        // Store metadata for display on review page
+        const fileInfo = {
+            proofOfPayment: proofOfPaymentFile ? {
+                name: proofOfPaymentFile.name,
+                size: proofOfPaymentFile.size,
+                type: proofOfPaymentFile.type
+            } : null,
+            resultsCert: resultsCertFile ? {
+                name: resultsCertFile.name,
+                size: resultsCertFile.size,
+                type: resultsCertFile.type
+            } : null,
+            attachments: attachmentsFiles.map(f => ({
+                name: f.name,
+                size: f.size,
+                type: f.type
+            }))
+        };
+        
+        sessionStorage.setItem('applicationFiles', JSON.stringify(fileInfo));
+        
+        // Convert files to Blobs and store in IndexedDB for persistence across page navigation
+        try {
+            const db = await openIndexedDB();
+            const tx = db.transaction('applicationFiles', 'readwrite');
+            const store = tx.objectStore('applicationFiles');
+            
+            // Clear previous files
+            await store.clear();
+            
+            // Store proof of payment
+            if (proofOfPaymentFile) {
+                await store.add({
+                    type: 'proofOfPayment',
+                    file: proofOfPaymentFile,
+                    name: proofOfPaymentFile.name,
+                    mimeType: proofOfPaymentFile.type
+                });
             }
+            
+            // Store results certificate
+            if (resultsCertFile) {
+                await store.add({
+                    type: 'resultsCert',
+                    file: resultsCertFile,
+                    name: resultsCertFile.name,
+                    mimeType: resultsCertFile.type
+                });
+            }
+            
+            // Store additional attachments
+            for (let i = 0; i < attachmentsFiles.length; i++) {
+                const file = attachmentsFiles[i];
+                await store.add({
+                    type: 'attachment',
+                    index: i,
+                    file: file,
+                    name: file.name,
+                    mimeType: file.type
+                });
+            }
+            
+            await tx.done;
+        } catch (err) {
+            console.warn('IndexedDB storage failed, trying alternative storage:', err);
+            // Fallback: Store in window.persistedApplicationFiles (less reliable but works within session)
+            window.persistedApplicationFiles = {
+                proofOfPayment: proofOfPaymentFile,
+                resultsCert: resultsCertFile,
+                attachments: attachmentsFiles
+            };
         }
+        
+        window.formSubmitted = true;
+        window.currentFormData = data;
+        
+        // Redirect to review page
+        window.location.href = 'review.html';
+    }
 
-        // Show submitting modal
-        const submittingModal = document.getElementById('submitting-modal');
-        if (submittingModal) {
-            submittingModal.classList.remove('hidden');
-            const progressBar = document.getElementById('progress-bar');
-            if (progressBar) progressBar.style.width = '30%';
-        }
-
-        // Send to server immediately without reading files
-        fetch('/submit', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                // Success - update progress and redirect
-                if (submittingModal) {
-                    const progressBar = document.getElementById('progress-bar');
-                    if (progressBar) progressBar.style.width = '100%';
-                    
-                    // Show success after short delay
-                    setTimeout(() => {
-                        submittingModal.classList.add('hidden');
-                        const name = data.firstname || 'Applicant';
-                        const program = data.choice1 || 'your selected program';
-                        const successMessage = document.getElementById('success-message');
-                        if (successMessage) {
-                            successMessage.innerHTML = 
-                                `Thank you, <strong>${escapeHtml(name)}</strong>. Your application for <strong>${escapeHtml(program)}</strong> has been submitted successfully.`;
-                        }
-                        const successModal = document.getElementById('successModal');
-                        if (successModal) successModal.classList.remove('hidden');
-                        
-                        // Clear session data
-                        sessionStorage.removeItem('applicationData');
-                        sessionStorage.removeItem('applicationFiles');
-                    }, 300);
-                } else {
-                    // No modal - just redirect
-                    sessionStorage.removeItem('applicationData');
-                    sessionStorage.removeItem('applicationFiles');
-                    window.location.href = 'review.html';
+    // IndexedDB helper functions
+    function openIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('ApplicationDatabase', 1);
+            
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve(request.result);
+            
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('applicationFiles')) {
+                    db.createObjectStore('applicationFiles', { keyPath: 'id', autoIncrement: true });
                 }
-            } else {
-                return response.json().then(err => { throw err; });
+            };
+        });
+    }
+
+    function getFilesFromIndexedDB() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const db = await openIndexedDB();
+                const tx = db.transaction('applicationFiles', 'readonly');
+                const store = tx.objectStore('applicationFiles');
+                const request = store.getAll();
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    const records = request.result;
+                    const files = {
+                        proofOfPayment: null,
+                        resultsCert: null,
+                        attachments: []
+                    };
+                    
+                    records.forEach(record => {
+                        if (record.type === 'proofOfPayment') {
+                            files.proofOfPayment = record.file;
+                        } else if (record.type === 'resultsCert') {
+                            files.resultsCert = record.file;
+                        } else if (record.type === 'attachment') {
+                            files.attachments.push(record.file);
+                        }
+                    });
+                    
+                    resolve(files);
+                };
+            } catch (err) {
+                reject(err);
             }
-        })
-        .catch(err => {
-            console.error('Submit error:', err);
-            if (submittingModal) submittingModal.classList.add('hidden');
-            showErrorBanner('Submission failed: ' + (err.error || err.message || 'Unknown error'));
         });
     }
 

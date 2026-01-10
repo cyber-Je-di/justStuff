@@ -7,134 +7,256 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="css/site.css" rel="stylesheet">
+    <style>
+        @media (max-width: 640px) {
+            .review-section {
+                border-radius: 0.75rem;
+            }
+            .review-header {
+                padding: 1rem;
+            }
+        }
+        
+        .info-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #ea580c;
+        }
+        
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1e293b;
+            word-break: break-word;
+        }
+        
+        @media (max-width: 640px) {
+            .info-value {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-900">
-    <div id="navbar-placeholder"></div>
+<body class="bg-gradient-to-b from-slate-50 to-slate-100 font-sans text-slate-900">
+    <!-- Navigation -->
+    <nav id="navbar-placeholder" class="glass sticky top-0 z-40 rounded-b-2xl mx-2 mt-2"></nav>
+    
+    <!-- Skip Link -->
     <a href="#main-content" class="skip-link">Skip to content</a>
 
-    
-
-    <div id="main-content" class="max-w-4xl mx-auto px-4 py-12">
-        <div class="mb-8 flex justify-between items-center max-w-xs mx-auto text-sm font-bold text-slate-400">
+    <!-- Main Content -->
+    <main id="main-content" class="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
+        
+        <!-- Progress Bar -->
+        <div class="mb-8 flex justify-between items-center text-xs sm:text-sm font-bold text-slate-400 max-w-2xl mx-auto">
             <span class="text-blue-900">1. Fill</span>
-            <div class="h-1 flex-1 mx-4 bg-blue-900 rounded"></div>
+            <div class="h-1 flex-1 mx-2 sm:mx-4 bg-blue-900 rounded"></div>
             <span class="text-blue-900">2. Review</span>
-            <div class="h-1 flex-1 mx-4 bg-slate-300 rounded"></div>
-            <span>3. Finish</span>
+            <div class="h-1 flex-1 mx-2 sm:mx-4 bg-blue-900 rounded"></div>
+            <span class="text-orange-600">3. Submit</span>
         </div>
 
-        <div class="bg-white rounded-3xl overflow-hidden shadow-lg">
-            <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
-                <h2 class="text-xl font-bold">Review Your Details</h2>
-                <button id="edit-btn" class="text-sm bg-blue-800 px-4 py-2 rounded hover:bg-blue-700 transition">Edit Info</button>
-            </div>
-
-            <!-- Dynamic content will be loaded here -->
-            <div id="review-content" class="p-8">
-                <div class="flex items-center justify-center py-12">
-                    <div class="text-center">
-                        <div class="animate-spin mb-4">
-                            <i class="fas fa-spinner text-4xl text-blue-900"></i>
-                        </div>
-                        <p class="text-slate-600">Loading your application...</p>
-                    </div>
+        <!-- Review Card Container -->
+        <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg">
+            
+            <!-- Header -->
+            <div class="review-header bg-gradient-to-r from-blue-900 to-blue-800 p-4 sm:p-8 text-white flex justify-between items-start sm:items-center flex-col sm:flex-row gap-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-black uppercase mb-1">Review Your Application</h1>
+                    <p class="text-xs sm:text-sm text-blue-100">Please verify all information is correct before submitting</p>
                 </div>
-            </div>
-
-            <div id="submit-section" class="p-8 bg-slate-50 border-t">
-                <div class="flex items-start mb-6">
-                    <input type="checkbox" id="confirm" class="mt-1 mr-3 w-5 h-5 rounded border-2 border-slate-300 text-blue-900 cursor-pointer">
-                    <label for="confirm" class="text-sm text-slate-700 leading-snug cursor-pointer">
-                        I confirm that all information entered is accurate. I understand that providing false documents will lead to automatic disqualification.
-                    </label>
-                </div>
-                
-                <button id="submit-btn" disabled class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-800 transition shadow-lg disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                    <span id="submit-text">CONFIRM & SUBMIT</span>
-                    <i id="submit-icon" class="fas fa-arrow-right hidden"></i>
+                <button id="edit-btn" class="w-full sm:w-auto text-sm bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-bold transition flex items-center justify-center gap-2">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit Info</span>
                 </button>
             </div>
-        </div>
-    </div>
 
-    <!-- Loading Modal during submission -->
-    <div id="submitting-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-10 max-w-sm w-full text-center">
-            <div class="mb-6">
-                <div class="inline-block">
-                    <div class="animate-spin">
-                        <i class="fas fa-circle-notch text-5xl text-blue-900"></i>
+            <!-- Content Area -->
+            <div id="review-content" class="p-4 sm:p-8 space-y-6 sm:space-y-8">
+                <!-- Loading State -->
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <div class="animate-spin mb-4">
+                        <i class="fas fa-spinner text-4xl text-blue-900"></i>
                     </div>
+                    <p class="text-slate-600 text-sm sm:text-base">Loading your application...</p>
                 </div>
             </div>
-            <h2 class="text-2xl font-bold text-blue-900 mb-2">Submitting Application</h2>
-            <p class="text-slate-600 mb-6">Please wait while we process your application...</p>
-            <div class="w-full bg-slate-200 rounded-full h-2">
-                <div id="progress-bar" class="bg-blue-900 h-2 rounded-full transition-all duration-500 w-1/3"></div>
+
+            <!-- Submit Section -->
+            <div id="submit-section" class="p-4 sm:p-8 bg-slate-50 border-t-2 border-slate-200 space-y-6">
+                
+                <!-- Confirmation Checkbox -->
+                <div class="flex items-start gap-3 p-4 border-2 border-slate-300 rounded-lg hover:border-orange-400 hover:bg-orange-50 transition">
+                    <input type="checkbox" id="confirm" class="mt-1 w-5 h-5 rounded border-2 border-slate-300 text-orange-600 cursor-pointer accent-orange-600 flex-shrink-0">
+                    <label for="confirm" class="text-sm text-slate-700 leading-snug cursor-pointer flex-1">
+                        <span class="font-semibold">I confirm that all information is accurate and complete.</span> I understand that providing false information or documents will lead to automatic disqualification and may have legal consequences.
+                    </label>
+                </div>
+
+                <!-- File Validation Notice -->
+                <div id="files-notice" class="flex gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <i class="fas fa-info-circle text-blue-600 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                        <p class="text-sm font-semibold text-blue-900 mb-1">Important: Files Required</p>
+                        <p class="text-xs text-blue-800">Your application requires the following files to be submitted:</p>
+                        <ul class="text-xs text-blue-800 mt-2 ml-4 space-y-1">
+                            <li><i class="fas fa-check text-green-600"></i> Payment receipt (Zanaco Bill Muster)</li>
+                            <li><i class="fas fa-check text-green-600"></i> School results or certificates</li>
+                            <li><i class="fas fa-file text-slate-600"></i> Additional supporting documents (optional)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="submit-btn" disabled class="w-full bg-gradient-to-r from-orange-600 to-orange-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-orange-700 hover:to-orange-800 transition shadow-lg shadow-orange-300 disabled:from-slate-400 disabled:to-slate-400 disabled:cursor-not-allowed disabled:shadow-none uppercase flex items-center justify-center gap-2">
+                    <i class="fas fa-paper-plane"></i>
+                    <span id="submit-text">Confirm & Submit Application</span>
+                </button>
+
+                <p class="text-center text-slate-600 text-xs sm:text-sm">
+                    <i class="fas fa-lock text-green-600 mr-1"></i>
+                    Your information is secure and encrypted. Data used only for admission purposes.
+                </p>
             </div>
+        </div>
+
+        <!-- Message After Load -->
+        <p class="text-center text-slate-600 text-xs sm:text-sm mt-6 px-4">
+            Need to make changes? Click the "Edit Info" button to go back and modify your application.
+        </p>
+    </main>
+
+    <!-- Loading/Submitting Modal -->
+    <div id="submitting-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 max-w-sm w-full text-center">
+            <div class="mb-6">
+                <div class="inline-block animate-spin">
+                    <i class="fas fa-circle-notch text-5xl text-blue-900"></i>
+                </div>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-blue-900 mb-2">Submitting Application</h2>
+            <p class="text-sm sm:text-base text-slate-600 mb-6">Please wait while we process your application...</p>
+            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-orange-600 to-orange-700 h-2 rounded-full transition-all duration-500" style="width: 10%;"></div>
+            </div>
+            <p class="text-xs text-slate-500 mt-4">Do not close this window</p>
         </div>
     </div>
 
     <!-- Success Modal -->
-    <div id="successModal" class="hidden fixed inset-0 bg-blue-900/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center">
-            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-check text-4xl"></i>
+    <div id="successModal" class="hidden fixed inset-0 bg-gradient-to-b from-blue-900/95 to-blue-900/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 max-w-md w-full text-center">
+            <div class="w-16 sm:w-20 h-16 sm:h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+                <i class="fas fa-check text-3xl sm:text-4xl"></i>
             </div>
-            <h2 class="text-2xl font-extrabold text-blue-900">Application Received!</h2>
-            <p id="success-message" class="text-slate-600 mt-4">Thank you! Your application has been submitted successfully.</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-blue-900 mb-2">Application Received!</h2>
+            <p id="success-message" class="text-sm sm:text-base text-slate-600 mb-6">Thank you! Your application has been submitted successfully.</p>
             
-            <div class="mt-8 p-4 bg-orange-50 border border-orange-100 rounded-xl text-left">
-                <p class="text-xs font-bold text-orange-800 uppercase mb-2">Next Steps:</p>
-                <ul class="text-sm text-slate-700 space-y-2">
-                    <li><i class="fas fa-envelope mr-2 text-orange-500"></i> Check your email for a confirmation.</li>
-                    <li><i class="fas fa-phone mr-2 text-orange-500"></i> Our admissions officer will call you within 48 hours.</li>
+            <div class="mt-6 sm:mt-8 p-4 bg-orange-50 border-2 border-orange-200 rounded-lg text-left">
+                <p class="text-xs font-bold text-orange-800 uppercase mb-3 flex items-center gap-2">
+                    <i class="fas fa-tasks"></i> What happens next?
+                </p>
+                <ul class="text-xs sm:text-sm text-slate-700 space-y-3">
+                    <li class="flex gap-3">
+                        <span class="bg-orange-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                        <span><strong>Confirmation Email:</strong> You'll receive an email confirming receipt of your application</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="bg-orange-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
+                        <span><strong>Document Review:</strong> Our team will review your submitted documents (2-3 business days)</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="bg-orange-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
+                        <span><strong>Follow-up Call:</strong> We'll contact you within 48 hours to discuss your application</span>
+                    </li>
                 </ul>
             </div>
 
-            <a href="index.html" class="block mt-8 w-full border-2 border-blue-900 text-blue-900 py-3 rounded-xl font-bold hover:bg-blue-900 hover:text-white transition">
-                Return to Home
-            </a>
+            <div class="mt-6 sm:mt-8 space-y-3">
+                <a href="index.html" class="block w-full border-2 border-blue-900 text-blue-900 py-2.5 sm:py-3 rounded-lg font-bold hover:bg-blue-900 hover:text-white transition text-sm sm:text-base">
+                    Return to Home
+                </a>
+                <p class="text-xs text-slate-500 px-4">
+                    <i class="fas fa-envelope mr-1"></i> Keep an eye on your inbox for updates
+                </p>
+            </div>
         </div>
     </div>
 
     <!-- Error Modal -->
-    <div id="errorModal" class="hidden fixed inset-0 bg-red-900/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center">
-            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-exclamation text-4xl"></i>
+    <div id="errorModal" class="hidden fixed inset-0 bg-red-900/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 max-w-md w-full text-center">
+            <div class="w-16 sm:w-20 h-16 sm:h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-exclamation text-3xl sm:text-4xl"></i>
             </div>
-            <h2 class="text-2xl font-extrabold text-red-900">Submission Failed</h2>
-            <p id="error-message" class="text-slate-600 mt-4">An error occurred while submitting your application. Please try again.</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-red-900 mb-2">Submission Failed</h2>
+            <p id="error-message" class="text-sm sm:text-base text-slate-600 mb-6">An error occurred while submitting your application. Please try again.</p>
             
-            <button onclick="closeErrorModal()" class="block mt-8 w-full bg-red-900 text-white py-3 rounded-xl font-bold hover:bg-red-800 transition">
+            <button onclick="closeErrorModal()" class="block w-full bg-red-900 text-white py-2.5 sm:py-3 rounded-lg font-bold hover:bg-red-800 transition text-sm sm:text-base">
                 Try Again
             </button>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="js/main.js"></script>
     <script>
         let applicationData = {};
-        let applicationFiles = [];
+        let applicationFiles = { proofOfPayment: null, resultsCert: null, attachments: [] };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadApplicationData();
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadApplicationData();
             setupEventListeners();
         });
 
-        function loadApplicationData() {
+        // Load application data from session storage and IndexedDB
+        async function loadApplicationData() {
             try {
                 const data = sessionStorage.getItem('applicationData');
                 const files = sessionStorage.getItem('applicationFiles');
                 
                 if (!data) {
+                    // No data - redirect back to application form
                     window.location.href = 'apply.html';
                     return;
                 }
                 
                 applicationData = JSON.parse(data);
-                applicationFiles = files ? JSON.parse(files) : [];
+                const fileInfo = files ? JSON.parse(files) : {};
+                
+                // Try to retrieve actual File objects from IndexedDB
+                try {
+                    const dbFiles = await getFilesFromIndexedDB();
+                    if (dbFiles && (dbFiles.proofOfPayment || dbFiles.resultsCert || dbFiles.attachments.length > 0)) {
+                        applicationFiles = dbFiles;
+                    } else if (window.persistedApplicationFiles) {
+                        // Fallback to window-stored files if IndexedDB didn't work
+                        applicationFiles = window.persistedApplicationFiles;
+                    }
+                } catch (dbErr) {
+                    console.warn('Could not retrieve files from IndexedDB:', dbErr);
+                    if (window.persistedApplicationFiles) {
+                        applicationFiles = window.persistedApplicationFiles;
+                    }
+                }
+                
+                // Check if required files are present
+                const hasPaymentReceipt = fileInfo.proofOfPayment !== null;
+                const hasSchoolResults = fileInfo.resultsCert !== null;
+                
+                // Store file info for later submission
+                applicationData.hasPaymentReceipt = hasPaymentReceipt;
+                applicationData.hasSchoolResults = hasSchoolResults;
+                applicationData.fileInfo = fileInfo;
                 
                 renderReviewContent();
             } catch (err) {
@@ -143,277 +265,427 @@
             }
         }
 
+        // IndexedDB helper - same as in apply.js for consistency
+        function openIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('ApplicationDatabase', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('applicationFiles')) {
+                        db.createObjectStore('applicationFiles', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
+        }
+
+        function getFilesFromIndexedDB() {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const db = await openIndexedDB();
+                    const tx = db.transaction('applicationFiles', 'readonly');
+                    const store = tx.objectStore('applicationFiles');
+                    const request = store.getAll();
+                    
+                    request.onerror = () => reject(request.error);
+                    request.onsuccess = () => {
+                        const records = request.result;
+                        const files = {
+                            proofOfPayment: null,
+                            resultsCert: null,
+                            attachments: []
+                        };
+                        
+                        records.forEach(record => {
+                            if (record.type === 'proofOfPayment') {
+                                files.proofOfPayment = record.file;
+                            } else if (record.type === 'resultsCert') {
+                                files.resultsCert = record.file;
+                            } else if (record.type === 'attachment') {
+                                files.attachments.push(record.file);
+                            }
+                        });
+                        
+                        resolve(files);
+                    };
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
+        // Render the review content
         function renderReviewContent() {
             const d = applicationData;
-            const fileCount = applicationFiles.length;
             
-            const contentHtml = `
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Personal Information</h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Full Name</p>
-                                    <p class="font-semibold text-lg">${escapeHtml(d.surname || '')} ${escapeHtml(d.firstname || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">NRC Number</p>
-                                    <p class="font-semibold">${escapeHtml(d.nrc || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Nationality</p>
-                                    <p class="font-semibold">${escapeHtml(d.nationality || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Date of Birth</p>
-                                    <p class="font-semibold">${escapeHtml(d.dob || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Gender</p>
-                                    <p class="font-semibold">${escapeHtml(d.gender || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Contact Number</p>
-                                    <p class="font-semibold">${escapeHtml(d.cell || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Email</p>
-                                    <p class="font-semibold text-sm break-all">${escapeHtml(d.email || '')}</p>
-                                </div>
-                            </div>
-                        </div>
+            // Parse subjects
+            let subjectsHtml = '<p class="text-slate-600 text-sm">No subjects recorded</p>';
+            try {
+                const subjects = JSON.parse(d.subjectsGrades || '[]');
+                if (subjects.length > 0) {
+                    subjectsHtml = '<div class="space-y-2">' + subjects.map(s => {
+                        return `<div class="flex justify-between items-center bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                    <span class="font-medium text-sm text-slate-700">${escapeHtml(s.subject)}</span>
+                                    <span class="bg-blue-600 text-white px-3 py-1 rounded-full font-bold text-xs">${escapeHtml(s.grade)}</span>
+                                </div>`;
+                    }).join('') + '</div>';
+                }
+            } catch(e) {
+                subjectsHtml = '<p class="text-slate-600 text-sm">Error loading subjects</p>';
+            }
 
-                        <div>
-                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Address</h3>
-                            <p class="text-slate-700">${escapeHtml(d.address || '')}</p>
+            const contentHtml = `
+                <!-- Personal Information -->
+                <section class="review-section">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-900 mb-4 pb-3 border-b-2 border-orange-500 flex items-center gap-2">
+                        <i class="fas fa-user text-orange-600"></i> Personal Information
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="info-field">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value font-semibold text-base sm:text-lg">${escapeHtml(d.surname || '')} ${escapeHtml(d.firstname || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">NRC Number</span>
+                            <span class="info-value font-mono font-semibold">${escapeHtml(d.nrc || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Gender</span>
+                            <span class="info-value">${escapeHtml(d.gender || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Date of Birth</span>
+                            <span class="info-value">${escapeHtml(d.dob || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Nationality</span>
+                            <span class="info-value">${escapeHtml(d.nationality || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Contact Number</span>
+                            <span class="info-value font-mono">${escapeHtml(d.cell || '')}</span>
+                        </div>
+                        <div class="info-field sm:col-span-2">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value break-all text-sm">${escapeHtml(d.email || 'Not provided')}</span>
+                        </div>
+                        <div class="info-field sm:col-span-2">
+                            <span class="info-label">Residential Address</span>
+                            <span class="info-value text-sm whitespace-pre-wrap">${escapeHtml(d.address || '')}</span>
                         </div>
                     </div>
+                </section>
 
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Education & Program</h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Last School</p>
-                                    <p class="font-semibold">${escapeHtml(d.lastSchool || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Education Attained</p>
-                                    <p class="font-semibold">${escapeHtml(d.educationAttained || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Year Completed</p>
-                                    <p class="font-semibold">${escapeHtml(d.yearCompleted || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Previous Qualifications</p>
-                                    <p class="font-semibold">${escapeHtml(d.prevQualifications || 'None')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Subjects & Grades</p>
-                                    <div class="mt-2">
-                                        ${(() => {
-                                            try {
-                                                const subjects = JSON.parse(d.subjectsGrades || '[]');
-                                                if (subjects.length === 0) {
-                                                    return '<p class="text-slate-600 text-sm">No subjects recorded</p>';
-                                                }
-                                                return '<div class="space-y-2">' + subjects.map(s => {
-                                                    return '<div class="flex justify-between items-center bg-slate-50 p-2 rounded text-sm">' +
-                                                           '<span class="font-medium">' + escapeHtml(s.subject) + '</span>' +
-                                                           '<span class="bg-blue-100 text-blue-900 px-2 py-1 rounded font-bold">' + escapeHtml(s.grade) + '</span>' +
-                                                           '</div>';
-                                                }).join('') + '</div>';
-                                            } catch(e) {
-                                                return '<p class="text-slate-600 text-sm">No subjects recorded</p>';
-                                            }
-                                        })()}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Primary Choice</p>
-                                    <span class="inline-block bg-blue-100 text-blue-900 px-3 py-1 rounded-full text-sm font-bold mt-1">${escapeHtml(d.choice1 || '')}</span>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Second Choice</p>
-                                    <p class="font-semibold text-sm">${escapeHtml(d.choice2 || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Training Mode</p>
-                                    <p class="font-semibold">${escapeHtml(d.mode || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Level of Study</p>
-                                    <p class="font-semibold">${escapeHtml(d.level || '')}</p>
-                                </div>
+                <!-- Educational Background -->
+                <section class="review-section">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-900 mb-4 pb-3 border-b-2 border-orange-500 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-orange-600"></i> Educational Background
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="info-field sm:col-span-2">
+                            <span class="info-label">Last School Attended</span>
+                            <span class="info-value">${escapeHtml(d.lastSchool || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Education Level Attained</span>
+                            <span class="info-value">${escapeHtml(d.educationAttained || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Year of Completion</span>
+                            <span class="info-value">${escapeHtml(d.yearCompleted || '')}</span>
+                        </div>
+                        <div class="info-field sm:col-span-2">
+                            <span class="info-label">Previous Qualifications</span>
+                            <span class="info-value text-sm">${escapeHtml(d.prevQualifications || 'None recorded')}</span>
+                        </div>
+                        <div class="info-field sm:col-span-2">
+                            <span class="info-label">✓ Selected Subjects & Grades (${(() => {
+                                try {
+                                    const s = JSON.parse(d.subjectsGrades || '[]');
+                                    return s.length;
+                                } catch(e) {
+                                    return 0;
+                                }
+                            })()})</span>
+                            ${subjectsHtml}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Course Selection -->
+                <section class="review-section">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-900 mb-4 pb-3 border-b-2 border-orange-500 flex items-center gap-2">
+                        <i class="fas fa-book text-orange-600"></i> Course Selection & Study Preferences
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="info-field">
+                            <span class="info-label">1st Choice Program</span>
+                            <span class="inline-block bg-blue-100 text-blue-900 px-3 py-2 rounded-full text-sm font-bold mt-1">${escapeHtml(d.choice1 || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">2nd Choice Program</span>
+                            <span class="info-value">${escapeHtml(d.choice2 || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Mode of Study</span>
+                            <span class="inline-block bg-orange-100 text-orange-900 px-3 py-1 rounded-lg text-sm font-semibold mt-1">${escapeHtml(d.mode || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Level of Study</span>
+                            <span class="info-value">${escapeHtml(d.level || '')}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sponsor Information -->
+                <section class="review-section">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-900 mb-4 pb-3 border-b-2 border-orange-500 flex items-center gap-2">
+                        <i class="fas fa-users text-orange-600"></i> Sponsor Information
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="info-field sm:col-span-2">
+                            <span class="info-label">Sponsor Full Name</span>
+                            <span class="info-value font-semibold">${escapeHtml(d.sponsorName || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Relationship to Applicant</span>
+                            <span class="info-value">${escapeHtml(d.sponsorRelation || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Occupation</span>
+                            <span class="info-value">${escapeHtml(d.sponsorOccupation || 'Not specified')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Contact Number</span>
+                            <span class="info-value font-mono">${escapeHtml(d.sponsorCell || 'Not provided')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value text-sm break-all">${escapeHtml(d.sponsorEmail || '')}</span>
+                        </div>
+                        <div class="info-field sm:col-span-2">
+                            <span class="info-label">Postal Address</span>
+                            <span class="info-value text-sm whitespace-pre-wrap">${escapeHtml(d.sponsorPostal || '')}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Application Details & Confirmations -->
+                <section class="review-section">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-900 mb-4 pb-3 border-b-2 border-orange-500 flex items-center gap-2">
+                        <i class="fas fa-check-circle text-orange-600"></i> Application Details
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="info-field">
+                            <span class="info-label">Application Date</span>
+                            <span class="info-value">${escapeHtml(d.applicationDate || '')}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Payment Method</span>
+                            <span class="info-value">Zanaco Bill Muster</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Application Fee</span>
+                            <span class="inline-block bg-orange-100 text-orange-900 px-3 py-1 rounded-lg font-bold text-sm mt-1">K100</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-label">Bank Account Number</span>
+                            <span class="info-value font-mono font-bold text-blue-900">0596204400114</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Confirmations Checklist -->
+                <section class="review-section bg-blue-50 border border-blue-200">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-900 mb-4 pb-3 border-b-2 border-blue-300 flex items-center gap-2">
+                        <i class="fas fa-tasks text-blue-600"></i> Confirmations
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-600 mt-1"><i class="fas fa-check-circle text-lg flex-shrink-0"></i></span>
+                            <div>
+                                <p class="font-semibold text-blue-900 text-sm">Identity Confirmation</p>
+                                <p class="text-xs text-blue-800 mt-0.5">You confirm to be the person submitting this application</p>
                             </div>
                         </div>
-
-                        <div>
-                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Sponsor Information</h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Sponsor Name</p>
-                                    <p class="font-semibold">${escapeHtml(d.sponsorName || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Relationship</p>
-                                    <p class="font-semibold">${escapeHtml(d.sponsorRelation || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Contact Number</p>
-                                    <p class="font-semibold">${escapeHtml(d.sponsorCell || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Email Address</p>
-                                    <p class="font-semibold text-sm break-all">${escapeHtml(d.sponsorEmail || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Occupation</p>
-                                    <p class="font-semibold">${escapeHtml(d.sponsorOccupation || 'Not specified')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Postal Address</p>
-                                    <p class="font-semibold text-sm whitespace-pre-wrap">${escapeHtml(d.sponsorPostal || '')}</p>
-                                </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-600 mt-1"><i class="fas fa-check-circle text-lg flex-shrink-0"></i></span>
+                            <div>
+                                <p class="font-semibold text-blue-900 text-sm">Intent & Commitment</p>
+                                <p class="text-xs text-blue-800 mt-0.5">You declare genuine intent to enroll and commit to the course</p>
                             </div>
                         </div>
-
-                        ${fileCount > 0 ? `
-                        <div>
-                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Application Finalization</h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Date of Application</p>
-                                    <p class="font-semibold">${escapeHtml(d.applicationDate || '')}</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Confirmations</p>
-                                    <div class="space-y-2 mt-2">
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <span class="${d.identityCheck === 'true' || d.identityCheck === true ? 'text-green-600' : 'text-slate-400'}"><i class="fas fa-check-circle"></i></span>
-                                            <span class="font-medium">Identity Confirmation: ${d.identityCheck === 'true' || d.identityCheck === true ? '<span class="text-green-600 font-bold">✓ Confirmed</span>' : '<span class="text-slate-500">Not confirmed</span>'}</span>
-                                        </div>
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <span class="${d.intentCheck === 'true' || d.intentCheck === true ? 'text-green-600' : 'text-slate-400'}"><i class="fas fa-check-circle"></i></span>
-                                            <span class="font-medium">Intent & Commitment: ${d.intentCheck === 'true' || d.intentCheck === true ? '<span class="text-green-600 font-bold">✓ Confirmed</span>' : '<span class="text-slate-500">Not confirmed</span>'}</span>
-                                        </div>
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <span class="${d.integrityCheck === 'true' || d.integrityCheck === true ? 'text-green-600' : 'text-slate-400'}"><i class="fas fa-check-circle"></i></span>
-                                            <span class="font-medium">Information Integrity: ${d.integrityCheck === 'true' || d.integrityCheck === true ? '<span class="text-green-600 font-bold">✓ Confirmed</span>' : '<span class="text-slate-500">Not confirmed</span>'}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-600 mt-1"><i class="fas fa-check-circle text-lg flex-shrink-0"></i></span>
+                            <div>
+                                <p class="font-semibold text-blue-900 text-sm">Information Integrity</p>
+                                <p class="text-xs text-blue-800 mt-0.5">All provided information is true, complete, and accurate</p>
                             </div>
                         </div>
-                        ` : ''}
+                    </div>
+                </section>
 
-                        ${fileCount > 0 ? `
-                        <div>
-                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Attachments</h3>
-                            <div class="space-y-2">
-                                ${applicationFiles.map((f, i) => `
-                                    <div class="flex items-center gap-2 p-3 bg-slate-100 rounded-lg">
-                                        <i class="fas fa-file text-blue-900"></i>
-                                        <span class="text-sm font-semibold text-slate-700 truncate">${escapeHtml(f.name)}</span>
-                                        <span class="text-xs text-slate-500 ml-auto whitespace-nowrap">${formatFileSize(f.size)}</span>
+                <!-- Files Summary -->
+                <section class="review-section bg-orange-50 border border-orange-200">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-900 mb-4 pb-3 border-b-2 border-orange-300 flex items-center gap-2">
+                        <i class="fas fa-file-upload text-orange-600"></i> Attached Documents
+                    </h2>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3 p-3 ${applicationData.hasPaymentReceipt ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'} rounded-lg">
+                            <i class="fas ${applicationData.hasPaymentReceipt ? 'fa-check-circle text-green-600' : 'fa-times-circle text-red-600'} text-lg flex-shrink-0"></i>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-semibold text-sm ${applicationData.hasPaymentReceipt ? 'text-green-900' : 'text-red-900'}">Payment Receipt</p>
+                                <p class="text-xs ${applicationData.hasPaymentReceipt ? 'text-green-800' : 'text-red-800'}">
+                                    ${applicationData.hasPaymentReceipt ? `<i class="fas fa-check mr-1"></i>${escapeHtml(applicationData.fileInfo?.proofOfPayment?.name || '')}` : 'Not uploaded (Required)'}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 ${applicationData.hasSchoolResults ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'} rounded-lg">
+                            <i class="fas ${applicationData.hasSchoolResults ? 'fa-check-circle text-green-600' : 'fa-times-circle text-red-600'} text-lg flex-shrink-0"></i>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-semibold text-sm ${applicationData.hasSchoolResults ? 'text-green-900' : 'text-red-900'}">School Results</p>
+                                <p class="text-xs ${applicationData.hasSchoolResults ? 'text-green-800' : 'text-red-800'}">
+                                    ${applicationData.hasSchoolResults ? `<i class="fas fa-check mr-1"></i>${escapeHtml(applicationData.fileInfo?.resultsCert?.name || '')}` : 'Not uploaded (Required)'}
+                                </p>
+                            </div>
+                        </div>
+                        ${applicationData.fileInfo?.attachments?.length > 0 ? `
+                        <div class="pt-2">
+                            <p class="text-xs font-semibold text-slate-700 mb-2">Additional Documents (${applicationData.fileInfo.attachments.length})</p>
+                            <div class="space-y-1">
+                                ${applicationData.fileInfo.attachments.map(f => `
+                                    <div class="flex items-center gap-2 p-2 bg-slate-100 rounded text-xs">
+                                        <i class="fas fa-file text-blue-900 flex-shrink-0"></i>
+                                        <span class="truncate text-slate-700">${escapeHtml(f.name)}</span>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
                         ` : ''}
                     </div>
-                </div>
+                </section>
             `;
             
             document.getElementById('review-content').innerHTML = contentHtml;
-        }
-
-        function setupEventListeners() {
-            document.getElementById('confirm').addEventListener('change', (e) => {
-                document.getElementById('submit-btn').disabled = !e.target.checked;
-            });
-
-            document.getElementById('submit-btn').addEventListener('click', submitApplication);
             
-            document.getElementById('edit-btn').addEventListener('click', () => {
-                // Preserve data and go back to apply form
-                window.history.back();
-            });
+            // Update files notice visibility
+            if (!applicationData.hasPaymentReceipt || !applicationData.hasSchoolResults) {
+                document.getElementById('files-notice').classList.remove('hidden');
+            }
         }
 
+        // Setup event listeners
+        function setupEventListeners() {
+            // Edit button - go back to apply form
+            document.getElementById('edit-btn').addEventListener('click', () => {
+                window.location.href = 'apply.html';
+            });
+
+            // Confirmation checkbox
+            document.getElementById('confirm').addEventListener('change', (e) => {
+                const submitBtn = document.getElementById('submit-btn');
+                const filesValid = applicationData.hasPaymentReceipt && applicationData.hasSchoolResults;
+                submitBtn.disabled = !e.target.checked || !filesValid;
+            });
+
+            // Submit button
+            document.getElementById('submit-btn').addEventListener('click', submitApplication);
+        }
+
+        // Submit application
         async function submitApplication() {
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;
             
             // Show submitting modal
             document.getElementById('submitting-modal').classList.remove('hidden');
-            updateProgressBar();
+            document.getElementById('progress-bar').style.width = '10%';
             
             try {
                 const formData = new FormData();
                 
-                // Add all text fields
+                // Add all text fields from applicationData
                 Object.keys(applicationData).forEach(key => {
-                    formData.append(key, applicationData[key] || '');
+                    if (key !== 'fileInfo' && key !== 'hasPaymentReceipt' && key !== 'hasSchoolResults') {
+                        formData.append(key, applicationData[key] || '');
+                    }
                 });
                 
-                // Add files - properly convert ArrayBuffer to Blob
-                for (const file of applicationFiles) {
-                    // If data is an ArrayBuffer, convert to Blob; if it's already a string (base64), handle accordingly
-                    let blob;
-                    if (file.data instanceof ArrayBuffer) {
-                        blob = new Blob([file.data], { type: file.type });
-                    } else if (typeof file.data === 'string') {
-                        // If it's a string, assume it's already in a usable format
-                        blob = new Blob([file.data], { type: file.type });
-                    } else {
-                        // Fallback
-                        blob = new Blob([file.data], { type: file.type || 'application/octet-stream' });
+                // Add actual files from applicationFiles variable (loaded from IndexedDB or window storage)
+                if (applicationFiles) {
+                    if (applicationFiles.proofOfPayment) {
+                        formData.append('attachments', applicationFiles.proofOfPayment);
                     }
-                    formData.append('attachments', blob, file.name);
+                    if (applicationFiles.resultsCert) {
+                        formData.append('attachments', applicationFiles.resultsCert);
+                    }
+                    if (applicationFiles.attachments && applicationFiles.attachments.length > 0) {
+                        for (let i = 0; i < applicationFiles.attachments.length; i++) {
+                            formData.append('attachments', applicationFiles.attachments[i]);
+                        }
+                    }
                 }
+
+                // Update progress
+                document.getElementById('progress-bar').style.width = '30%';
                 
-                // Simulate progress
-                progressInterval = setInterval(() => {
-                    const current = parseInt(document.getElementById('progress-bar').style.width) || 33;
-                    if (current < 90) {
-                        document.getElementById('progress-bar').style.width = (current + Math.random() * 20) + '%';
-                    }
-                }, 300);
-                
+                // Send to server
                 const response = await fetch('/submit', {
                     method: 'POST',
                     body: formData
                 });
                 
-                clearInterval(progressInterval);
-                document.getElementById('progress-bar').style.width = '100%';
+                // Update progress
+                document.getElementById('progress-bar').style.width = '85%';
                 
                 if (response.ok) {
-                    // Delay showing success to make progress bar completion visible
+                    // Complete progress
+                    document.getElementById('progress-bar').style.width = '100%';
+                    
+                    // Wait a moment then show success
                     await new Promise(r => setTimeout(r, 500));
                     
                     document.getElementById('submitting-modal').classList.add('hidden');
                     
+                    const responseData = await response.json();
+                    
                     // Update success message with applicant name
                     const name = applicationData.firstname || 'Applicant';
                     const program = applicationData.choice1 || 'your selected program';
-                    document.getElementById('success-message').innerHTML = 
-                        `Thank you, <strong>${escapeHtml(name)}</strong>. Your application for <strong>${escapeHtml(program)}</strong> has been submitted successfully.`;
+                    
+                    // Check if email was sent
+                    if (responseData.emailSent === false) {
+                        document.getElementById('success-message').innerHTML = 
+                            `Thank you, <strong>${escapeHtml(name)}</strong>. Your application for <strong>${escapeHtml(program)}</strong> has been received and submitted to our admissions team.<br><br><span class="text-sm text-yellow-700">Note: We were unable to send a confirmation email, but your application has been recorded.</span>`;
+                    } else {
+                        document.getElementById('success-message').innerHTML = 
+                            `Thank you, <strong>${escapeHtml(name)}</strong>. Your application for <strong>${escapeHtml(program)}</strong> has been submitted successfully.`;
+                    }
                     
                     document.getElementById('successModal').classList.remove('hidden');
                     
                     // Clear session data
                     sessionStorage.removeItem('applicationData');
                     sessionStorage.removeItem('applicationFiles');
+                    applicationFiles = { proofOfPayment: null, resultsCert: null, attachments: [] };
+                    
+                    // Clear IndexedDB
+                    try {
+                        const db = await openIndexedDB();
+                        const tx = db.transaction('applicationFiles', 'readwrite');
+                        await tx.objectStore('applicationFiles').clear();
+                    } catch (e) {
+                        console.warn('Could not clear IndexedDB:', e);
+                    }
                 } else {
                     const error = await response.json().catch(() => ({}));
                     throw new Error(error.error || 'Submission failed');
                 }
             } catch (err) {
-                clearInterval(progressInterval);
+                console.error('Submit error:', err);
                 document.getElementById('submitting-modal').classList.add('hidden');
                 document.getElementById('error-message').textContent = err.message || 'An error occurred. Please try again.';
                 document.getElementById('errorModal').classList.remove('hidden');
@@ -421,15 +693,12 @@
             }
         }
 
-        let progressInterval;
-        function updateProgressBar() {
-            document.getElementById('progress-bar').style.width = '33%';
-        }
-
+        // Close error modal
         function closeErrorModal() {
             document.getElementById('errorModal').classList.add('hidden');
         }
 
+        // Utility function to escape HTML
         function escapeHtml(text) {
             const map = {
                 '&': '&amp;',
@@ -438,15 +707,7 @@
                 '"': '&quot;',
                 "'": '&#039;'
             };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+            return String(text || '').replace(/[&<>"']/g, m => map[m]);
         }
     </script>
 </body>
