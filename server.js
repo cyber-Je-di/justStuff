@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 const path = require('path');
@@ -9,6 +10,17 @@ const validator = require('validator');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
+// Security: Force HTTPS in production
+if (NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
+      return res.redirect(301, 'https://' + req.get('host') + req.url);
+    }
+    next();
+  });
+}
 
 // Serve static site files from the repository root (so you can open http://localhost:3000/apply.html)
 app.use(express.static(path.join(__dirname)));
@@ -16,12 +28,26 @@ app.use(express.static(path.join(__dirname)));
 // Basic security headers
 app.use(helmet());
 
+// CORS - restrict to your domain (set ALLOWED_ORIGINS in .env)
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
+  credentials: true
+}));
+
 // Rate limiter for the submit endpoint (protects against brute force/abuse)
 const submitLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 10, // max 10 submissions per IP per window
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  skip: (req) => NODE_ENV !== 'production' // Disable in development for testing
 });
 
 // Multer memory storage (files kept in memory buffer, suitable for small uploads)
@@ -41,7 +67,7 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     if (!fields.surname) errors.push('surname');
     if (!fields.firstname) errors.push('firstname');
     if (!fields.nrc) errors.push('nrc');
-    if (errors.length) return res.status(400).json({ error: `Missing required fields: ${errors.join(', ')}` });
+    if (errors.length) return res.status(400).json({ error: 'Missing required fields' });
 
     // Validate NRC BEFORE sanitization (to preserve slashes)
     const nrcOk = /^\d{6}\/\d{2}\/\d{1}$/.test(fields.nrc) || /^\d{9}$/.test(fields.nrc);
@@ -78,7 +104,7 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     let totalBytes = 0;
     for (const f of files) {
       if (!ALLOWED_MIMES.includes(f.mimetype)) {
-        return res.status(400).json({ error: `Unsupported file type: ${f.originalname}` });
+        return res.status(400).json({ error: 'Unsupported file type' });
       }
       totalBytes += (f.size || 0);
       if (totalBytes > MAX_TOTAL_ATTACHMENTS) {
@@ -86,7 +112,7 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
       }
     }
 
-    // Build email body
+    // Build email body (sanitized)
     const lines = [];
     lines.push(`Application received from ${fields.surname} ${fields.firstname}`);
     lines.push('');
@@ -97,7 +123,7 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     // Configure transporter
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.error('Missing SMTP configuration in environment');
-      return res.status(500).json({ error: 'Server not configured for sending email. See README.' });
+      return res.status(500).json({ error: 'Server configuration error' });
     }
 
     const createTransport = (host) => nodemailer.createTransport({
@@ -123,7 +149,9 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     let fromHeader = process.env.SMTP_FROM || process.env.SMTP_USER;
     if (useApplicantFrom && fields.email) {
       fromHeader = fields.email;
-      console.warn('Using applicant email as From header (USE_APPLICANT_AS_FROM=true). This may trigger SPF/DMARC rejections.');
+      if (NODE_ENV === 'development') {
+        console.warn('Using applicant email as From header (USE_APPLICANT_AS_FROM=true).');
+      }
     }
 
     const mailOptions = {
@@ -139,25 +167,30 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     const dns = require('dns').promises;
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.log('Email sent:', info.messageId);
+      if (NODE_ENV === 'development') {
+        console.log('Email sent:', info.messageId);
+      }
     } catch (sendErr) {
-      console.error('Initial send error', sendErr && sendErr.code, sendErr && sendErr.message);
+      console.error('Email send error:', sendErr.code || sendErr.message);
       if (sendErr && sendErr.code === 'ENETUNREACH') {
         try {
           const lookup = await dns.lookup(process.env.SMTP_HOST, { family: 4 });
           if (lookup && lookup.address) {
-            console.log('Retrying SMTP send using IPv4 address', lookup.address);
+            if (NODE_ENV === 'development') {
+              console.log('Retrying SMTP send using IPv4 address');
+            }
             transporter = createTransport(lookup.address);
-            // set TLS servername so certificate validation still checks the real host
             transporter.options.tls = transporter.options.tls || {};
             transporter.options.tls.servername = process.env.SMTP_HOST;
             const info2 = await transporter.sendMail(mailOptions);
-            console.log('Email sent on IPv4 retry:', info2.messageId);
+            if (NODE_ENV === 'development') {
+              console.log('Email sent on IPv4 retry:', info2.messageId);
+            }
           } else {
             throw sendErr;
           }
         } catch (retryErr) {
-          console.error('Retry failed', retryErr);
+          console.error('Email retry failed');
           throw retryErr;
         }
       } else {
@@ -167,9 +200,21 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
 
     res.json({ ok: true });
   } catch (err) {
-    console.error('Submit error', err);
+    console.error('Submit error:', err.message);
+    // Generic error message in production
+    const errorMessage = NODE_ENV === 'production' ? 'Server error' : err.message || 'Server error';
+    res.status(500).json({ error: errorMessage });
+  }
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err.message);
+  if (NODE_ENV === 'production') {
+    res.status(500).json({ error: 'Server error' });
+  } else {
     res.status(500).json({ error: err.message || 'Server error' });
   }
 });
 
-app.listen(PORT, () => console.log(`Server started on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server started on ${NODE_ENV === 'production' ? 'https' : 'http'}://localhost:${PORT}`));
