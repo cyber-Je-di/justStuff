@@ -14,15 +14,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="css/site.css" rel="stylesheet">
-    <style>
-        .program-card { transition: all 0.3s ease; }
-        .program-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
-        .modal-overlay.open { display: flex; align-items: center; justify-content: center; }
-        .modal-content { max-height: 85vh; overflow-y: auto; position: relative; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .modal-overlay.open .modal-content { animation: fadeIn 0.3s ease-out; }
-    </style>
+    <!-- Programs Page Styles -->
+    <link href="css/programs.css" rel="stylesheet">
+    <!-- FAB Component Styles -->
+    <link href="css/fab.css" rel="stylesheet">
 </head>
 <body class="bg-slate-100 font-sans text-slate-900">
 

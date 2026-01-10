@@ -37,6 +37,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Custom styles for animations, branding, and additional CSS -->
     <link href="css/site.css" rel="stylesheet">
+    <!-- FAB Component Styles -->
+    <link href="css/fab.css" rel="stylesheet">
 </head>
 
 <body class="bg-slate-100 font-sans text-slate-900">
@@ -76,7 +78,7 @@
                             Explore Courses
                         </a>
                         <a href="contact.html" role="button"
-                            class="inline-block bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg hover:shadow-lg transition shadow-lg btn-glow animate-on-scroll w-full sm:w-auto text-center"
+                            class="inline-block bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg hover:shadow-lg transition shadow-lg animate-on-scroll w-full sm:w-auto text-center"
                             data-anim="splash" style="animation-delay: 0.1s;">
                             Contact Us
                         </a>
@@ -533,7 +535,23 @@
       ]
     }
     </script>
-
+    
+    <!-- Floating Action Button Component -->
+    <div class="fab-container fab-float group">
+        <div class="flex items-center gap-0">
+            <!-- Text Label -->
+            <div class="fab-label">
+                Visit Campus
+            </div>
+            
+            <!-- Circular Icon Button -->
+            <a href="https://maps.google.com/?q=Craw+Hammer+Trades+School+Chingola" target="_blank" rel="noopener noreferrer" 
+               class="fab-button"
+               title="Visit our campus">
+                <i class="fas fa-location-dot"></i>
+            </a>
+        </div>
+    </div>
 
 </body>
 
