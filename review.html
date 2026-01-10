@@ -610,7 +610,12 @@
                 // Add all text fields from applicationData
                 Object.keys(applicationData).forEach(key => {
                     if (key !== 'fileInfo' && key !== 'hasPaymentReceipt' && key !== 'hasSchoolResults') {
-                        formData.append(key, applicationData[key] || '');
+                        const value = applicationData[key] || '';
+                        formData.append(key, value);
+                        // Debug log for subjects
+                        if (key === 'subjectsGrades') {
+                            console.log('Sending subjectsGrades:', value);
+                        }
                     }
                 });
                 

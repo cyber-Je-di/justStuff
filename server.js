@@ -108,6 +108,10 @@ app.post('/submit', submitLimiter, upload.any(), async (req, res) => {
   try {
     const fields = req.body || {};  // Form field data (name, email, etc.)
     const attachments = req.files || [];  // Uploaded files
+    
+    // Debug log to see what subjectsGrades looks like
+    console.log('Received subjectsGrades:', fields.subjectsGrades);
+    console.log('subjectsGrades length:', fields.subjectsGrades ? fields.subjectsGrades.length : 0);
 
     // ===== VALIDATION SECTION =====
     // Check for required fields
@@ -128,13 +132,25 @@ app.post('/submit', submitLimiter, upload.any(), async (req, res) => {
     if (!nrcOk) return res.status(400).json({ error: 'Invalid NRC format. Expected 123456/78/9 or 123456789' });
 
     // Sanitize all text fields to prevent XSS attacks (HTML injection)
+    // Note: Exclude subjectsGrades since it's JSON data that shouldn't be HTML-escaped
     const nrcValue = fields.nrc;
     Object.keys(fields).forEach(k => {
-      if (typeof fields[k] === 'string') {
+      if (typeof fields[k] === 'string' && k !== 'subjectsGrades') {
         fields[k] = validator.escape(validator.trim(fields[k]));
       }
     });
     fields.nrc = validator.trim(nrcValue); // Keep NRC without escaping to preserve format
+
+    // Convert boolean string fields back to actual booleans
+    // When booleans are sent via FormData, they become strings "true"/"false"
+    const booleanFields = ['identityCheck', 'intentCheck', 'integrityCheck'];
+    booleanFields.forEach(field => {
+      if (fields[field] === 'true' || fields[field] === true) {
+        fields[field] = true;
+      } else {
+        fields[field] = false;
+      }
+    });
 
     // Email validation - ensures email is in valid format if provided
     if (fields.email && !validator.isEmail(fields.email)) {
@@ -227,10 +243,18 @@ app.post('/submit', submitLimiter, upload.any(), async (req, res) => {
       <div style="background: #f5f5f5; padding: 10px; border-radius: 4px; margin-top: 8px;">
         ${(() => {
           try {
-            const subjects = JSON.parse(fields.subjectsGrades || '[]');
+            // Handle both cases: if it's already an array or if it's a JSON string
+            let subjects = fields.subjectsGrades;
+            if (typeof subjects === 'string') {
+              subjects = JSON.parse(subjects || '[]');
+            }
+            if (!Array.isArray(subjects)) {
+              subjects = [];
+            }
             if (subjects.length === 0) return '<p style="color: #666;">No subjects selected</p>';
             return subjects.map((s, i) => `<div>${i+1}. ${s.subject} - Grade <strong>${s.grade}</strong></div>`).join('');
           } catch (e) {
+            console.error('Error parsing subjects:', e, 'Value:', fields.subjectsGrades);
             return '<p style="color: #666;">Subject data unavailable</p>';
           }
         })()}
@@ -281,9 +305,9 @@ app.post('/submit', submitLimiter, upload.any(), async (req, res) => {
     <!-- CONFIRMATIONS -->
     <div class="section">
       <div class="section-title">✓ Application Confirmations</div>
-      <div class="field-row"><span class="field-label">Identity Confirmed:</span><span class="field-value">${fields.identityCheck === 'on' || fields.identityCheck === 'true' ? '✓ Yes' : '✗ No'}</span></div>
-      <div class="field-row"><span class="field-label">Intent Confirmed:</span><span class="field-value">${fields.intentCheck === 'on' || fields.intentCheck === 'true' ? '✓ Yes' : '✗ No'}</span></div>
-      <div class="field-row"><span class="field-label">Integrity Confirmed:</span><span class="field-value">${fields.integrityCheck === 'on' || fields.integrityCheck === 'true' ? '✓ Yes' : '✗ No'}</span></div>
+      <div class="field-row"><span class="field-label">Identity Confirmed:</span><span class="field-value">${fields.identityCheck ? '✓ Yes' : '✗ No'}</span></div>
+      <div class="field-row"><span class="field-label">Intent Confirmed:</span><span class="field-value">${fields.intentCheck ? '✓ Yes' : '✗ No'}</span></div>
+      <div class="field-row"><span class="field-label">Integrity Confirmed:</span><span class="field-value">${fields.integrityCheck ? '✓ Yes' : '✗ No'}</span></div>
       <div class="field-row"><span class="field-label">Application Date:</span><span class="field-value">${fields.applicationDate || 'N/A'}</span></div>
     </div>
 
@@ -313,10 +337,18 @@ Year Completed: ${fields.yearCompleted}
 Subjects & Grades:
 ${(() => {
   try {
-    const subjects = JSON.parse(fields.subjectsGrades || '[]');
+    // Handle both cases: if it's already an array or if it's a JSON string
+    let subjects = fields.subjectsGrades;
+    if (typeof subjects === 'string') {
+      subjects = JSON.parse(subjects || '[]');
+    }
+    if (!Array.isArray(subjects)) {
+      subjects = [];
+    }
     if (subjects.length === 0) return '  No subjects recorded';
     return subjects.map((s, i) => `  ${i+1}. ${s.subject} - Grade ${s.grade}`).join('\n');
   } catch (e) {
+    console.error('Error parsing subjects in plain text:', e);
     return '  Subject data unavailable';
   }
 })()}

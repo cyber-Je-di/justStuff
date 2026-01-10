@@ -432,7 +432,7 @@
             }
         });
 
-        // Subjects and Grades validation - minimum 6 subjects with grades required (grades must be 1-9)
+        // Subjects and Grades validation - at least 1 subject required (grades must be 1-9)
         // Check hidden field which is populated by mobile picker
         const subjectsGradesField = document.getElementById('subjectsGrades');
         let selectedSubjects = [];
@@ -474,9 +474,9 @@
             }
         }
         
-        if (selectedSubjects.length < 6) {
+        if (selectedSubjects.length < 1) {
             const selectorDiv = document.getElementById('mobile-subjects-selector') || document.getElementById('subjects-table-desktop') || document.body;
-            showError(selectorDiv, `Please select at least 6 subjects with their grades. You currently have ${selectedSubjects.length}.`);
+            showError(selectorDiv, `Please select at least 1 subject with a grade.`);
             errors.push('Subjects and Grades');
             isValid = false;
         } else {
@@ -663,7 +663,9 @@
     async function saveAndReview() {
         // Extract subjects from table and populate hidden field
         const subjects = extractSubjectsFromTable();
+        console.log('Extracted subjects:', subjects);
         document.getElementById('subjectsGrades').value = JSON.stringify(subjects);
+        console.log('subjectsGrades field value:', document.getElementById('subjectsGrades').value);
         
         const data = {
             // Personal Details
@@ -701,9 +703,9 @@
             sponsorRelation: document.getElementById('sponsorRelation').value.trim(),
             
             // Finalization
-            identityConfirmed: document.getElementById('identityCheck').checked,
-            intentConfirmed: document.getElementById('intentCheck').checked,
-            integrityConfirmed: document.getElementById('integrityCheck').checked,
+            identityCheck: document.getElementById('identityCheck').checked,
+            intentCheck: document.getElementById('intentCheck').checked,
+            integrityCheck: document.getElementById('integrityCheck').checked,
             applicationDate: document.getElementById('applicationDate').value,
             
             // Payment
@@ -711,6 +713,8 @@
             applicationFee: 'K100',
             zanacoBankAccount: '0596204400114'
         };
+        
+        console.log('Data to be stored:', data.subjectsGrades);
 
         // Store data in session storage
         sessionStorage.setItem('applicationData', JSON.stringify(data));
