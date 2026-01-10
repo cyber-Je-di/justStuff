@@ -16,9 +16,11 @@ const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // SECURITY: Force HTTPS in production
-// This ensures all traffic is encrypted when deployed to live servers
-if (NODE_ENV === 'production') {
+// Note: cPanel already handles HTTPS redirect via Force HTTPS setting
+// Only apply this if cPanel Force HTTPS is NOT enabled
+if (NODE_ENV === 'production' && process.env.FORCE_HTTPS !== 'false') {
   app.use((req, res, next) => {
+    // Check if request is already HTTPS or has HTTPS proxy header
     if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
       return res.redirect(301, 'https://' + req.get('host') + req.url);
     }
@@ -30,20 +32,57 @@ if (NODE_ENV === 'production') {
 app.use(express.static(path.join(__dirname)));
 
 // Add security headers to prevent XSS, clickjacking, and other attacks
-app.use(helmet());
+// Configure Helmet for production - disable CSP if causing issues
+app.use(helmet({
+  contentSecurityPolicy: NODE_ENV === 'production' ? false : true,
+  crossOriginResourceSharing: true,
+  crossOriginOpenerPolicy: true
+}));
 
 // CORS Configuration: Restrict API to allowed domains only
 // Prevents unauthorized cross-domain requests from malicious websites
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
+const defaultOrigins = [
+  'http://localhost:3000',
+  'http://localhost',
+  'http://127.0.0.1',
+  'https://crawhammertrades.com',
+  'https://www.crawhammertrades.com',
+  'http://crawhammertrades.com',
+  'http://www.crawhammertrades.com'
+];
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : defaultOrigins;
+
+if (NODE_ENV === 'development') {
+  console.log('Allowed Origins:', allowedOrigins);
+}
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed'));
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
     }
+    
+    // Check if origin is in allowlist
+    if (allowedOrigins.some(allowed => {
+      return origin === allowed || origin.endsWith(allowed.replace(/^https?:\/\//, ''));
+    })) {
+      return callback(null, true);
+    }
+    
+    // Log rejected origins in development
+    if (NODE_ENV === 'development') {
+      console.warn('CORS rejected origin:', origin);
+    }
+    
+    callback(new Error('CORS not allowed'));
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Rate Limiter: Protects against brute force and spam
