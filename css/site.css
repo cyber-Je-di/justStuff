@@ -1,100 +1,119 @@
-:root{
-  /* Theme colors: Sky Blue, Green, Grey */
-  --sky: #38bdf8; /* Sky Blue */
-  --green: #10b981; /* Green */
-  --grey: #6b7280; /* Neutral Grey */
+/* ========================================
+   CRAW HAMMER TRADES SCHOOL - CUSTOM STYLES
+   ======================================== */
 
-  /* Legacy aliases (kept for compatibility) */
+/* CSS Variables: Define reusable color values for the entire design system */
+:root{
+  /* Primary brand colors - used throughout the site for consistency */
+  --sky: #38bdf8; /* Cyan/Sky Blue - used for accents and highlights */
+  --green: #10b981; /* Emerald Green - used for success states and secondary accents */
+  --grey: #6b7280; /* Neutral Grey - used for secondary text and borders */
+
+  /* Legacy aliases (kept for backward compatibility with older code) */
   --brand-blue: var(--sky);
   --accent: var(--green);
   
-  /* Glassmorphism colors */
-  --glass-light: rgba(255, 255, 255, 0.15);
-  --glass-dark: rgba(0, 0, 0, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
+  /* Glassmorphism effect colors - creates modern frosted glass UI effect */
+  --glass-light: rgba(255, 255, 255, 0.15);  /* Light semi-transparent white */
+  --glass-dark: rgba(0, 0, 0, 0.1);          /* Dark semi-transparent black */
+  --glass-border: rgba(255, 255, 255, 0.2);  /* Border for glass effect */
 }
-/* Import Open Sans and set default font */
+
+/* Import Google Fonts - Open Sans provides clean, readable typography */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
 
+/* Global font family - applied to all text elements and form controls */
 html, body, input, button, textarea, select {
   font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
-/* Motto styling (smaller, not bold) */
+/* Custom styling for motto text - smaller and lighter weight for emphasis */
 .motto-title{ font-weight: 400 !important; font-size: 2.25rem !important; }
 
-/* ============ GLOWING & BUTTON ANIMATIONS ============ */
-/* Glowing pulse animation for primary CTA buttons */
+/* ============ GLOWING & BUTTON ANIMATIONS ============
+   These animations make buttons and CTAs more visually engaging and draw attention */
+
+/* Pulsing glow animation - repeats continuously to catch user attention */
 @keyframes glowPulse {
   0%, 100% { 
+    /* Subtle glow at rest */
     box-shadow: 0 0 10px rgba(249, 115, 22, 0.3), 
+
                 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   50% { 
+    /* Intense glow at peak of animation */
     box-shadow: 0 0 20px rgba(249, 115, 22, 0.6), 
                 0 0 30px rgba(249, 115, 22, 0.4),
                 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 }
 
-/* Glow on hover for buttons */
+/* Hover animation for buttons - intensifies glow when user hovers */
 @keyframes glowHover {
   0% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.5); }
   100% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.8), 0 0 40px rgba(249, 115, 22, 0.4); }
 }
 
-/* Button glow effect */
+/* Apply continuous glow pulse to buttons - makes them stand out */
 .btn-glow {
   animation: glowPulse 2.5s ease-in-out infinite;
   transition: all 0.3s ease;
 }
 
+/* Enhance glow effect on hover and lift button slightly */
 .btn-glow:hover {
   animation: glowHover 0.6s ease-out forwards;
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Slight upward movement for depth */
 }
 
-/* ============ FLOATING ACTION BUTTON (FAB) ANIMATION ============ */
+/* ============ FLOATING ACTION BUTTON (FAB) ANIMATION ============ 
+   Creates smooth up/down floating motion for action buttons (like Visit Campus) */
 @keyframes floatingFab {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px);       /* Start position */
     box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
   }
   50% {
-    transform: translateY(-15px);
-    box-shadow: 0 15px 35px rgba(249, 115, 22, 0.6);
+    transform: translateY(-15px);     /* Move up 15px at peak */
+    box-shadow: 0 15px 35px rgba(249, 115, 22, 0.6); /* Shadow increases as button rises */
   }
 }
 
+/* Apply floating animation to FAB buttons */
 .fab-float {
   animation: floatingFab 3s ease-in-out infinite;
 }
 
-/* ============ GLASSMORPHISM (iOS 16+ STYLE) ============ */
-/* Base glass effect with backdrop blur */
+/* ============ GLASSMORPHISM (iOS 16+ STYLE) ============ 
+   Creates modern, frosted glass effect with backdrop blur - popular in modern UI design */
+
+/* Base glass effect - used for main containers */
 .glass {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  background: rgba(255, 255, 255, 0.15);      /* Semi-transparent white background */
+  backdrop-filter: blur(20px);                 /* Blurs everything behind the element */
+  -webkit-backdrop-filter: blur(20px);        /* Safari/iOS support */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle glass border */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Soft shadow for depth */
 }
 
+/* Dark variant of glass effect */
 .glass-dark {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.1);              /* Semi-transparent black background */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
+/* Glass card - lighter blur for cards/panels */
 .glass-card {
   background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);                 /* Less blur than .glass for readability */
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth transitions on hover */
 }
 
 .glass-card:hover {

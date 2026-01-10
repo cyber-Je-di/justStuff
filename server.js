@@ -1,18 +1,22 @@
+// Load environment variables from .env file (API keys, SMTP credentials, etc.)
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const multer = require('multer');
-const nodemailer = require('nodemailer');
-const path = require('path');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const validator = require('validator');
+
+// Core dependencies
+const express = require('express');       // Web framework for handling HTTP requests
+const cors = require('cors');             // Cross-Origin Resource Sharing - allows requests from allowed domains
+const multer = require('multer');         // Handles file uploads from forms
+const nodemailer = require('nodemailer'); // Sends emails with application submissions
+const path = require('path');             // File/directory path utilities
+const helmet = require('helmet');         // Security headers middleware (prevents various attacks)
+const rateLimit = require('express-rate-limit'); // Prevents brute force attacks by limiting requests per IP
+const validator = require('validator');   // Input validation and sanitization
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// Security: Force HTTPS in production
+// SECURITY: Force HTTPS in production
+// This ensures all traffic is encrypted when deployed to live servers
 if (NODE_ENV === 'production') {
   app.use((req, res, next) => {
     if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
@@ -22,13 +26,14 @@ if (NODE_ENV === 'production') {
   });
 }
 
-// Serve static site files from the repository root (so you can open http://localhost:3000/apply.html)
+// Serve static files (HTML, CSS, images, etc.) from the project root directory
 app.use(express.static(path.join(__dirname)));
 
-// Basic security headers
+// Add security headers to prevent XSS, clickjacking, and other attacks
 app.use(helmet());
 
-// CORS - restrict to your domain (set ALLOWED_ORIGINS in .env)
+// CORS Configuration: Restrict API to allowed domains only
+// Prevents unauthorized cross-domain requests from malicious websites
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
 app.use(cors({
   origin: (origin, callback) => {
@@ -41,67 +46,75 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiter for the submit endpoint (protects against brute force/abuse)
+// Rate Limiter: Protects against brute force and spam
+// Max 10 submissions per IP address per minute - prevents abuse
 const submitLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 10, // max 10 submissions per IP per window
+  windowMs: 60 * 1000, // 1 minute window
+  max: 10, // max 10 requests per IP
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => NODE_ENV !== 'production' // Disable in development for testing
+  skip: (req) => NODE_ENV !== 'production' // Disable in development for easier testing
 });
 
-// Multer memory storage (files kept in memory buffer, suitable for small uploads)
+// File Upload Configuration: Stores files in memory (RAM) temporarily
+// Suitable for small to medium uploads (up to 20MB per file)
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
+// Health check endpoint - used by hosting providers to verify server is running
 app.get('/health', (req, res) => res.json({ ok: true }));
 
+// MAIN APPLICATION SUBMISSION ENDPOINT
+// POST /submit - Receives application form data and file uploads, validates, and sends via email
 app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, res) => {
   try {
-    const fields = req.body || {};
-    const files = req.files || [];
+    const fields = req.body || {};  // Form field data (name, email, etc.)
+    const files = req.files || [];   // Uploaded files (documents, images, etc.)
 
-    // Basic server-side validation & sanitization
+    // ===== VALIDATION SECTION =====
+    // Check for required fields
     const errors = [];
-
-    // Required fields
     if (!fields.surname) errors.push('surname');
     if (!fields.firstname) errors.push('firstname');
     if (!fields.nrc) errors.push('nrc');
     if (errors.length) return res.status(400).json({ error: 'Missing required fields' });
 
-    // Validate NRC BEFORE sanitization (to preserve slashes)
+    // Validate NRC format (Zambian ID number) BEFORE sanitization to preserve slashes
+    // Accepts format: 123456/78/9 or 123456789
     const nrcOk = /^\d{6}\/\d{2}\/\d{1}$/.test(fields.nrc) || /^\d{9}$/.test(fields.nrc);
     if (!nrcOk) return res.status(400).json({ error: 'Invalid NRC format. Expected 123456/78/9 or 123456789' });
 
-    // Sanitize and trim fields (but don't escape slashes in NRC)
+    // Sanitize all text fields to prevent XSS attacks (HTML injection)
     const nrcValue = fields.nrc;
     Object.keys(fields).forEach(k => {
       if (typeof fields[k] === 'string') {
         fields[k] = validator.escape(validator.trim(fields[k]));
       }
     });
-    fields.nrc = validator.trim(nrcValue); // Keep NRC without escaping
+    fields.nrc = validator.trim(nrcValue); // Keep NRC without escaping to preserve format
 
-    // Email validation (if provided)
+    // Email validation - ensures email is in valid format if provided
     if (fields.email && !validator.isEmail(fields.email)) {
       return res.status(400).json({ error: 'Invalid email address' });
     }
 
-    // Phone validation (simple): allow digits, spaces, + and -
+    // Phone validation - allows digits, spaces, +, and - characters
     if (fields.phone && !/^[0-9+\-\s()]{7,20}$/.test(fields.phone)) {
       return res.status(400).json({ error: 'Invalid phone number' });
     }
 
-    // File validation: allowed mime types and total size
+    // ===== FILE VALIDATION SECTION =====
+    // Whitelist of allowed file types (only secure formats)
     const ALLOWED_MIMES = [
-      'application/pdf',
-      'image/png',
-      'image/jpeg',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      'application/pdf',                                              // PDF documents
+      'image/png',                                                    // PNG images
+      'image/jpeg',                                                   // JPEG images
+      'application/msword',                                           // Microsoft Word (.doc)
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // Word (.docx)
     ];
-    const MAX_TOTAL_ATTACHMENTS = 30 * 1024 * 1024; // 30MB total
+    const MAX_TOTAL_ATTACHMENTS = 30 * 1024 * 1024; // 30MB total size limit
     let totalBytes = 0;
+    
+    // Check each uploaded file
     for (const f of files) {
       if (!ALLOWED_MIMES.includes(f.mimetype)) {
         return res.status(400).json({ error: 'Unsupported file type' });
@@ -112,7 +125,8 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
       }
     }
 
-    // Build email body (sanitized)
+    // ===== EMAIL PREPARATION SECTION =====
+    // Build email body with all application information
     const lines = [];
     lines.push(`Application received from ${fields.surname} ${fields.firstname}`);
     lines.push('');
@@ -120,12 +134,13 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
       lines.push(`${k}: ${fields[k]}`);
     });
 
-    // Configure transporter
+    // Check SMTP configuration exists
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.error('Missing SMTP configuration in environment');
       return res.status(500).json({ error: 'Server configuration error' });
     }
 
+    // Create email transporter function (can retry with different host if needed)
     const createTransport = (host) => nodemailer.createTransport({
       host,
       port: parseInt(process.env.SMTP_PORT || '587', 10),
@@ -138,13 +153,12 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
 
     let transporter = createTransport(process.env.SMTP_HOST);
 
-    // Prepare attachments array for nodemailer
+    // Prepare files for email attachment
     const attachments = files.map(f => ({ filename: f.originalname, content: f.buffer }));
 
-    // Decide From header. By default we use SMTP_FROM or SMTP_USER to avoid spoofing problems.
-    // If the operator explicitly enables USE_APPLICANT_AS_FROM=true in .env, and an applicant email
-    // was provided, we will set From to the applicant's address (note: this can increase deliverability
-    // problems due to SPF/DMARC checks; see README).
+    // Determine From header
+    // Default: Use SMTP_FROM for security (avoid email spoofing)
+    // Optional: Use applicant email if explicitly enabled (may cause delivery issues with SPF/DMARC)
     const useApplicantFrom = process.env.USE_APPLICANT_AS_FROM === 'true';
     let fromHeader = process.env.SMTP_FROM || process.env.SMTP_USER;
     if (useApplicantFrom && fields.email) {
@@ -154,16 +168,18 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
       }
     }
 
+    // Configure email message
     const mailOptions = {
       from: fromHeader,
       to: process.env.TO_EMAIL || 'crawhammer.marketing@gmail.com',
       subject: `New application: ${fields.surname} ${fields.firstname}`,
       text: lines.join('\n'),
-      replyTo: fields.email || undefined,
+      replyTo: fields.email || undefined, // Allows admissions team to reply directly to applicant
       attachments
     };
 
-    // Try to send. If an IPv6 network error occurs (ENETUNREACH), retry by resolving SMTP host to IPv4.
+    // ===== EMAIL SENDING WITH RETRY LOGIC =====
+    // Try to send email with fallback to IPv4 if IPv6 fails
     const dns = require('dns').promises;
     try {
       const info = await transporter.sendMail(mailOptions);
@@ -172,6 +188,8 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
       }
     } catch (sendErr) {
       console.error('Email send error:', sendErr.code || sendErr.message);
+      
+      // If IPv6 network error, retry with IPv4 address resolution
       if (sendErr && sendErr.code === 'ENETUNREACH') {
         try {
           const lookup = await dns.lookup(process.env.SMTP_HOST, { family: 4 });
@@ -198,23 +216,25 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
       }
     }
 
+    // Success response
     res.json({ ok: true });
   } catch (err) {
     console.error('Submit error:', err.message);
-    // Generic error message in production
+    // Return generic error in production (security), detailed in development (debugging)
     const errorMessage = NODE_ENV === 'production' ? 'Server error' : err.message || 'Server error';
     res.status(500).json({ error: errorMessage });
   }
 });
 
-// Global error handler
+// Global error handler - catches any unhandled errors
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err.message);
   if (NODE_ENV === 'production') {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' }); // Generic message for security
   } else {
-    res.status(500).json({ error: err.message || 'Server error' });
+    res.status(500).json({ error: err.message || 'Server error' }); // Detailed message for debugging
   }
 });
 
+// Start the server
 app.listen(PORT, () => console.log(`Server started on ${NODE_ENV === 'production' ? 'https' : 'http'}://localhost:${PORT}`));
