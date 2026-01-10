@@ -2,6 +2,18 @@
    CRAW HAMMER TRADES SCHOOL - CUSTOM STYLES
    ======================================== */
 
+/* Smooth scrolling behavior for anchor links and smooth page transitions */
+html {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
 /* CSS Variables: Define reusable color values for the entire design system */
 :root{
   /* Primary brand colors - used throughout the site for consistency */
@@ -92,12 +104,20 @@ html, body, input, button, textarea, select {
    Creates modern, frosted glass effect with backdrop blur - popular in modern UI design */
 
 /* Base glass effect - used for main containers */
+/* Remove extra spacing from navbar */
+#navbar-placeholder {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .glass {
   background: rgba(255, 255, 255, 0.15);      /* Semi-transparent white background */
   backdrop-filter: blur(20px);                 /* Blurs everything behind the element */
   -webkit-backdrop-filter: blur(20px);        /* Safari/iOS support */
   border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle glass border */
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Soft shadow for depth */
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Dark variant of glass effect */
@@ -326,12 +346,12 @@ section:nth-of-type(4) { animation-delay: 0.3s; }
 section:nth-of-type(5) { animation-delay: 0.4s; }
 
 /* ============ LINK ANIMATIONS ============ */
-a:not(.btn-glow):not(.btn-primary) {
+a:not(.btn-glow):not(.btn-primary):not(nav a) {
   position: relative;
   transition: color 0.3s ease;
 }
 
-a:not(.btn-glow):not(.btn-primary):hover {
+a:not(.btn-glow):not(.btn-primary):not(nav a):hover {
   color: var(--accent, #10b981);
 }
 
