@@ -271,6 +271,16 @@ NRC: ${fields.nrc}
 Last School: ${fields.lastSchool}
 Education Level: ${fields.educationAttained}
 Year Completed: ${fields.yearCompleted}
+Subjects & Grades:
+${(() => {
+  try {
+    const subjects = JSON.parse(fields.subjectsGrades || '[]');
+    if (subjects.length === 0) return '  No subjects recorded';
+    return subjects.map((s, i) => `  ${i+1}. ${s.subject} - Grade ${s.grade}`).join('\n');
+  } catch (e) {
+    return '  Subject data unavailable';
+  }
+})()}
 
 === COURSE SELECTION ===
 1st Choice: ${fields.choice1}

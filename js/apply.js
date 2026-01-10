@@ -143,6 +143,59 @@
         }
     })();
 
+    // ===== DESKTOP CUSTOM SUBJECT HANDLER =====
+    (function desktopCustomSubjects() {
+        const addBtn = document.getElementById('add-custom-subject-btn');
+        const container = document.getElementById('custom-subjects-container');
+        const table = document.getElementById('subjects-table-desktop');
+        
+        if (!addBtn || !container || !table) return;
+        
+        let customCount = 0;
+        
+        addBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            customCount++;
+            
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-slate-50 bg-slate-50 custom-subject-row';
+            row.innerHTML = `
+                <td class="px-2 sm:px-4 py-2 sm:py-3">
+                    <input type="text" placeholder="Subject" class="w-full px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm custom-subject-input">
+                </td>
+                <td class="px-2 sm:px-4 py-2 sm:py-3">
+                    <input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric">
+                </td>
+                <td class="px-2 sm:px-4 py-2 sm:py-3">
+                    <button type="button" class="remove-custom-btn text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded transition font-semibold text-xs">
+                        <i class="fas fa-trash-alt mr-1"></i> Remove
+                    </button>
+                </td>
+                <td class="px-2 sm:px-4 py-2 sm:py-3"></td>
+            `;
+            
+            // Add remove button handler
+            const removeBtn = row.querySelector('.remove-custom-btn');
+            removeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                row.remove();
+            });
+            
+            // Grade input validation
+            const gradeInput = row.querySelector('.subject-grade');
+            gradeInput.addEventListener('input', function(e) {
+                let value = this.value.replace(/[^1-9]/g, '');
+                if (value.length > 1) {
+                    value = value.charAt(0);
+                }
+                this.value = value;
+            });
+            
+            table.appendChild(row);
+            row.querySelector('.custom-subject-input').focus();
+        });
+    })();
+
     // ===== FILE UPLOAD HANDLERS =====
     
     // School Results/Certificates Upload
@@ -573,17 +626,23 @@
                     const gradeCell = cells[i + 1];
                     
                     if (subjectCell && gradeCell) {
-                        // Get subject name
+                        // Get subject name - handle both static text and input fields
+                        let subjectName = '';
+                        
+                        // First check for input (including custom subject inputs)
                         const subjectInputs = subjectCell.querySelectorAll('input[type="text"]');
-                        const subjectName = subjectInputs.length > 0 
-                            ? subjectInputs[0].value.trim() 
-                            : subjectCell.textContent.trim();
+                        if (subjectInputs.length > 0) {
+                            subjectName = subjectInputs[0].value.trim();
+                        } else {
+                            // Fall back to cell text content for predefined subjects
+                            subjectName = subjectCell.textContent.trim();
+                        }
                         
                         // Get grade value
                         const gradeInputs = gradeCell.querySelectorAll('input[type="text"]');
                         const grade = gradeInputs.length > 0 ? gradeInputs[0].value.trim() : '';
                         
-                        // Include if grade is entered
+                        // Include if grade is entered and subject name exists
                         if (grade && subjectName) {
                             subjects.push({
                                 subject: subjectName,
