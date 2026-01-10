@@ -3,6 +3,24 @@
     const form = document.querySelector('#application-form form');
     if (!form) return;
 
+    // Copy account number to clipboard
+    const copyBtn = document.querySelector('.copy-account-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const accountNum = '0596204400114';
+            navigator.clipboard.writeText(accountNum).then(() => {
+                const originalIcon = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check text-green-600 text-xl"></i>';
+                setTimeout(() => {
+                    this.innerHTML = originalIcon;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        });
+    }
+
     // ensure a multiple file input exists; create it if missing
     let attachmentsInput = form.querySelector('input[name="attachments"]');
     if (!attachmentsInput) {
@@ -68,6 +86,64 @@
         });
 
         renderFiles();
+    })();
+
+    // Proof of Payment UI: show selected file and support drag & drop
+    (function proofOfPaymentUi() {
+        const proofInput = document.getElementById('proofOfPayment');
+        const proofDropzone = document.getElementById('proof-dropzone');
+        const proofFileInfo = document.getElementById('proof-file-info');
+        
+        if (!proofInput || !proofDropzone || !proofFileInfo) return;
+
+        function renderProofFile() {
+            if (!proofInput.files || proofInput.files.length === 0) {
+                proofFileInfo.textContent = 'No file selected.';
+                proofDropzone.classList.remove('border-orange-500', 'bg-orange-50');
+                proofDropzone.classList.add('border-slate-200', 'bg-slate-50');
+                return;
+            }
+            const file = proofInput.files[0];
+            proofFileInfo.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span><i class="fas fa-check-circle text-green-600 mr-2"></i>${file.name} <span class="text-xs text-slate-500">(${Math.round(file.size/1024)} KB)</span></span>
+                    <button type="button" class="text-red-600 text-xs underline hover:text-red-800">Remove</button>
+                </div>
+            `;
+            const removeBtn = proofFileInfo.querySelector('button');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', () => {
+                    const dt = new DataTransfer();
+                    proofInput.files = dt.files;
+                    renderProofFile();
+                });
+            }
+            proofDropzone.classList.remove('border-slate-200', 'bg-slate-50');
+            proofDropzone.classList.add('border-orange-500', 'bg-orange-50');
+        }
+
+        proofInput.addEventListener('change', renderProofFile);
+
+        proofDropzone.addEventListener('dragover', (e) => { 
+            e.preventDefault(); 
+            proofDropzone.classList.add('border-orange-500', 'bg-orange-50');
+        });
+        proofDropzone.addEventListener('dragleave', (e) => { 
+            proofDropzone.classList.remove('border-orange-500', 'bg-orange-50');
+        });
+        proofDropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const dt = e.dataTransfer;
+            if (dt && dt.files && dt.files.length) {
+                // Accept only the first file for proof of payment
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(dt.files[0]);
+                proofInput.files = dataTransfer.files;
+                renderProofFile();
+            }
+        });
+
+        renderProofFile();
     })();
 
     // Replace or populate the nationality input with a country dropdown
@@ -186,6 +262,9 @@
         data.sponsorPostal = document.getElementById('sponsorPostal') ? document.getElementById('sponsorPostal').value.trim() : '';
         data.sponsorOccupation = document.getElementById('sponsorOccupation') ? document.getElementById('sponsorOccupation').value.trim() : '';
         data.sponsorRelation = document.getElementById('sponsorRelation') ? document.getElementById('sponsorRelation').value.trim() : '';
+        data.applicationFee = 'K100';
+        data.paymentMethod = 'Zanaco Bill Muster';
+        data.zanacoBankAccount = '0596204400114';
         return data;
     }
 
@@ -193,28 +272,57 @@
         sessionStorage.setItem('applicationData', JSON.stringify(data));
         
         const fileData = [];
-        for (let i = 0; i < attachmentsInput.files.length; i++) {
-            const file = attachmentsInput.files[i];
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                fileData.push({
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    data: e.target.result
-                });
-                if (fileData.length === attachmentsInput.files.length) {
-                    sessionStorage.setItem('applicationFiles', JSON.stringify(fileData));
-                    window.location.href = 'review.html';
-                }
-            };
-            reader.readAsArrayBuffer(file);
+        const proofInput = document.getElementById('proofOfPayment');
+        const proofFile = proofInput && proofInput.files && proofInput.files.length > 0 ? proofInput.files[0] : null;
+        
+        // Function to read and store proof of payment
+        function processProofOfPayment() {
+            if (proofFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const proofData = {
+                        name: proofFile.name,
+                        type: proofFile.type,
+                        size: proofFile.size,
+                        data: e.target.result,
+                        isProofOfPayment: true
+                    };
+                    sessionStorage.setItem('proofOfPayment', JSON.stringify(proofData));
+                    processAttachments();
+                };
+                reader.readAsArrayBuffer(proofFile);
+            } else {
+                processAttachments();
+            }
         }
         
-        if (attachmentsInput.files.length === 0) {
-            sessionStorage.setItem('applicationFiles', JSON.stringify([]));
-            window.location.href = 'review.html';
+        // Function to process other attachments
+        function processAttachments() {
+            for (let i = 0; i < attachmentsInput.files.length; i++) {
+                const file = attachmentsInput.files[i];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    fileData.push({
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: e.target.result
+                    });
+                    if (fileData.length === attachmentsInput.files.length) {
+                        sessionStorage.setItem('applicationFiles', JSON.stringify(fileData));
+                        window.location.href = 'review.html';
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            
+            if (attachmentsInput.files.length === 0) {
+                sessionStorage.setItem('applicationFiles', JSON.stringify([]));
+                window.location.href = 'review.html';
+            }
         }
+        
+        processProofOfPayment();
     }
 
     function showSuccess(msg) {
@@ -242,6 +350,17 @@
             const el = document.getElementById(id);
             if (el) clearError(el);
         });
+
+        // Validate proof of payment file is uploaded
+        const proofInput = document.getElementById('proofOfPayment');
+        if (!proofInput || !proofInput.files || proofInput.files.length === 0) {
+            const dropzone = document.getElementById('proof-dropzone');
+            if (dropzone) {
+                showError(dropzone, 'Proof of payment (Zanaco Bill Muster receipt) is required.');
+                errors.push('Proof of payment');
+                valid = false;
+            }
+        }
 
         ['surname','firstname','address'].forEach(id => {
             const el = document.getElementById(id);

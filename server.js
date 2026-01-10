@@ -76,7 +76,13 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     if (!fields.surname) errors.push('surname');
     if (!fields.firstname) errors.push('firstname');
     if (!fields.nrc) errors.push('nrc');
-    if (errors.length) return res.status(400).json({ error: 'Missing required fields' });
+    if (errors.length) return res.status(400).json({ error: 'Missing required fields: ' + errors.join(', ') });
+
+    // Check if proof of payment file is attached (payment method is now fixed as Zanaco Bill Muster)
+    let proofOfPaymentFile = files.find(f => f.fieldname === 'proofOfPayment');
+    if (!proofOfPaymentFile) {
+      return res.status(400).json({ error: 'Proof of payment is required. Please attach your Zanaco Bill Muster receipt.' });
+    }
 
     // Validate NRC format (Zambian ID number) BEFORE sanitization to preserve slashes
     // Accepts format: 123456/78/9 or 123456789
@@ -130,8 +136,23 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     const lines = [];
     lines.push(`Application received from ${fields.surname} ${fields.firstname}`);
     lines.push('');
+    lines.push('=== APPLICATION DETAILS ===');
     Object.keys(fields).forEach(k => {
       lines.push(`${k}: ${fields[k]}`);
+    });
+    lines.push('');
+    lines.push('=== PAYMENT INFORMATION ===');
+    lines.push(`Application Fee: K100`);
+    lines.push(`Payment Method: Zanaco Bill Muster`);
+    lines.push(`Zanaco Account: 0596204400114`);
+    lines.push(`Payment Receipt File: ${proofOfPaymentFile.originalname}`);
+    lines.push('');
+    lines.push('=== ATTACHED FILES ===');
+    if (proofOfPaymentFile) {
+      lines.push(`[ZANACO BILL MUSTER] ${proofOfPaymentFile.originalname} (${Math.round(proofOfPaymentFile.size / 1024)} KB)`);
+    }
+    files.filter(f => f.fieldname === 'attachments').forEach(f => {
+      lines.push(`${f.originalname} (${Math.round(f.size / 1024)} KB)`);
     });
 
     // Check SMTP configuration exists
@@ -153,8 +174,26 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
 
     let transporter = createTransport(process.env.SMTP_HOST);
 
-    // Prepare files for email attachment
-    const attachments = files.map(f => ({ filename: f.originalname, content: f.buffer }));
+    // Prepare files for email attachment - include proof of payment first, then other attachments
+    const allAttachments = [];
+    
+    // Add proof of payment as first attachment
+    if (proofOfPaymentFile) {
+      allAttachments.push({ 
+        filename: `[PROOF_OF_PAYMENT] ${proofOfPaymentFile.originalname}`, 
+        content: proofOfPaymentFile.buffer 
+      });
+    }
+    
+    // Add other attachments
+    files.filter(f => f.fieldname === 'attachments').forEach(f => {
+      allAttachments.push({ 
+        filename: f.originalname, 
+        content: f.buffer 
+      });
+    });
+    
+    const attachments = allAttachments;
 
     // Determine From header
     // Default: Use SMTP_FROM for security (avoid email spoofing)
