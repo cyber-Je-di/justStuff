@@ -211,6 +211,27 @@
                                     <p class="font-semibold">${escapeHtml(d.prevQualifications || 'None')}</p>
                                 </div>
                                 <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Subjects & Grades</p>
+                                    <div class="mt-2">
+                                        ${(() => {
+                                            try {
+                                                const subjects = JSON.parse(d.subjectsGrades || '[]');
+                                                if (subjects.length === 0) {
+                                                    return '<p class="text-slate-600 text-sm">No subjects recorded</p>';
+                                                }
+                                                return '<div class="space-y-2">' + subjects.map(s => {
+                                                    return '<div class="flex justify-between items-center bg-slate-50 p-2 rounded text-sm">' +
+                                                           '<span class="font-medium">' + escapeHtml(s.subject) + '</span>' +
+                                                           '<span class="bg-blue-100 text-blue-900 px-2 py-1 rounded font-bold">' + escapeHtml(s.grade) + '</span>' +
+                                                           '</div>';
+                                                }).join('') + '</div>';
+                                            } catch(e) {
+                                                return '<p class="text-slate-600 text-sm">No subjects recorded</p>';
+                                            }
+                                        })()}
+                                    </div>
+                                </div>
+                                <div>
                                     <p class="text-slate-500 text-xs font-semibold uppercase">Primary Choice</p>
                                     <span class="inline-block bg-blue-100 text-blue-900 px-3 py-1 rounded-full text-sm font-bold mt-1">${escapeHtml(d.choice1 || '')}</span>
                                 </div>
@@ -221,6 +242,10 @@
                                 <div>
                                     <p class="text-slate-500 text-xs font-semibold uppercase">Training Mode</p>
                                     <p class="font-semibold">${escapeHtml(d.mode || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Level of Study</p>
+                                    <p class="font-semibold">${escapeHtml(d.level || '')}</p>
                                 </div>
                             </div>
                         </div>
@@ -237,15 +262,52 @@
                                     <p class="font-semibold">${escapeHtml(d.sponsorRelation || '')}</p>
                                 </div>
                                 <div>
-                                    <p class="text-slate-500 text-xs font-semibold uppercase">Contact</p>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Contact Number</p>
                                     <p class="font-semibold">${escapeHtml(d.sponsorCell || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Email Address</p>
+                                    <p class="font-semibold text-sm break-all">${escapeHtml(d.sponsorEmail || '')}</p>
                                 </div>
                                 <div>
                                     <p class="text-slate-500 text-xs font-semibold uppercase">Occupation</p>
                                     <p class="font-semibold">${escapeHtml(d.sponsorOccupation || 'Not specified')}</p>
                                 </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Postal Address</p>
+                                    <p class="font-semibold text-sm whitespace-pre-wrap">${escapeHtml(d.sponsorPostal || '')}</p>
+                                </div>
                             </div>
                         </div>
+
+                        ${fileCount > 0 ? `
+                        <div>
+                            <h3 class="text-orange-600 font-bold uppercase text-xs tracking-widest mb-4">Application Finalization</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Date of Application</p>
+                                    <p class="font-semibold">${escapeHtml(d.applicationDate || '')}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs font-semibold uppercase">Confirmations</p>
+                                    <div class="space-y-2 mt-2">
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <span class="${d.identityCheck === 'true' || d.identityCheck === true ? 'text-green-600' : 'text-slate-400'}"><i class="fas fa-check-circle"></i></span>
+                                            <span class="font-medium">Identity Confirmation: ${d.identityCheck === 'true' || d.identityCheck === true ? '<span class="text-green-600 font-bold">✓ Confirmed</span>' : '<span class="text-slate-500">Not confirmed</span>'}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <span class="${d.intentCheck === 'true' || d.intentCheck === true ? 'text-green-600' : 'text-slate-400'}"><i class="fas fa-check-circle"></i></span>
+                                            <span class="font-medium">Intent & Commitment: ${d.intentCheck === 'true' || d.intentCheck === true ? '<span class="text-green-600 font-bold">✓ Confirmed</span>' : '<span class="text-slate-500">Not confirmed</span>'}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <span class="${d.integrityCheck === 'true' || d.integrityCheck === true ? 'text-green-600' : 'text-slate-400'}"><i class="fas fa-check-circle"></i></span>
+                                            <span class="font-medium">Information Integrity: ${d.integrityCheck === 'true' || d.integrityCheck === true ? '<span class="text-green-600 font-bold">✓ Confirmed</span>' : '<span class="text-slate-500">Not confirmed</span>'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
 
                         ${fileCount > 0 ? `
                         <div>

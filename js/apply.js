@@ -1,188 +1,280 @@
-// Application Form Handler
+// Enhanced Application Form Handler
 (function () {
-    const form = document.querySelector('#application-form form');
+    const form = document.querySelector('#application-form form') || document.querySelector('#main-form');
     if (!form) return;
 
-    // Copy account number to clipboard
-    const copyBtn = document.querySelector('.copy-account-btn');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const accountNum = '0596204400114';
-            navigator.clipboard.writeText(accountNum).then(() => {
-                const originalIcon = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-check text-green-600 text-xl"></i>';
-                setTimeout(() => {
-                    this.innerHTML = originalIcon;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
+    // ===== DYNAMIC SUBJECT PICKER (MOBILE) =====
+    (function mobileSubjectPicker() {
+        const mobileSelector = document.getElementById('mobile-subjects-selector');
+        if (!mobileSelector) return;
+
+        const allSubjects = ['English', 'Mathematics', 'Science', 'Physics', 'Chemistry', 'Biology', 
+                            'Computer Science', 'History', 'Geography', 'Economics', 'Civics', 'Agriculture', 'Commerce', 'Art & Design'];
+        let selectedSubjects = [];
+
+        const dropdown = document.getElementById('mobile-subject-dropdown');
+        const gradeInput = document.getElementById('mobile-subject-grade');
+        const customSubjectInput = document.getElementById('mobile-custom-subject-name');
+        const customSubjectContainer = document.getElementById('custom-subject-input-mobile');
+        const addBtn = document.getElementById('add-subject-btn');
+        const selectedList = document.getElementById('mobile-selected-subjects');
+        const counter = document.getElementById('subjects-counter');
+        const subjectsGradesField = document.getElementById('subjectsGrades');
+
+        // Grade input validation - only allow 1-9
+        gradeInput.addEventListener('input', function(e) {
+            let value = this.value.replace(/[^1-9]/g, '');
+            if (value.length > 1) {
+                value = value.charAt(0);
+            }
+            this.value = value;
         });
-    }
 
-    // ensure a multiple file input exists; create it if missing
-    let attachmentsInput = form.querySelector('input[name="attachments"]');
-    if (!attachmentsInput) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'mt-4';
-        wrapper.innerHTML = '<label class="block font-medium">Attach documents (multiple allowed)</label>' +
-            '<input id="attachments" name="attachments" type="file" multiple class="mt-1 block w-full" />';
-        const submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn && submitBtn.parentNode) submitBtn.parentNode.insertBefore(wrapper, submitBtn);
-        else form.appendChild(wrapper);
-        attachmentsInput = form.querySelector('input[name="attachments"]');
-    }
+        // Toggle custom subject input
+        dropdown.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customSubjectContainer.classList.remove('hidden');
+                customSubjectInput.focus();
+            } else {
+                customSubjectContainer.classList.add('hidden');
+            }
+        });
 
-    // attachments UI: show selected files and support drag & drop
-    (function attachmentsUi() {
+        // Add subject button click
+        addBtn.addEventListener('click', function() {
+            let selectedSubject = dropdown.value.trim();
+            const grade = gradeInput.value.trim();
+
+            // Validate inputs
+            if (!selectedSubject) {
+                alert('Please select a subject');
+                return;
+            }
+
+            if (selectedSubject === 'custom') {
+                selectedSubject = customSubjectInput.value.trim();
+                if (!selectedSubject) {
+                    alert('Please enter a custom subject name');
+                    return;
+                }
+            }
+
+            if (!grade) {
+                alert('Please enter a grade (1-9)');
+                return;
+            }
+
+            if (!/^[1-9]$/.test(grade)) {
+                alert('Grade must be a number between 1 and 9');
+                return;
+            }
+
+            // Check if subject already selected
+            if (selectedSubjects.some(s => s.subject.toLowerCase() === selectedSubject.toLowerCase())) {
+                alert('You have already selected this subject');
+                return;
+            }
+
+            // Add subject
+            selectedSubjects.push({ subject: selectedSubject, grade: grade });
+            updateUI();
+            clearInputs();
+        });
+
+        // Remove subject button
+        selectedList.addEventListener('click', function(e) {
+            if (e.target.closest('button[data-remove-subject]')) {
+                const subjectName = e.target.closest('button').getAttribute('data-remove-subject');
+                selectedSubjects = selectedSubjects.filter(s => s.subject !== subjectName);
+                updateUI();
+            }
+        });
+
+        // Update UI
+        function updateUI() {
+            // Update counter
+            const count = selectedSubjects.length;
+            counter.textContent = `${count}/6`;
+
+            // Update selected subjects list
+            if (selectedSubjects.length === 0) {
+                selectedList.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">No subjects added yet</p>';
+            } else {
+                selectedList.innerHTML = selectedSubjects.map(item => `
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div class="flex-1">
+                            <p class="text-xs font-semibold text-slate-700">${item.subject}</p>
+                            <p class="text-xs text-slate-600">Grade: <span class="font-bold text-orange-600">${item.grade}</span></p>
+                        </div>
+                        <button type="button" data-remove-subject="${item.subject}" class="ml-2 text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded transition text-lg">
+                            ×
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Update dropdown - remove already selected subjects
+            const selectedNames = selectedSubjects.map(s => s.subject.toLowerCase());
+            const options = dropdown.querySelectorAll('option');
+            options.forEach(option => {
+                if (option.value && option.value !== 'custom' && option.value !== '') {
+                    option.hidden = selectedNames.includes(option.value.toLowerCase());
+                }
+            });
+
+            // Serialize to hidden field
+            serializeSubjects();
+        }
+
+        function clearInputs() {
+            dropdown.value = '';
+            gradeInput.value = '';
+            customSubjectInput.value = '';
+            customSubjectContainer.classList.add('hidden');
+            dropdown.focus();
+        }
+
+        function serializeSubjects() {
+            subjectsGradesField.value = JSON.stringify(selectedSubjects);
+        }
+    })();
+
+    // ===== FILE UPLOAD HANDLERS =====
+    
+    // School Results/Certificates Upload
+    (function documentsUpload() {
+        const fileInput = document.getElementById('resultsCert');
+        const dropzone = document.getElementById('documents-dropzone');
+        const fileInfo = document.getElementById('documents-file-info');
+        
+        if (!fileInput || !dropzone || !fileInfo) return;
+
+        function updateDisplay() {
+            if (!fileInput.files || fileInput.files.length === 0) {
+                fileInfo.textContent = 'No file selected';
+                return;
+            }
+            const file = fileInput.files[0];
+            fileInfo.innerHTML = `<i class="fas fa-check-circle text-green-600 mr-2"></i>${file.name} (${Math.round(file.size/1024)} KB)`;
+        }
+
+        fileInput.addEventListener('change', updateDisplay);
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-orange-500', 'bg-orange-50');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-orange-500', 'bg-orange-50');
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-orange-500', 'bg-orange-50');
+            if (e.dataTransfer.files.length) {
+                const dt = new DataTransfer();
+                dt.items.add(e.dataTransfer.files[0]);
+                fileInput.files = dt.files;
+                updateDisplay();
+            }
+        });
+
+        updateDisplay();
+    })();
+
+    // Proof of Payment Upload
+    (function proofOfPaymentUpload() {
+        const fileInput = document.getElementById('proofOfPayment');
+        const dropzone = document.getElementById('proof-dropzone');
+        const fileInfo = document.getElementById('proof-file-info');
+        
+        if (!fileInput || !dropzone || !fileInfo) return;
+
+        function updateDisplay() {
+            if (!fileInput.files || fileInput.files.length === 0) {
+                fileInfo.textContent = 'No file selected';
+                dropzone.classList.remove('border-orange-500', 'bg-orange-50');
+                return;
+            }
+            const file = fileInput.files[0];
+            fileInfo.innerHTML = `<i class="fas fa-check-circle text-green-600 mr-2"></i>${file.name} (${Math.round(file.size/1024)} KB)`;
+            dropzone.classList.add('border-orange-500', 'bg-orange-50');
+        }
+
+        fileInput.addEventListener('change', updateDisplay);
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-orange-500', 'bg-orange-50');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-orange-500', 'bg-orange-50');
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-orange-500', 'bg-orange-50');
+            if (e.dataTransfer.files.length) {
+                const dt = new DataTransfer();
+                dt.items.add(e.dataTransfer.files[0]);
+                fileInput.files = dt.files;
+                updateDisplay();
+            }
+        });
+
+        updateDisplay();
+    })();
+
+    // Additional Documents Upload
+    (function attachmentsUpload() {
+        const fileInput = document.getElementById('attachments');
         const dropzone = document.getElementById('dropzone');
-        const list = document.getElementById('attachments-list');
-        if (!attachmentsInput || !dropzone || !list) return;
+        const fileInfo = document.getElementById('attachments-list');
+        
+        if (!fileInput || !dropzone || !fileInfo) return;
 
-        function renderFiles() {
-            const files = attachmentsInput.files;
-            if (!files || files.length === 0) {
-                list.textContent = 'No files selected.';
+        function updateDisplay() {
+            if (!fileInput.files || fileInput.files.length === 0) {
+                fileInfo.textContent = 'No files selected';
                 return;
             }
             const ul = document.createElement('ul');
-            ul.className = 'space-y-1';
-            for (let i = 0; i < files.length; i++) {
-                const f = files[i];
+            ul.className = 'space-y-2 mt-2';
+            for (let i = 0; i < fileInput.files.length; i++) {
+                const file = fileInput.files[i];
                 const li = document.createElement('li');
-                li.className = 'flex justify-between items-center';
-                li.innerHTML = `<span class="truncate">${f.name} <span class="text-xs text-slate-400">(${Math.round(f.size/1024)} KB)</span></span>`;
+                li.className = 'flex items-center gap-2 text-sm';
+                li.innerHTML = `<i class="fas fa-file text-orange-500"></i><span>${file.name} (${Math.round(file.size/1024)} KB)</span>`;
                 ul.appendChild(li);
             }
-            list.innerHTML = '';
-            list.appendChild(ul);
-            const clear = document.createElement('button');
-            clear.type = 'button';
-            clear.className = 'mt-2 text-xs text-red-600 underline';
-            clear.textContent = 'Remove all';
-            clear.addEventListener('click', () => {
-                const dt = new DataTransfer();
-                attachmentsInput.files = dt.files;
-                renderFiles();
-            });
-            list.appendChild(clear);
+            fileInfo.innerHTML = '';
+            fileInfo.appendChild(ul);
         }
 
-        attachmentsInput.addEventListener('change', renderFiles);
+        fileInput.addEventListener('change', updateDisplay);
 
-        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('bg-slate-100'); });
-        dropzone.addEventListener('dragleave', (e) => { dropzone.classList.remove('bg-slate-100'); });
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-orange-500');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-orange-500');
+        });
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropzone.classList.remove('bg-slate-100');
-            const dt = e.dataTransfer;
-            if (dt && dt.files && dt.files.length) {
-                const dataTransfer = new DataTransfer();
-                for (let i = 0; i < dt.files.length; i++) dataTransfer.items.add(dt.files[i]);
-                attachmentsInput.files = dataTransfer.files;
-                renderFiles();
+            dropzone.classList.remove('border-orange-500');
+            if (e.dataTransfer.files.length) {
+                const dt = new DataTransfer();
+                for (let i = 0; i < e.dataTransfer.files.length; i++) {
+                    dt.items.add(e.dataTransfer.files[i]);
+                }
+                fileInput.files = dt.files;
+                updateDisplay();
             }
         });
 
-        renderFiles();
+        updateDisplay();
     })();
 
-    // Proof of Payment UI: show selected file and support drag & drop
-    (function proofOfPaymentUi() {
-        const proofInput = document.getElementById('proofOfPayment');
-        const proofDropzone = document.getElementById('proof-dropzone');
-        const proofFileInfo = document.getElementById('proof-file-info');
-        
-        if (!proofInput || !proofDropzone || !proofFileInfo) return;
-
-        function renderProofFile() {
-            if (!proofInput.files || proofInput.files.length === 0) {
-                proofFileInfo.textContent = 'No file selected.';
-                proofDropzone.classList.remove('border-orange-500', 'bg-orange-50');
-                proofDropzone.classList.add('border-slate-200', 'bg-slate-50');
-                return;
-            }
-            const file = proofInput.files[0];
-            proofFileInfo.innerHTML = `
-                <div class="flex items-center justify-between">
-                    <span><i class="fas fa-check-circle text-green-600 mr-2"></i>${file.name} <span class="text-xs text-slate-500">(${Math.round(file.size/1024)} KB)</span></span>
-                    <button type="button" class="text-red-600 text-xs underline hover:text-red-800">Remove</button>
-                </div>
-            `;
-            const removeBtn = proofFileInfo.querySelector('button');
-            if (removeBtn) {
-                removeBtn.addEventListener('click', () => {
-                    const dt = new DataTransfer();
-                    proofInput.files = dt.files;
-                    renderProofFile();
-                });
-            }
-            proofDropzone.classList.remove('border-slate-200', 'bg-slate-50');
-            proofDropzone.classList.add('border-orange-500', 'bg-orange-50');
-        }
-
-        proofInput.addEventListener('change', renderProofFile);
-
-        proofDropzone.addEventListener('dragover', (e) => { 
-            e.preventDefault(); 
-            proofDropzone.classList.add('border-orange-500', 'bg-orange-50');
-        });
-        proofDropzone.addEventListener('dragleave', (e) => { 
-            proofDropzone.classList.remove('border-orange-500', 'bg-orange-50');
-        });
-        proofDropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const dt = e.dataTransfer;
-            if (dt && dt.files && dt.files.length) {
-                // Accept only the first file for proof of payment
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(dt.files[0]);
-                proofInput.files = dataTransfer.files;
-                renderProofFile();
-            }
-        });
-
-        renderProofFile();
-    })();
-
-    // Replace or populate the nationality input with a country dropdown
-    (function populateNationality() {
-        const natEl = document.getElementById('nationality');
-        if (!natEl) return;
-        const countries = [
-            'Zambia','Zimbabwe','South Africa','Botswana','Namibia','Mozambique','Malawi','Tanzania','Kenya','Uganda',
-            'Nigeria','Ghana','Sierra Leone','Liberia','Cameroon','Egypt','Morocco','Algeria','Tunisia','Sudan',
-            'United Kingdom','United States','Canada','Australia','New Zealand','India','Pakistan','Bangladesh',
-            'China','Japan','South Korea','Germany','France','Italy','Spain','Portugal','Brazil','Argentina','Chile',
-            'Netherlands','Belgium','Sweden','Norway','Denmark','Finland','Russia'
-        ];
-
-        const select = document.createElement('select');
-        select.id = natEl.id;
-        select.name = natEl.name || 'nationality';
-        select.className = natEl.className;
-
-        countries.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c;
-            opt.textContent = c;
-            select.appendChild(opt);
-        });
-
-        const initial = (natEl.value || '').trim();
-        if (initial) {
-            const match = Array.from(select.options).find(o => o.value.toLowerCase() === initial.toLowerCase());
-            if (match) match.selected = true;
-            else {
-                const opt = document.createElement('option'); opt.value = initial; opt.textContent = initial; opt.selected = true; select.insertBefore(opt, select.firstChild);
-            }
-        }
-
-        natEl.parentNode.replaceChild(select, natEl);
-    })();
-
-    // Auto-insert slashes into NRC input to format XXXXXX/XX/X and restrict to digits
+    // ===== NRC FORMATTER =====
     (function nrcFormatter() {
         const nrcEl = document.getElementById('nrc');
         if (!nrcEl) return;
@@ -201,219 +293,447 @@
         });
 
         nrcEl.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Tab') return;
+            if (e.ctrlKey || e.metaKey || ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
             if (!/\d/.test(e.key)) e.preventDefault();
         });
     })();
 
-    function showError(el, msg) {
-        clearError(el);
-        const node = document.createElement('p');
-        node.className = 'text-red-500 text-sm mt-1';
-        node.textContent = msg;
-        el.insertAdjacentElement('afterend', node);
-    }
-
-    function clearError(el) {
-        const next = el.nextElementSibling;
-        if (next && next.classList && next.classList.contains('text-red-500')) next.remove();
-    }
-
+    // ===== VALIDATION FUNCTIONS =====
     function validateNRC(value) {
         const trimmed = value.trim();
-        if (/^\d{6}\/\d{2}\/\d{1}$/.test(trimmed)) return true;
-        if (/^\d{9}$/.test(trimmed)) return true;
-        return false;
+        return /^\d{6}\/\d{2}\/\d{1}$/.test(trimmed) || /^\d{9}$/.test(trimmed);
     }
 
     function validateEmail(value) {
+        if (!value) return true; // Email is optional
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
     }
 
     function validatePhone(value) {
+        if (!value) return true;
         const digits = value.replace(/\D/g, '');
-        if (digits.length === 12 && digits.startsWith('260')) return true;
-        if (digits.length === 10 && digits.startsWith('0')) return true;
-        return false;
+        return (digits.length === 12 && digits.startsWith('260')) || (digits.length === 10 && digits.startsWith('0'));
     }
 
-    function gatherData() {
-        const data = {};
-        data.surname = document.getElementById('surname').value.trim();
-        data.firstname = document.getElementById('firstname').value.trim();
-        data.gender = document.getElementById('gender') ? document.getElementById('gender').value : '';
-        data.dob = document.getElementById('dob') ? document.getElementById('dob').value : '';
-        data.nrc = document.getElementById('nrc').value.trim();
-        data.nationality = document.getElementById('nationality') ? document.getElementById('nationality').value : '';
-        data.address = document.getElementById('address').value.trim();
-        data.cell = document.getElementById('cell').value.trim();
-        data.phone = document.getElementById('cell').value.trim();
-        data.email = document.getElementById('email').value.trim();
-        data.lastSchool = document.getElementById('lastSchool') ? document.getElementById('lastSchool').value.trim() : '';
-        data.educationAttained = document.getElementById('educationAttained') ? document.getElementById('educationAttained').value.trim() : '';
-        data.yearCompleted = document.getElementById('yearCompleted') ? document.getElementById('yearCompleted').value.trim() : '';
-        data.prevQualifications = document.getElementById('prevQualifications') ? document.getElementById('prevQualifications').value.trim() : '';
-        data.choice1 = (document.querySelector('input[name="choice1"]:checked') || {}).value || '';
-        data.choice2 = document.getElementById('choice2') ? document.getElementById('choice2').value : '';
-        data.mode = (document.querySelector('input[name="mode"]:checked') || {}).value || '';
-        data.level = document.getElementById('levelSelect') ? document.getElementById('levelSelect').value : '';
-        data.sponsorName = document.getElementById('sponsorName') ? document.getElementById('sponsorName').value.trim() : '';
-        data.sponsorCell = document.getElementById('sponsorCell') ? document.getElementById('sponsorCell').value.trim() : '';
-        data.sponsorPostal = document.getElementById('sponsorPostal') ? document.getElementById('sponsorPostal').value.trim() : '';
-        data.sponsorOccupation = document.getElementById('sponsorOccupation') ? document.getElementById('sponsorOccupation').value.trim() : '';
-        data.sponsorRelation = document.getElementById('sponsorRelation') ? document.getElementById('sponsorRelation').value.trim() : '';
-        data.applicationFee = 'K100';
-        data.paymentMethod = 'Zanaco Bill Muster';
-        data.zanacoBankAccount = '0596204400114';
-        return data;
+    function showError(el, msg) {
+        const existing = el.nextElementSibling;
+        if (existing && existing.classList.contains('text-red-500')) existing.remove();
+        const err = document.createElement('p');
+        err.className = 'text-red-500 text-sm mt-1 flex items-center gap-1';
+        err.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        el.insertAdjacentElement('afterend', err);
     }
 
-    function openReviewPage(data) {
-        sessionStorage.setItem('applicationData', JSON.stringify(data));
+    function clearError(el) {
+        const next = el.nextElementSibling;
+        if (next && next.classList.contains('text-red-500')) next.remove();
+    }
+
+    function scrollToError(el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-red-500');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-red-500'), 3000);
+    }
+
+    // ===== FORM SUBMISSION =====
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        const errors = [];
+
+        // Clear previous errors
+        form.querySelectorAll('.text-red-500').forEach(el => el.remove());
+
+        // Required field validations
+        const requiredFields = [
+            { id: 'firstname', label: 'First Name' },
+            { id: 'surname', label: 'Surname' },
+            { id: 'gender', label: 'Gender' },
+            { id: 'dob', label: 'Date of Birth' },
+            { id: 'nrc', label: 'NRC Number' },
+            { id: 'nationality', label: 'Nationality' },
+            { id: 'address', label: 'Residential Address' },
+            { id: 'cell', label: 'Cell Number' },
+            { id: 'lastSchool', label: 'Last School Attended' },
+            { id: 'educationAttained', label: 'Education Level Attained' },
+            { id: 'yearCompleted', label: 'Year of Completion' },
+            { id: 'sponsorName', label: 'Sponsor Name' },
+            { id: 'sponsorPostal', label: 'Sponsor Postal Address' },
+            { id: 'sponsorEmail', label: 'Sponsor Email' },
+            { id: 'sponsorRelation', label: 'Relationship to Applicant' },
+            { id: 'applicationDate', label: 'Application Date' }
+        ];
+
+        requiredFields.forEach(field => {
+            const el = document.getElementById(field.id);
+            if (el && !el.value.trim()) {
+                showError(el, `${field.label} is required`);
+                errors.push(field.label);
+                isValid = false;
+            } else if (el) {
+                clearError(el);
+            }
+        });
+
+        // Subjects and Grades validation - minimum 6 subjects with grades required (grades must be 1-9)
+        // Check hidden field which is populated by mobile picker
+        const subjectsGradesField = document.getElementById('subjectsGrades');
+        let selectedSubjects = [];
         
-        const fileData = [];
-        const proofInput = document.getElementById('proofOfPayment');
-        const proofFile = proofInput && proofInput.files && proofInput.files.length > 0 ? proofInput.files[0] : null;
-        
-        // Function to read and store proof of payment
-        function processProofOfPayment() {
-            if (proofFile) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const proofData = {
-                        name: proofFile.name,
-                        type: proofFile.type,
-                        size: proofFile.size,
-                        data: e.target.result,
-                        isProofOfPayment: true
-                    };
-                    sessionStorage.setItem('proofOfPayment', JSON.stringify(proofData));
-                    processAttachments();
-                };
-                reader.readAsArrayBuffer(proofFile);
-            } else {
-                processAttachments();
+        if (subjectsGradesField && subjectsGradesField.value) {
+            try {
+                selectedSubjects = JSON.parse(subjectsGradesField.value);
+            } catch (e) {
+                selectedSubjects = [];
             }
         }
         
-        // Function to process other attachments
-        function processAttachments() {
-            for (let i = 0; i < attachmentsInput.files.length; i++) {
-                const file = attachmentsInput.files[i];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    fileData.push({
-                        name: file.name,
-                        type: file.type,
-                        size: file.size,
-                        data: e.target.result
-                    });
-                    if (fileData.length === attachmentsInput.files.length) {
-                        sessionStorage.setItem('applicationFiles', JSON.stringify(fileData));
-                        window.location.href = 'review.html';
+        // Also try desktop table if no mobile data
+        if (selectedSubjects.length === 0) {
+            const desktopTable = document.getElementById('subjects-table-desktop');
+            if (desktopTable) {
+                const rows = desktopTable.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    for (let i = 0; i < cells.length; i += 2) {
+                        const subjectCell = cells[i];
+                        const gradeCell = cells[i + 1];
+                        
+                        if (subjectCell && gradeCell) {
+                            const subjectInputs = subjectCell.querySelectorAll('input[type="text"]');
+                            const subjectName = subjectInputs.length > 0 
+                                ? subjectInputs[0].value.trim() 
+                                : subjectCell.textContent.trim();
+                            
+                            const gradeInputs = gradeCell.querySelectorAll('input[type="text"]');
+                            const grade = gradeInputs.length > 0 ? gradeInputs[0].value.trim() : '';
+                            
+                            if (grade && subjectName) {
+                                selectedSubjects.push({ subject: subjectName, grade: grade });
+                            }
+                        }
                     }
-                };
-                reader.readAsArrayBuffer(file);
-            }
-            
-            if (attachmentsInput.files.length === 0) {
-                sessionStorage.setItem('applicationFiles', JSON.stringify([]));
-                window.location.href = 'review.html';
+                });
             }
         }
         
-        processProofOfPayment();
+        if (selectedSubjects.length < 6) {
+            const selectorDiv = document.getElementById('mobile-subjects-selector') || document.getElementById('subjects-table-desktop') || document.body;
+            showError(selectorDiv, `Please select at least 6 subjects with their grades. You currently have ${selectedSubjects.length}.`);
+            errors.push('Subjects and Grades');
+            isValid = false;
+        } else {
+            // Validate all grades are 1-9
+            let invalidGrades = false;
+            selectedSubjects.forEach(item => {
+                if (!/^[1-9]$/.test(item.grade)) {
+                    invalidGrades = true;
+                }
+            });
+            
+            if (invalidGrades) {
+                showError(document.getElementById('mobile-subjects-selector') || document.getElementById('subjects-table-desktop') || document.body, 'All grades must be numbers 1-9 (Zambian standard)');
+                errors.push('Invalid Grades');
+                isValid = false;
+            }
+        }
+
+        // NRC validation
+        const nrcEl = document.getElementById('nrc');
+        if (nrcEl && nrcEl.value.trim() && !validateNRC(nrcEl.value)) {
+            showError(nrcEl, 'Invalid NRC format. Use XXXXXX/XX/X');
+            isValid = false;
+        }
+
+        // Email validation
+        const emailEl = document.getElementById('email');
+        if (emailEl && emailEl.value && !validateEmail(emailEl.value)) {
+            showError(emailEl, 'Invalid email address');
+            isValid = false;
+        }
+
+        // Sponsor email validation
+        const sponsorEmailEl = document.getElementById('sponsorEmail');
+        if (sponsorEmailEl && sponsorEmailEl.value && !validateEmail(sponsorEmailEl.value)) {
+            showError(sponsorEmailEl, 'Invalid email address');
+            isValid = false;
+        }
+
+        // Phone validations
+        const cellEl = document.getElementById('cell');
+        if (cellEl && cellEl.value && !validatePhone(cellEl.value)) {
+            showError(cellEl, 'Invalid phone number');
+            isValid = false;
+        }
+
+        // Course selection validation
+        const choice1 = document.querySelector('input[name="choice1"]:checked');
+        if (!choice1) {
+            showError(form.querySelector('input[name="choice1"]').parentElement, '1st Choice Course is required');
+            isValid = false;
+        }
+
+        const choice2El = document.getElementById('choice2');
+        if (!choice2El.value) {
+            showError(choice2El, '2nd Choice Course is required');
+            isValid = false;
+        }
+
+        // Study preferences validation
+        const mode = document.querySelector('input[name="mode"]:checked');
+        if (!mode) {
+            showError(form.querySelector('input[name="mode"]').parentElement, 'Mode of Study is required');
+            isValid = false;
+        }
+
+        const levelEl = document.getElementById('levelSelect');
+        if (!levelEl.value) {
+            showError(levelEl, 'Level of Study is required');
+            isValid = false;
+        }
+
+        // Confirmation checkboxes validation
+        const identityCheck = document.getElementById('identityCheck');
+        const intentCheck = document.getElementById('intentCheck');
+        const integrityCheck = document.getElementById('integrityCheck');
+
+        if (!identityCheck || !identityCheck.checked) {
+            showError(identityCheck ? identityCheck.parentElement : document.body, 'You must confirm your identity');
+            errors.push('Identity Confirmation');
+            isValid = false;
+        }
+
+        if (!intentCheck || !intentCheck.checked) {
+            showError(intentCheck ? intentCheck.parentElement : document.body, 'You must confirm your intent and commitment');
+            errors.push('Intent & Commitment');
+            isValid = false;
+        }
+
+        if (!integrityCheck || !integrityCheck.checked) {
+            showError(integrityCheck ? integrityCheck.parentElement : document.body, 'You must confirm information integrity');
+            errors.push('Information Integrity');
+            isValid = false;
+        }
+
+        // File validations
+        const resultsCertEl = document.getElementById('resultsCert');
+        if (!resultsCertEl.files || resultsCertEl.files.length === 0) {
+            showError(document.getElementById('documents-dropzone'), 'School results or certificates are required');
+            isValid = false;
+        }
+
+        const proofEl = document.getElementById('proofOfPayment');
+        if (!proofEl.files || proofEl.files.length === 0) {
+            showError(document.getElementById('proof-dropzone'), 'Payment proof (Zanaco receipt) is required');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            // Scroll to first error
+            const firstError = form.querySelector('.text-red-500');
+            if (firstError) {
+                scrollToError(firstError.previousElementSibling || firstError);
+            }
+            showErrorBanner('Please fix the errors above before submitting');
+            return;
+        }
+
+        // Gather and submit
+        gatherAndSubmit();
+    });
+
+    // Extract subjects and grades from both desktop table and mobile picker
+    function extractSubjectsFromTable() {
+        const subjects = [];
+        
+        // First, try to get from mobile picker hidden field
+        const subjectsGradesField = document.getElementById('subjectsGrades');
+        if (subjectsGradesField && subjectsGradesField.value) {
+            try {
+                return JSON.parse(subjectsGradesField.value);
+            } catch (e) {
+                // Fall through to try other methods
+            }
+        }
+        
+        // Try desktop table
+        const desktopTable = document.getElementById('subjects-table-desktop');
+        if (desktopTable) {
+            const rows = desktopTable.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                
+                // Process each pair of columns (subject, grade)
+                for (let i = 0; i < cells.length; i += 2) {
+                    const subjectCell = cells[i];
+                    const gradeCell = cells[i + 1];
+                    
+                    if (subjectCell && gradeCell) {
+                        // Get subject name
+                        const subjectInputs = subjectCell.querySelectorAll('input[type="text"]');
+                        const subjectName = subjectInputs.length > 0 
+                            ? subjectInputs[0].value.trim() 
+                            : subjectCell.textContent.trim();
+                        
+                        // Get grade value
+                        const gradeInputs = gradeCell.querySelectorAll('input[type="text"]');
+                        const grade = gradeInputs.length > 0 ? gradeInputs[0].value.trim() : '';
+                        
+                        // Include if grade is entered
+                        if (grade && subjectName) {
+                            subjects.push({
+                                subject: subjectName,
+                                grade: grade
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        
+        return subjects;
     }
 
-    function showSuccess(msg) {
-        const el = document.createElement('div');
-        el.className = 'fixed bottom-6 right-6 bg-green-600 text-white px-4 py-2 rounded shadow';
-        el.textContent = msg;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 6000);
+    function gatherAndSubmit() {
+        // Extract subjects from table and populate hidden field
+        const subjects = extractSubjectsFromTable();
+        document.getElementById('subjectsGrades').value = JSON.stringify(subjects);
+        
+        const data = {
+            // Personal Details
+            firstname: document.getElementById('firstname').value.trim(),
+            surname: document.getElementById('surname').value.trim(),
+            gender: document.getElementById('gender').value,
+            dob: document.getElementById('dob').value,
+            nrc: document.getElementById('nrc').value.trim(),
+            nationality: document.getElementById('nationality').value,
+            address: document.getElementById('address').value.trim(),
+            cell: document.getElementById('cell').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            
+            // Education
+            lastSchool: document.getElementById('lastSchool').value.trim(),
+            educationAttained: document.getElementById('educationAttained').value.trim(),
+            yearCompleted: document.getElementById('yearCompleted').value.trim(),
+            subjectsGrades: JSON.stringify(subjects),
+            prevQualifications: document.getElementById('prevQualifications').value.trim(),
+            
+            // Courses
+            choice1: document.querySelector('input[name="choice1"]:checked').value,
+            choice2: document.getElementById('choice2').value,
+            
+            // Study Preferences
+            mode: document.querySelector('input[name="mode"]:checked').value,
+            level: document.getElementById('levelSelect').value,
+            
+            // Sponsor
+            sponsorName: document.getElementById('sponsorName').value.trim(),
+            sponsorPostal: document.getElementById('sponsorPostal').value.trim(),
+            sponsorEmail: document.getElementById('sponsorEmail').value.trim(),
+            sponsorCell: document.getElementById('sponsorCell').value.trim(),
+            sponsorOccupation: document.getElementById('sponsorOccupation').value.trim(),
+            sponsorRelation: document.getElementById('sponsorRelation').value.trim(),
+            
+            // Finalization
+            identityConfirmed: document.getElementById('identityCheck').checked,
+            intentConfirmed: document.getElementById('intentCheck').checked,
+            integrityConfirmed: document.getElementById('integrityCheck').checked,
+            applicationDate: document.getElementById('applicationDate').value,
+            
+            // Payment
+            paymentMethod: 'Zanaco Bill Muster',
+            applicationFee: 'K100',
+            zanacoBankAccount: '0596204400114'
+        };
+
+        sessionStorage.setItem('applicationData', JSON.stringify(data));
+
+        // Collect files - use FormData directly to send files without ArrayBuffer conversion
+        const formData = new FormData();
+        
+        // Add all form fields
+        Object.keys(data).forEach(key => {
+            formData.append(key, data[key]);
+        });
+        
+        // Add files directly as Blobs (faster than ArrayBuffer)
+        const proofEl = document.getElementById('proofOfPayment');
+        const resultsCertEl = document.getElementById('resultsCert');
+        const attachmentsEl = document.getElementById('attachments');
+
+        if (proofEl && proofEl.files.length) formData.append('attachments', proofEl.files[0]);
+        if (resultsCertEl && resultsCertEl.files.length) formData.append('attachments', resultsCertEl.files[0]);
+        if (attachmentsEl && attachmentsEl.files.length) {
+            for (let i = 0; i < attachmentsEl.files.length; i++) {
+                formData.append('attachments', attachmentsEl.files[i]);
+            }
+        }
+
+        // Show submitting modal
+        const submittingModal = document.getElementById('submitting-modal');
+        if (submittingModal) {
+            submittingModal.classList.remove('hidden');
+            const progressBar = document.getElementById('progress-bar');
+            if (progressBar) progressBar.style.width = '30%';
+        }
+
+        // Send to server immediately without reading files
+        fetch('/submit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                // Success - update progress and redirect
+                if (submittingModal) {
+                    const progressBar = document.getElementById('progress-bar');
+                    if (progressBar) progressBar.style.width = '100%';
+                    
+                    // Show success after short delay
+                    setTimeout(() => {
+                        submittingModal.classList.add('hidden');
+                        const name = data.firstname || 'Applicant';
+                        const program = data.choice1 || 'your selected program';
+                        const successMessage = document.getElementById('success-message');
+                        if (successMessage) {
+                            successMessage.innerHTML = 
+                                `Thank you, <strong>${escapeHtml(name)}</strong>. Your application for <strong>${escapeHtml(program)}</strong> has been submitted successfully.`;
+                        }
+                        const successModal = document.getElementById('successModal');
+                        if (successModal) successModal.classList.remove('hidden');
+                        
+                        // Clear session data
+                        sessionStorage.removeItem('applicationData');
+                        sessionStorage.removeItem('applicationFiles');
+                    }, 300);
+                } else {
+                    // No modal - just redirect
+                    sessionStorage.removeItem('applicationData');
+                    sessionStorage.removeItem('applicationFiles');
+                    window.location.href = 'review.html';
+                }
+            } else {
+                return response.json().then(err => { throw err; });
+            }
+        })
+        .catch(err => {
+            console.error('Submit error:', err);
+            if (submittingModal) submittingModal.classList.add('hidden');
+            showErrorBanner('Submission failed: ' + (err.error || err.message || 'Unknown error'));
+        });
+    }
+
+    function escapeHtml(text) {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.replace(/[&<>"']/g, m => map[m]);
     }
 
     function showErrorBanner(msg) {
         const el = document.createElement('div');
-        el.className = 'fixed bottom-6 right-6 bg-red-600 text-white px-4 py-2 rounded shadow';
-        el.textContent = msg;
+        el.className = 'fixed top-20 left-4 right-4 max-w-md bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3';
+        el.innerHTML = `<i class="fas fa-exclamation-triangle text-lg flex-shrink-0"></i> <span>${msg}</span>`;
         document.body.appendChild(el);
-        setTimeout(() => el.remove(), 8000);
+        setTimeout(() => el.remove(), 6000);
     }
 
-    function onSubmit(e) {
-        e.preventDefault();
-        let valid = true;
-        const errors = [];
-
-        ['surname','firstname','nrc','cell','email','address'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) clearError(el);
-        });
-
-        // Validate proof of payment file is uploaded
-        const proofInput = document.getElementById('proofOfPayment');
-        if (!proofInput || !proofInput.files || proofInput.files.length === 0) {
-            const dropzone = document.getElementById('proof-dropzone');
-            if (dropzone) {
-                showError(dropzone, 'Proof of payment (Zanaco Bill Muster receipt) is required.');
-                errors.push('Proof of payment');
-                valid = false;
-            }
-        }
-
-        ['surname','firstname','address'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el && !el.value.trim()) { 
-                showError(el, 'This field is required.'); 
-                errors.push(el.previousElementSibling?.textContent || id);
-                valid = false; 
-            }
-        });
-
-        const nrcEl = document.getElementById('nrc');
-        if (!nrcEl.value.trim()) {
-            showError(nrcEl, 'NRC is required.');
-            errors.push('NRC');
-            valid = false;
-        } else if (!validateNRC(nrcEl.value)) { 
-            showError(nrcEl, 'NRC must be in format XXXXXX/XX/X or 9 digits.'); 
-            errors.push('NRC format');
-            valid = false; 
-        }
-
-        const cellEl = document.getElementById('cell');
-        if (!cellEl.value.trim()) {
-            showError(cellEl, 'Cell number is required.');
-            errors.push('Cell number');
-            valid = false;
-        } else if (!validatePhone(cellEl.value)) { 
-            showError(cellEl, 'Enter a valid cell number (0XXXXXXXXX or +260XXXXXXXXX).'); 
-            errors.push('Cell number format');
-            valid = false; 
-        }
-
-        const emailEl = document.getElementById('email');
-        if (emailEl.value && !validateEmail(emailEl.value)) { 
-            showError(emailEl, 'Enter a valid email address.'); 
-            errors.push('Email format');
-            valid = false; 
-        }
-
-        if (!valid) {
-            const firstError = form.querySelector('.text-red-500');
-            if (firstError) {
-                firstError.previousElementSibling?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            if (window.innerWidth < 768) {
-                showErrorBanner('Please fix the following: ' + errors.join(', '));
-            }
-            return;
-        }
-
-        const data = gatherData();
-        openReviewPage(data);
-    }
-
-    form.addEventListener('submit', onSubmit);
 })();

@@ -94,138 +94,348 @@
         </div>
     </header>
 
-    <main id="main-content" class="max-w-7xl mx-auto px-4 py-16">
-        <div class="grid lg:grid-cols-3 gap-12">
+    <main id="main-content" class="max-w-7xl mx-auto px-3 sm:px-4 py-8 sm:py-16">
+        <div class="grid lg:grid-cols-3 gap-6 sm:gap-12">
             
-            <div class="lg:col-span-2 space-y-16">
-                <section id="application-form" class="glass-card rounded-3xl p-6 sm:p-8 md:p-12 space-y-8">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b pb-4 sm:pb-6 gap-4">
-                        <h2 class="text-2xl sm:text-3xl font-black text-blue-900 uppercase">Application Form</h2>
+            <div class="lg:col-span-2 space-y-6">
+                <!-- APPLICATION REQUIREMENTS SECTION -->
+                <section class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-10 lg:p-12 border-l-4 border-orange-500">
+                    <div class="flex items-start gap-4 mb-4">
+                        <i class="fas fa-clipboard-list text-orange-500 text-2xl flex-shrink-0 mt-1"></i>
+                        <div>
+                            <h2 class="text-lg sm:text-2xl font-black text-blue-900 uppercase">Application Requirements</h2>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-2">Before you apply, please ensure you have the following:</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-700">Zambian National Registration Card (NRC)</p>
+                                <p class="text-xs text-slate-600">Valid NRC number in format XXXXXX/XX/X</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-700">School Results or Certificates</p>
+                                <p class="text-xs text-slate-600">PDF, JPG, PNG, or DOC format (max 20MB)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-700">Minimum 6 Subjects</p>
+                                <p class="text-xs text-slate-600">Select at least 6 of your best subjects with grades</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-700">Application Fee (K100)</p>
+                                <p class="text-xs text-slate-600">Zanaco Bill Muster with proof of payment</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-700">Valid Contact Information</p>
+                                <p class="text-xs text-slate-600">Active email and cell phone number</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 flex-shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-700">Legal Consent</p>
+                                <p class="text-xs text-slate-600">Agree to all terms and confirm accuracy</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex gap-3">
+                        <i class="fas fa-lightbulb text-yellow-600 flex-shrink-0 mt-0.5"></i>
+                        <p class="text-xs sm:text-sm text-slate-700"><strong>Tip:</strong> Have all documents ready before starting. You can save and continue later if needed.</p>
+                    </div>
+                </section>
+
+                <section id="application-form" class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-10 lg:p-12">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b pb-4 sm:pb-6 gap-4 mb-8">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-blue-900 uppercase">Application Form</h2>
+                            <p class="text-xs text-slate-500 mt-2">Complete all sections below. Fields marked with <span class="text-red-500 font-bold">*</span> are required.</p>
+                        </div>
                         <span class="text-xs font-mono bg-slate-100 px-3 py-1 rounded whitespace-nowrap">FORM NO. CHTS-2026</span>
                     </div>
 
-                    <form class="space-y-10">
-                        <div>
-                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-4 sm:mb-6">
-                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">1</span>
-                                Personal Details
+                    <form class="space-y-8 sm:space-y-12" id="main-form">
+                        
+                        <!-- SECTION 1: APPLICANT PERSONAL DETAILS -->
+                        <div class="pb-8 border-b border-slate-200">
+                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm font-bold">1</span>
+                                Applicant Personal Details
                             </h2>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                                <div class="sm:col-span-1">
-                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Surname</label>
-                                    <input id="surname" name="surname" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
-                                </div>
-                                <div class="sm:col-span-1">
-                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">First Name</label>
-                                    <input id="firstname" name="firstname" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">First Name <span class="text-red-500">*</span></label>
+                                    <input id="firstname" name="firstname" type="text" required placeholder="Your first name" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Gender</label>
-                                    <select id="gender" name="gender" class="w-full glass-input rounded-lg px-4 py-3">
-                                        <option>Male</option>
-                                        <option>Female</option>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Surname <span class="text-red-500">*</span></label>
+                                    <input id="surname" name="surname" type="text" required placeholder="Your last name" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Gender <span class="text-red-500">*</span></label>
+                                    <select id="gender" name="gender" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition bg-white">
+                                        <option value="">Select gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Date of Birth</label>
-                                    <input id="dob" name="dob" type="date" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Date of Birth <span class="text-red-500">*</span></label>
+                                    <input id="dob" name="dob" type="date" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">NRC Number</label>
-                                    <input id="nrc" name="nrc" type="text" placeholder="000000/00/1" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">NRC Number <span class="text-red-500">*</span></label>
+                                    <input id="nrc" name="nrc" type="text" required placeholder="000000/00/1" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition font-mono">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nationality</label>
-                                    <input id="nationality" name="nationality" type="text" value="Zambian" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Nationality <span class="text-red-500">*</span></label>
+                                    <select id="nationality" name="nationality" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition bg-white">
+                                        <option value="">Select nationality</option>
+                                        <option value="Zambian" selected>Zambian</option>
+                                        <option value="Zimbabwean">Zimbabwean</option>
+                                        <option value="South African">South African</option>
+                                        <option value="Other">Other</option>
+                                    </select>
                                 </div>
-                                <div class="sm:col-span-2">
-                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Residential Address</label>
-                                    <textarea id="address" name="address" rows="2" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none"></textarea>
+                                <div class="sm:col-span-2 lg:col-span-3">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Residential Address <span class="text-red-500">*</span></label>
+                                    <textarea id="address" name="address" rows="3" required placeholder="Your complete residential address" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition resize-none"></textarea>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Cell No.</label>
-                                    <input id="cell" name="cell" type="tel" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Cell Number <span class="text-red-500">*</span></label>
+                                    <input id="cell" name="cell" type="tel" required placeholder="0976XXXXXX" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
-                                    <input id="email" name="email" type="email" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Email Address</label>
+                                    <input id="email" name="email" type="email" placeholder="your.email@example.com" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                             </div>
                         </div>
 
-                        <hr class="border-slate-100">
-
-                        <div>
-                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-4 sm:mb-6">
-                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">2</span>
-                                Education Background
+                        <!-- SECTION 2: EDUCATIONAL BACKGROUND & DOCUMENTS -->
+                        <div class="pb-8 border-b border-slate-200">
+                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm font-bold">2</span>
+                                Educational Background & Documents
                             </h2>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6">
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Last School Attended</label>
-                                    <input id="lastSchool" name="lastSchool" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Last School Attended <span class="text-red-500">*</span></label>
+                                    <input id="lastSchool" name="lastSchool" type="text" required placeholder="e.g. Nkana High School" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Education Attained (e.g Grade 12)</label>
-                                    <input id="educationAttained" name="educationAttained" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Education Level Attained <span class="text-red-500">*</span></label>
+                                    <input id="educationAttained" name="educationAttained" type="text" required placeholder="e.g. Grade 12" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Year Completed</label>
-                                    <input id="yearCompleted" name="yearCompleted" type="number" placeholder="2024" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Year of Completion <span class="text-red-500">*</span></label>
+                                    <input id="yearCompleted" name="yearCompleted" type="number" placeholder="2024" min="1990" max="2030" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Previous Qualifications (If Any)</label>
-                                    <input id="prevQualifications" name="prevQualifications" type="text" placeholder="Institution - Qualification - Year" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-3">Subjects Covered and Grades Obtained <span class="text-red-500">*</span></label>
+                                    <p class="text-xs text-slate-600 mb-3"><strong>Select at least 6 of your best subjects</strong>. Enter your grades using the Zambian grading system (1-9, where 1 is highest and 9 is lowest)</p>
+                                    <div class="border border-slate-300 rounded-lg overflow-hidden">
+                                        <!-- Desktop View: 2-column table -->
+                                        <div class="hidden sm:block">
+                                            <table class="w-full text-xs sm:text-sm">
+                                                <thead class="bg-blue-900 text-white">
+                                                    <tr>
+                                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">Subject</th>
+                                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold" style="width: 70px;">Grade</th>
+                                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">Subject</th>
+                                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold" style="width: 70px;">Grade</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="subjects-table-desktop" class="divide-y divide-slate-200">
+                                                    <tr class="hover:bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">English</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Mathematics</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                    <tr class="hover:bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Science</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Physics</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                    <tr class="hover:bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Chemistry</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Biology</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                    <tr class="hover:bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Computer Science</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">History</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                    <tr class="hover:bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Geography</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Economics</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                    <tr class="hover:bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Civics</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Agriculture</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                    <tr class="hover:bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Commerce</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-slate-700 text-xs sm:text-sm">Art & Design</td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                    <tr class="hover:bg-slate-50 bg-slate-50">
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" id="customSubject1" placeholder="Subject" class="w-full px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" id="customSubject2" placeholder="Subject" class="w-full px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm"></td>
+                                                        <td class="px-2 sm:px-4 py-2 sm:py-3"><input type="text" class="subject-grade w-full text-center px-2 py-2 border border-slate-300 rounded text-xs sm:text-sm" maxlength="1" placeholder="1-9" inputmode="numeric"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Mobile View: Dynamic Subject Selection -->
+                                        <div class="sm:hidden" id="mobile-subjects-selector">
+                                            <div class="p-4 space-y-4">
+                                                <!-- Subject Selection Area -->
+                                                <div class="space-y-3">
+                                                    <div>
+                                                        <label class="block text-xs font-semibold text-slate-700 mb-2">Select Subject</label>
+                                                        <select id="mobile-subject-dropdown" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none transition bg-white">
+                                                            <option value="">-- Choose a subject --</option>
+                                                            <option value="English">English</option>
+                                                            <option value="Mathematics">Mathematics</option>
+                                                            <option value="Science">Science</option>
+                                                            <option value="Physics">Physics</option>
+                                                            <option value="Chemistry">Chemistry</option>
+                                                            <option value="Biology">Biology</option>
+                                                            <option value="Computer Science">Computer Science</option>
+                                                            <option value="History">History</option>
+                                                            <option value="Geography">Geography</option>
+                                                            <option value="Economics">Economics</option>
+                                                            <option value="Civics">Civics</option>
+                                                            <option value="Agriculture">Agriculture</option>
+                                                            <option value="Commerce">Commerce</option>
+                                                            <option value="Art & Design">Art & Design</option>
+                                                            <option value="custom">+ Add Custom Subject</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div id="custom-subject-input-mobile" class="hidden">
+                                                        <label class="block text-xs font-semibold text-slate-700 mb-2">Custom Subject Name</label>
+                                                        <input type="text" id="mobile-custom-subject-name" placeholder="Enter subject name" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none transition">
+                                                    </div>
+                                                    
+                                                    <div>
+                                                        <label class="block text-xs font-semibold text-slate-700 mb-2">Grade (1-9)</label>
+                                                        <input type="tel" id="mobile-subject-grade" placeholder="Enter grade" maxlength="1" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs text-center focus:ring-2 focus:ring-orange-500 outline-none transition text-lg font-bold" inputmode="numeric" autocomplete="off">
+                                                    </div>
+                                                    
+                                                    <button type="button" id="add-subject-btn" class="w-full bg-orange-500 text-white py-2 px-3 rounded-lg font-semibold text-xs hover:bg-orange-600 transition">Add Subject</button>
+                                                </div>
+
+                                                <!-- Selected Subjects List -->
+                                                <div class="border-t pt-4">
+                                                    <div class="flex items-center justify-between mb-3">
+                                                        <label class="block text-xs font-semibold text-slate-700">Selected Subjects</label>
+                                                        <span class="inline-block bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold" id="subjects-counter">0/6</span>
+                                                    </div>
+                                                    
+                                                    <div id="mobile-selected-subjects" class="space-y-2">
+                                                        <p class="text-xs text-slate-500 text-center py-4">No subjects added yet</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="subjectsGrades" name="subjectsGrades">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Attach School Results or Certificates <span class="text-red-500">*</span></label>
+                                    <p class="text-xs text-slate-600 mb-3">Upload copies of your school results or certificates</p>
+                                    <div id="documents-dropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center bg-slate-50 hover:border-orange-500 transition cursor-pointer">
+                                        <i class="fas fa-file-pdf text-2xl text-slate-400 mb-2"></i>
+                                        <p class="text-xs sm:text-sm text-slate-600">Drag & drop files or <label for="resultsCert" class="text-blue-900 font-semibold underline cursor-pointer">browse</label></p>
+                                        <input id="resultsCert" name="resultsCert" type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="sr-only" />
+                                        <div id="documents-file-info" class="mt-2 text-xs text-slate-600">No file selected</div>
+                                    </div>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Previous Qualifications (if any)</label>
+                                    <textarea id="prevQualifications" name="prevQualifications" rows="3" placeholder="Institution name - Qualification title - Year completed (if applicable)" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition resize-none"></textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <hr class="border-slate-100">
-
-                        <div>
-                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-4 sm:mb-6">
-                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">3</span>
-                                Course of Choice
+                        <!-- SECTION 3: COURSE SELECTION -->
+                        <div class="pb-8 border-b border-slate-200">
+                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm font-bold">3</span>
+                                Course Selection
                             </h2>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-3">Primary Choice (1st Choice)</label>
-                                    <div class="space-y-2 max-h-60 overflow-y-auto border p-4 rounded-lg bg-slate-50">
-                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                            <input type="radio" name="choice1" value="Electrical" class="w-4 h-4 text-orange-500">
-                                            <span class="text-sm">Electrical Technology/Engineering</span>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-3 sm:mb-4">1st Choice Course <span class="text-red-500">*</span></label>
+                                    <div class="space-y-2 border border-slate-300 rounded-lg p-3 sm:p-4 bg-slate-50 max-h-72 overflow-y-auto">
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition text-xs sm:text-sm">
+                                            <input type="radio" name="choice1" value="Electrical Technology / Electrical Engineering" required class="w-4 h-4 text-orange-500">
+                                            <span>Electrical Technology / Electrical Engineering</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                            <input type="radio" name="choice1" value="Metal" class="w-4 h-4 text-orange-500">
-                                            <span class="text-sm">Metal Fabrication</span>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition text-xs sm:text-sm">
+                                            <input type="radio" name="choice1" value="Metal Fabrication" required class="w-4 h-4 text-orange-500">
+                                            <span>Metal Fabrication</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                            <input type="radio" name="choice1" value="Auto" class="w-4 h-4 text-orange-500">
-                                            <span class="text-sm">Automotive Mechanics</span>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition text-xs sm:text-sm">
+                                            <input type="radio" name="choice1" value="Automotive Mechanics" required class="w-4 h-4 text-orange-500">
+                                            <span>Automotive Mechanics</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                            <input type="radio" name="choice1" value="Computer" class="w-4 h-4 text-orange-500">
-                                            <span class="text-sm">Computer Studies</span>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition text-xs sm:text-sm">
+                                            <input type="radio" name="choice1" value="Computer Studies" required class="w-4 h-4 text-orange-500">
+                                            <span>Computer Studies</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                            <input type="radio" name="choice1" value="Food" class="w-4 h-4 text-orange-500">
-                                            <span class="text-sm">Food Production</span>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition text-xs sm:text-sm">
+                                            <input type="radio" name="choice1" value="Food Production" required class="w-4 h-4 text-orange-500">
+                                            <span>Food Production</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                            <input type="radio" name="choice1" value="Tailoring" class="w-4 h-4 text-orange-500">
-                                            <span class="text-sm">Designing, Cutting & Tailoring</span>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition text-xs sm:text-sm">
+                                            <input type="radio" name="choice1" value="Designing, Cutting & Tailoring" required class="w-4 h-4 text-orange-500">
+                                            <span>Designing, Cutting & Tailoring</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                            <input type="radio" name="choice1" value="Carpentry" class="w-4 h-4 text-orange-500">
-                                            <span class="text-sm">Carpentry & Joinery</span>
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white rounded cursor-pointer transition text-xs sm:text-sm">
+                                            <input type="radio" name="choice1" value="Carpentry & Joinery" required class="w-4 h-4 text-orange-500">
+                                            <span>Carpentry & Joinery</span>
                                         </label>
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-3">Second Choice (2nd Choice)</label>
-                                        <select id="choice2" name="choice2" class="w-full glass-input rounded-lg px-4 py-3">
-                                        <option value="">-- Select Alternate --</option>
-                                        <option>Electrical Technology</option>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-3 sm:mb-4">2nd Choice Course <span class="text-red-500">*</span></label>
+                                    <select id="choice2" name="choice2" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition bg-white text-xs sm:text-sm">
+                                        <option value="">-- Select 2nd Choice --</option>
+                                        <option>Electrical Technology / Electrical Engineering</option>
                                         <option>Metal Fabrication</option>
                                         <option>Automotive Mechanics</option>
                                         <option>Computer Studies</option>
@@ -237,136 +447,169 @@
                             </div>
                         </div>
 
-                        <hr class="border-slate-100">
-
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <div>
-                                <h2 class="text-xl font-bold text-blue-900 mb-6">Mode of Study</h2>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
-                                        <input type="radio" name="mode" value="FullTime"> <span class="text-sm">Full Time</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
-                                        <input type="radio" name="mode" value="PartTime"> <span class="text-sm">Part Time</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
-                                        <input type="radio" name="mode" value="Distance"> <span class="text-sm">Distance</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:border-orange-500 transition">
-                                        <input type="radio" name="mode" value="ShortIntensive"> <span class="text-sm">Short Intensive</span>
-                                    </label>
+                        <!-- SECTION 4: STUDY PREFERENCES -->
+                        <div class="pb-8 border-b border-slate-200">
+                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm font-bold">4</span>
+                                Study Preferences
+                            </h2>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-3 sm:mb-4">Mode of Study <span class="text-red-500">*</span></label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center gap-3 p-3 border-2 border-slate-300 rounded-lg cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition">
+                                            <input type="radio" name="mode" value="Full Time" required class="w-4 h-4 text-orange-500 flex-shrink-0">
+                                            <span class="text-xs sm:text-sm font-medium">Full Time</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 border-2 border-slate-300 rounded-lg cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition">
+                                            <input type="radio" name="mode" value="Part Time" required class="w-4 h-4 text-orange-500 flex-shrink-0">
+                                            <span class="text-xs sm:text-sm font-medium">Part Time</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 border-2 border-slate-300 rounded-lg cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition">
+                                            <input type="radio" name="mode" value="Distance Learning" required class="w-4 h-4 text-orange-500 flex-shrink-0">
+                                            <span class="text-xs sm:text-sm font-medium">Distance Learning</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 border-2 border-slate-300 rounded-lg cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition">
+                                            <input type="radio" name="mode" value="Short Intensive" required class="w-4 h-4 text-orange-500 flex-shrink-0">
+                                            <span class="text-xs sm:text-sm font-medium">Short Intensive</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <h2 class="text-xl font-bold text-blue-900 mb-6">Level of Study</h2>
-                                <div class="space-y-3">
-                                        <select id="levelSelect" name="level" class="w-full glass-input rounded-lg px-4 py-3">
-                                        <optgroup label="General Levels">
-                                            <option>Trade Test Level - I</option>
-                                            <option>Trade Test Level - II</option>
-                                            <option>Trade Test Level - III</option>
-                                            <option>Certificate</option>
-                                            <option>Craft Certificate</option>
-                                        </optgroup>
-                                        <optgroup label="Advanced (Technician) Levels">
-                                            <option>Advanced Certificate Level I</option>
-                                            <option>Advanced Certificate Level II</option>
-                                        </optgroup>
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-3 sm:mb-4">Level of Study <span class="text-red-500">*</span></label>
+                                    <select id="levelSelect" name="level" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition bg-white text-xs sm:text-sm">
+                                        <option value="">-- Select Level --</option>
+                                        <option>Craft Certificate</option>
+                                        <option>Certificate</option>
+                                        <option>Trade Test (Level I)</option>
+                                        <option>Trade Test (Level II)</option>
+                                        <option>Trade Test (Level III)</option>
+                                        <option>Advanced Certificate (Level I)</option>
+                                        <option>Advanced Certificate (Level II)</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <hr class="border-slate-100">
-
-                        <div>
-                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-4 sm:mb-6">
-                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">4</span>
-                                Application Payment
+                        <!-- SECTION 5: SPONSOR INFORMATION -->
+                        <div class="pb-8 border-b border-slate-200">
+                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm font-bold">5</span>
+                                Sponsor Information
                             </h2>
-                            <div class="bg-gradient-to-r from-orange-50 to-blue-50 border-l-4 border-orange-500 p-4 sm:p-6 rounded-lg mb-6">
-                                <div class="flex items-start gap-3 mb-4">
-                                    <i class="fas fa-university text-orange-600 text-xl mt-1 flex-shrink-0"></i>
-                                    <div>
-                                        <p class="font-bold text-blue-900 mb-1">Application Fee: K100</p>
-                                        <p class="text-sm text-slate-700">Payment via Zanaco Bill Muster (Bill Master)</p>
-                                    </div>
-                                </div>
-                                <div class="bg-white border border-orange-200 rounded-lg p-4">
-                                    <p class="text-xs uppercase font-bold text-slate-600 mb-2">Zanaco Account Details:</p>
-                                    <div class="flex items-center justify-between gap-3 bg-orange-50 p-3 rounded">
-                                        <div>
-                                            <p class="text-xs text-slate-600">Account Number</p>
-                                            <p class="text-lg font-mono font-bold text-blue-900">0596204400114</p>
-                                        </div>
-                                        <button type="button" class="copy-account-btn text-orange-600 hover:text-orange-800 transition" title="Copy account number">
-                                            <i class="fas fa-copy text-xl"></i>
-                                        </button>
-                                    </div>
-                                    <p class="text-xs text-slate-600 mt-3 italic">Please use Zanaco Bill Master/Bill Muster to pay the K100 application fee.</p>
-                                </div>
-                            </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Payment Confirmation <span class="text-red-500">*</span></label>
-                                    <p class="text-xs text-slate-600 mb-3">Upload your Zanaco Bill Muster receipt/proof of payment</p>
-                                    <div id="proof-dropzone" class="border-2 border-dashed border-slate-200 rounded-lg p-4 sm:p-6 text-center bg-slate-50 hover:border-orange-500 transition">
-                                        <i class="fas fa-receipt text-2xl text-slate-400 mb-2"></i>
-                                        <p class="text-xs sm:text-sm text-slate-500">Drag & drop payment receipt here or <label for="proofOfPayment" class="text-blue-900 underline cursor-pointer">browse</label></p>
-                                        <input id="proofOfPayment" name="proofOfPayment" type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="sr-only" />
-                                        <div id="proof-file-info" class="mt-2 text-xs text-slate-600">No file selected.</div>
-                                    </div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Full Name of Sponsor <span class="text-red-500">*</span></label>
+                                    <input id="sponsorName" name="sponsorName" type="text" required placeholder="Full name" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Postal Address <span class="text-red-500">*</span></label>
+                                    <textarea id="sponsorPostal" name="sponsorPostal" rows="2" required placeholder="P.O. Box or physical address" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Email Address <span class="text-red-500">*</span></label>
+                                    <input id="sponsorEmail" name="sponsorEmail" type="email" required placeholder="email@example.com" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Cell Number</label>
+                                    <input id="sponsorCell" name="sponsorCell" type="tel" placeholder="0976XXXXXX" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Occupation</label>
+                                    <input id="sponsorOccupation" name="sponsorOccupation" type="text" placeholder="e.g. Manager, Teacher" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Relationship to Applicant <span class="text-red-500">*</span></label>
+                                    <input id="sponsorRelation" name="sponsorRelation" type="text" required placeholder="e.g. Father, Mother, Employer" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
                                 </div>
                             </div>
                         </div>
 
-                        <hr class="border-slate-100">
-
-                        <div>
-                            <h2 class="text-xl font-bold text-blue-900 flex items-center mb-6">
-                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm">5</span>
-                                Sponsor's Details
+                        <!-- SECTION 6: APPLICATION FINALIZATION -->
+                        <div class="pb-8 border-b border-slate-200">
+                            <h2 class="text-lg sm:text-xl font-bold text-blue-900 flex items-center mb-6">
+                                <span class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mr-3 text-sm font-bold">6</span>
+                                Application Finalization
                             </h2>
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Sponsor's Name</label>
-                                    <input id="sponsorName" name="sponsorName" type="text" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                            <div class="mt-8 pt-8 border-t border-slate-200">
+                                <h3 class="text-sm font-bold text-blue-900 mb-6 uppercase">✓ Application Confirmation</h3>
+                                <div class="space-y-4">
+                                    <label class="flex items-start gap-3 p-4 border-2 border-slate-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 cursor-pointer transition">
+                                        <input type="checkbox" id="identityCheck" name="identityCheck" required class="mt-1 w-4 h-4 text-orange-500 rounded cursor-pointer">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-slate-800 text-sm">Identity Confirmation <span class="text-red-500">*</span></p>
+                                            <p class="text-xs text-slate-600 mt-1">I confirm that I am the person submitting this application and all information provided is accurate to the best of my knowledge.</p>
+                                        </div>
+                                    </label>
+                                    
+                                    <label class="flex items-start gap-3 p-4 border-2 border-slate-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 cursor-pointer transition">
+                                        <input type="checkbox" id="intentCheck" name="intentCheck" required class="mt-1 w-4 h-4 text-orange-500 rounded cursor-pointer">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-slate-800 text-sm">Intent & Commitment <span class="text-red-500">*</span></p>
+                                            <p class="text-xs text-slate-600 mt-1">I declare my genuine intent to enroll at Craw Hammer Trades School and commit to completing the selected course with dedication and discipline.</p>
+                                        </div>
+                                    </label>
+                                    
+                                    <label class="flex items-start gap-3 p-4 border-2 border-slate-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 cursor-pointer transition">
+                                        <input type="checkbox" id="integrityCheck" name="integrityCheck" required class="mt-1 w-4 h-4 text-orange-500 rounded cursor-pointer">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-slate-800 text-sm">Information Integrity <span class="text-red-500">*</span></p>
+                                            <p class="text-xs text-slate-600 mt-1">I confirm that all information provided in this application is true, complete, and accurate. I understand that submission of false information may result in rejection of my application.</p>
+                                        </div>
+                                    </label>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Cell No.</label>
-                                    <input id="sponsorCell" name="sponsorCell" type="tel" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                            </div>
+                            
+                            <div class="mt-8 pt-8 border-t border-slate-200">
+                                <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Date of Application <span class="text-red-500">*</span></label>
+                                <input id="applicationDate" name="applicationDate" type="date" required class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 outline-none transition">
+                            </div>
+                            
+                            <!-- PAYMENT SECTION -->
+                            <div class="mt-8 pt-8 border-t border-slate-200">
+                                <h3 class="text-sm font-bold text-blue-900 mb-4 uppercase">💳 Application Payment (K100)</h3>
+                                <div class="bg-gradient-to-r from-orange-50 to-blue-50 border border-orange-300 rounded-lg p-6 mb-6">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <i class="fas fa-university text-orange-600 text-xl flex-shrink-0"></i>
+                                        <div>
+                                            <p class="font-bold text-blue-900">Zanaco Bill Muster Payment</p>
+                                            <p class="text-xs text-slate-600">Account: <span class="font-mono font-bold">0596204400114</span></p>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-slate-700">After paying via Zanaco Bill Muster, upload your receipt below as proof of payment.</p>
                                 </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Postal Address</label>
-                                    <input id="sponsorPostal" name="sponsorPostal" type="text" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Occupation</label>
-                                    <input id="sponsorOccupation" name="sponsorOccupation" type="text" class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Relationship to Applicant</label>
-                                    <input id="sponsorRelation" name="sponsorRelation" type="text" placeholder="e.g. Father, Employer" required class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none">
+                                <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Upload Payment Receipt <span class="text-red-500">*</span></label>
+                                <div id="proof-dropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center bg-slate-50 hover:border-orange-500 transition cursor-pointer">
+                                    <i class="fas fa-receipt text-2xl text-slate-400 mb-2"></i>
+                                    <p class="text-xs sm:text-sm text-slate-600">Drag & drop Zanaco receipt or <label for="proofOfPayment" class="text-blue-900 font-semibold underline cursor-pointer">browse</label></p>
+                                    <input id="proofOfPayment" name="proofOfPayment" type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="sr-only" />
+                                    <div id="proof-file-info" class="mt-2 text-xs text-slate-600">No file selected</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="pt-6">
-                            <div id="attachments-wrapper" class="mt-6">
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Attach Documents</label>
-                                <div id="dropzone" class="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center bg-slate-50">
-                                    <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
-                                    <p class="text-sm text-slate-500">Drag & drop files here or <label for="attachments" class="text-blue-900 underline cursor-pointer">browse</label>. Allowed: PDF, JPG, PNG, DOC, DOCX.</p>
-                                    <input id="attachments" name="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="sr-only" />
-                                    <div id="attachments-list" class="mt-3 text-sm text-slate-600">No files selected.</div>
-                                </div>
+                        <!-- ADDITIONAL DOCUMENTS -->
+                        <div class="pb-8">
+                            <h3 class="text-sm font-bold text-blue-900 mb-4 uppercase">📎 Additional Supporting Documents</h3>
+                            <p class="text-xs text-slate-600 mb-4">Upload any additional documents (NRC, Passport Photos, Medical Certificate, etc.)</p>
+                            <div id="dropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center bg-slate-50 hover:border-orange-500 transition cursor-pointer">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
+                                <p class="text-xs sm:text-sm text-slate-600">Drag & drop files or <label for="attachments" class="text-blue-900 font-semibold underline cursor-pointer">browse</label></p>
+                                <p class="text-xs text-slate-500 mt-2">Allowed: PDF, JPG, PNG, DOC, DOCX (Max 5 files, 20MB each)</p>
+                                <input id="attachments" name="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="sr-only" />
+                                <div id="attachments-list" class="mt-3 text-xs text-slate-600">No files selected</div>
                             </div>
+                        </div>
 
-                            <button type="submit" class="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-700 transition shadow-lg shadow-orange-200 uppercase">
-                                Submit 2026 Application
+                        <!-- SUBMIT BUTTON -->
+                        <div class="mt-12 pt-8 border-t border-slate-200">
+                            <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-orange-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-orange-700 hover:to-orange-800 transition shadow-lg shadow-orange-300 uppercase flex items-center justify-center gap-2">
+                                <i class="fas fa-paper-plane"></i>
+                                Submit Application
                             </button>
-                            <p class="text-center text-slate-500 mt-4 text-xs italic">
-                                By submitting, you agree to attach certified copies of results or certificates upon request[cite: 6].
+                            <p class="text-center text-slate-600 mt-4 text-xs">
+                                <i class="fas fa-lock text-green-600 mr-1"></i>
+                                Your information is secure and will only be used for admission purposes.
                             </p>
                         </div>
                     </form>

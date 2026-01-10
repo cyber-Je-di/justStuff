@@ -65,10 +65,10 @@ app.get('/health', (req, res) => res.json({ ok: true }));
 
 // MAIN APPLICATION SUBMISSION ENDPOINT
 // POST /submit - Receives application form data and file uploads, validates, and sends via email
-app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, res) => {
+app.post('/submit', submitLimiter, upload.any(), async (req, res) => {
   try {
     const fields = req.body || {};  // Form field data (name, email, etc.)
-    const files = req.files || [];   // Uploaded files (documents, images, etc.)
+    const attachments = req.files || [];  // Uploaded files
 
     // ===== VALIDATION SECTION =====
     // Check for required fields
@@ -78,10 +78,9 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     if (!fields.nrc) errors.push('nrc');
     if (errors.length) return res.status(400).json({ error: 'Missing required fields: ' + errors.join(', ') });
 
-    // Check if proof of payment file is attached (payment method is now fixed as Zanaco Bill Muster)
-    let proofOfPaymentFile = files.find(f => f.fieldname === 'proofOfPayment');
-    if (!proofOfPaymentFile) {
-      return res.status(400).json({ error: 'Proof of payment is required. Please attach your Zanaco Bill Muster receipt.' });
+    // Check if attachments exist (at least one file required)
+    if (!attachments || attachments.length === 0) {
+      return res.status(400).json({ error: 'At least one file must be attached. Please upload your payment receipt and school results.' });
     }
 
     // Validate NRC format (Zambian ID number) BEFORE sanitization to preserve slashes
@@ -121,7 +120,7 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     let totalBytes = 0;
     
     // Check each uploaded file
-    for (const f of files) {
+    for (const f of attachments) {
       if (!ALLOWED_MIMES.includes(f.mimetype)) {
         return res.status(400).json({ error: 'Unsupported file type' });
       }
@@ -132,26 +131,172 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
     }
 
     // ===== EMAIL PREPARATION SECTION =====
-    // Build email body with all application information
-    const lines = [];
-    lines.push(`Application received from ${fields.surname} ${fields.firstname}`);
-    lines.push('');
-    lines.push('=== APPLICATION DETAILS ===');
-    Object.keys(fields).forEach(k => {
-      lines.push(`${k}: ${fields[k]}`);
-    });
-    lines.push('');
-    lines.push('=== PAYMENT INFORMATION ===');
-    lines.push(`Application Fee: K100`);
-    lines.push(`Payment Method: Zanaco Bill Muster`);
+    // Build HTML email body with organized sections
+    const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
+    .header { background: linear-gradient(135deg, #0066cc 0%, #ff6600 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .header h1 { margin: 0; font-size: 24px; }
+    .header p { margin: 5px 0 0 0; font-size: 14px; }
+    .section { background: white; margin-bottom: 15px; padding: 15px; border-left: 4px solid #ff6600; border-radius: 4px; }
+    .section-title { font-size: 16px; font-weight: bold; color: #0066cc; margin-bottom: 10px; text-transform: uppercase; }
+    .field-row { display: flex; margin-bottom: 8px; }
+    .field-label { font-weight: bold; width: 180px; color: #0066cc; }
+    .field-value { flex: 1; word-break: break-word; }
+    .payment-box { background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 4px; margin: 15px 0; }
+    .files-box { background: #e7f3ff; border: 1px solid #b3d9ff; padding: 15px; border-radius: 4px; margin: 15px 0; }
+    .files-box ul { margin: 10px 0; padding-left: 20px; }
+    .files-box li { margin: 5px 0; }
+    .footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>New Application Submission</h1>
+      <p>Craw Hammer Trades School - Application Portal</p>
+    </div>
+
+    <!-- APPLICANT PERSONAL DETAILS -->
+    <div class="section">
+      <div class="section-title">👤 Applicant Personal Details</div>
+      <div class="field-row"><span class="field-label">First Name:</span><span class="field-value">${fields.firstname || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Surname:</span><span class="field-value">${fields.surname || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Gender:</span><span class="field-value">${fields.gender || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Date of Birth:</span><span class="field-value">${fields.dob || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">NRC Number:</span><span class="field-value">${fields.nrc || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Nationality:</span><span class="field-value">${fields.nationality || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Residential Address:</span><span class="field-value">${fields.address || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Cell Number:</span><span class="field-value">${fields.cell || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Email Address:</span><span class="field-value">${fields.email || 'N/A'}</span></div>
+    </div>
+
+    <!-- EDUCATIONAL BACKGROUND -->
+    <div class="section">
+      <div class="section-title">📚 Educational Background & Documents</div>
+      <div class="field-row"><span class="field-label">Last School Attended:</span><span class="field-value">${fields.lastSchool || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Education Level:</span><span class="field-value">${fields.educationAttained || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Year Completed:</span><span class="field-value">${fields.yearCompleted || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Previous Qualifications:</span><span class="field-value">${fields.prevQualifications || 'None'}</span></div>
+      <hr style="margin: 10px 0; border: none; border-top: 1px solid #ddd;">
+      <strong>Selected Subjects & Grades:</strong>
+      <div style="background: #f5f5f5; padding: 10px; border-radius: 4px; margin-top: 8px;">
+        ${(() => {
+          try {
+            const subjects = JSON.parse(fields.subjectsGrades || '[]');
+            if (subjects.length === 0) return '<p style="color: #666;">No subjects selected</p>';
+            return subjects.map((s, i) => `<div>${i+1}. ${s.subject} - Grade <strong>${s.grade}</strong></div>`).join('');
+          } catch (e) {
+            return '<p style="color: #666;">Subject data unavailable</p>';
+          }
+        })()}
+      </div>
+    </div>
+
+    <!-- COURSE SELECTION -->
+    <div class="section">
+      <div class="section-title">🎓 Course Selection</div>
+      <div class="field-row"><span class="field-label">1st Choice:</span><span class="field-value">${fields.choice1 || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">2nd Choice:</span><span class="field-value">${fields.choice2 || 'N/A'}</span></div>
+    </div>
+
+    <!-- STUDY PREFERENCES -->
+    <div class="section">
+      <div class="section-title">⚙️ Study Preferences</div>
+      <div class="field-row"><span class="field-label">Mode of Study:</span><span class="field-value">${fields.mode || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Level of Study:</span><span class="field-value">${fields.level || 'N/A'}</span></div>
+    </div>
+
+    <!-- SPONSOR INFORMATION -->
+    <div class="section">
+      <div class="section-title">👨‍👩‍👧 Sponsor Information</div>
+      <div class="field-row"><span class="field-label">Sponsor Name:</span><span class="field-value">${fields.sponsorName || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Relationship:</span><span class="field-value">${fields.sponsorRelation || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Occupation:</span><span class="field-value">${fields.sponsorOccupation || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Email:</span><span class="field-value">${fields.sponsorEmail || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Cell Number:</span><span class="field-value">${fields.sponsorCell || 'N/A'}</span></div>
+      <div class="field-row"><span class="field-label">Postal Address:</span><span class="field-value">${fields.sponsorPostal || 'N/A'}</span></div>
+    </div>
+
+    <!-- PAYMENT INFORMATION -->
+    <div class="payment-box">
+      <div style="font-weight: bold; margin-bottom: 10px;">💳 APPLICATION PAYMENT</div>
+      <div class="field-row"><span class="field-label">Application Fee:</span><span class="field-value"><strong>K100</strong></span></div>
+      <div class="field-row"><span class="field-label">Payment Method:</span><span class="field-value">Zanaco Bill Muster</span></div>
+      <div class="field-row"><span class="field-label">Bank Account:</span><span class="field-value"><strong>0596204400114</strong></span></div>
+    </div>
+
+    <!-- ATTACHED FILES -->
+    <div class="files-box">
+      <div style="font-weight: bold; margin-bottom: 10px;">📎 ATTACHED FILES (${attachments.length})</div>
+      <ul>
+        ${attachments.map(f => `<li><strong>${f.originalname}</strong> (${Math.round(f.size / 1024)} KB)</li>`).join('')}
+      </ul>
+    </div>
+
+    <!-- CONFIRMATIONS -->
+    <div class="section">
+      <div class="section-title">✓ Application Confirmations</div>
+      <div class="field-row"><span class="field-label">Identity Confirmed:</span><span class="field-value">${fields.identityCheck === 'on' || fields.identityCheck === 'true' ? '✓ Yes' : '✗ No'}</span></div>
+      <div class="field-row"><span class="field-label">Intent Confirmed:</span><span class="field-value">${fields.intentCheck === 'on' || fields.intentCheck === 'true' ? '✓ Yes' : '✗ No'}</span></div>
+      <div class="field-row"><span class="field-label">Integrity Confirmed:</span><span class="field-value">${fields.integrityCheck === 'on' || fields.integrityCheck === 'true' ? '✓ Yes' : '✗ No'}</span></div>
+      <div class="field-row"><span class="field-label">Application Date:</span><span class="field-value">${fields.applicationDate || 'N/A'}</span></div>
+    </div>
+
+    <div class="footer">
+      <p>This is an automated email from the Craw Hammer Trades School Application Portal.</p>
+      <p>Application submitted at ${new Date().toLocaleString('en-ZM', { timeZone: 'Africa/Lusaka' })}</p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    // Plain text fallback
+    const textBody = `
+Application received from ${fields.surname} ${fields.firstname}
+
+=== APPLICANT PERSONAL DETAILS ===
+Name: ${fields.firstname} ${fields.surname}
+Email: ${fields.email}
+Cell: ${fields.cell}
+NRC: ${fields.nrc}
+
+=== EDUCATIONAL BACKGROUND ===
+Last School: ${fields.lastSchool}
+Education Level: ${fields.educationAttained}
+Year Completed: ${fields.yearCompleted}
+
+=== COURSE SELECTION ===
+1st Choice: ${fields.choice1}
+2nd Choice: ${fields.choice2}
+
+=== STUDY PREFERENCES ===
+Mode: ${fields.mode}
+Level: ${fields.level}
+
+=== SPONSOR INFORMATION ===
+Name: ${fields.sponsorName}
+Relationship: ${fields.sponsorRelation}
+Email: ${fields.sponsorEmail}
+
+=== PAYMENT INFORMATION ===
+Application Fee: K100
+Payment Method: Zanaco Bill Muster
+Bank Account: 0596204400114
+
+=== ATTACHED FILES ===
+${attachments.map(f => `${f.originalname} (${Math.round(f.size / 1024)} KB)`).join('\n')}
+    `;
     lines.push(`Zanaco Account: 0596204400114`);
-    lines.push(`Payment Receipt File: ${proofOfPaymentFile.originalname}`);
     lines.push('');
     lines.push('=== ATTACHED FILES ===');
-    if (proofOfPaymentFile) {
-      lines.push(`[ZANACO BILL MUSTER] ${proofOfPaymentFile.originalname} (${Math.round(proofOfPaymentFile.size / 1024)} KB)`);
-    }
-    files.filter(f => f.fieldname === 'attachments').forEach(f => {
+    attachments.forEach(f => {
       lines.push(`${f.originalname} (${Math.round(f.size / 1024)} KB)`);
     });
 
@@ -174,88 +319,81 @@ app.post('/submit', submitLimiter, upload.array('attachments', 5), async (req, r
 
     let transporter = createTransport(process.env.SMTP_HOST);
 
-    // Prepare files for email attachment - include proof of payment first, then other attachments
-    const allAttachments = [];
+    // Prepare files for email attachment
+    const emailAttachments = [];
     
-    // Add proof of payment as first attachment
-    if (proofOfPaymentFile) {
-      allAttachments.push({ 
-        filename: `[PROOF_OF_PAYMENT] ${proofOfPaymentFile.originalname}`, 
-        content: proofOfPaymentFile.buffer 
-      });
-    }
-    
-    // Add other attachments
-    files.filter(f => f.fieldname === 'attachments').forEach(f => {
-      allAttachments.push({ 
+    // Add all uploaded attachments
+    attachments.forEach(f => {
+      emailAttachments.push({ 
         filename: f.originalname, 
         content: f.buffer 
       });
     });
-    
-    const attachments = allAttachments;
 
     // Determine From header
-    // Default: Use SMTP_FROM for security (avoid email spoofing)
-    // Optional: Use applicant email if explicitly enabled (may cause delivery issues with SPF/DMARC)
-    const useApplicantFrom = process.env.USE_APPLICANT_AS_FROM === 'true';
-    let fromHeader = process.env.SMTP_FROM || process.env.SMTP_USER;
-    if (useApplicantFrom && fields.email) {
-      fromHeader = fields.email;
-      if (NODE_ENV === 'development') {
-        console.warn('Using applicant email as From header (USE_APPLICANT_AS_FROM=true).');
-      }
-    }
+    // Use applicant email as sender (with fallback to SMTP user if email is missing)
+    let fromHeader = fields.email || (process.env.SMTP_FROM || process.env.SMTP_USER);
+    let replyToHeader = fields.email;
 
     // Configure email message
     const mailOptions = {
       from: fromHeader,
+      replyTo: replyToHeader,
       to: process.env.TO_EMAIL || 'crawhammer.marketing@gmail.com',
       subject: `New application: ${fields.surname} ${fields.firstname}`,
-      text: lines.join('\n'),
+      text: textBody,
+      html: htmlBody,
       replyTo: fields.email || undefined, // Allows admissions team to reply directly to applicant
-      attachments
+      attachments: emailAttachments
     };
 
-    // ===== EMAIL SENDING WITH RETRY LOGIC =====
-    // Try to send email with fallback to IPv4 if IPv6 fails
-    const dns = require('dns').promises;
-    try {
-      const info = await transporter.sendMail(mailOptions);
-      if (NODE_ENV === 'development') {
-        console.log('Email sent:', info.messageId);
-      }
-    } catch (sendErr) {
-      console.error('Email send error:', sendErr.code || sendErr.message);
-      
-      // If IPv6 network error, retry with IPv4 address resolution
-      if (sendErr && sendErr.code === 'ENETUNREACH') {
+    // ===== EMAIL SENDING (Non-blocking - Fire and Forget) =====
+    // Send email in background without blocking the response
+    // This allows the user to get immediate feedback while email sends asynchronously
+    (async () => {
+      try {
+        const dns = require('dns').promises;
         try {
-          const lookup = await dns.lookup(process.env.SMTP_HOST, { family: 4 });
-          if (lookup && lookup.address) {
-            if (NODE_ENV === 'development') {
-              console.log('Retrying SMTP send using IPv4 address');
-            }
-            transporter = createTransport(lookup.address);
-            transporter.options.tls = transporter.options.tls || {};
-            transporter.options.tls.servername = process.env.SMTP_HOST;
-            const info2 = await transporter.sendMail(mailOptions);
-            if (NODE_ENV === 'development') {
-              console.log('Email sent on IPv4 retry:', info2.messageId);
+          const info = await transporter.sendMail(mailOptions);
+          if (NODE_ENV === 'development') {
+            console.log('Email sent:', info.messageId);
+          }
+        } catch (sendErr) {
+          console.error('Email send error:', sendErr.code || sendErr.message);
+          
+          // If IPv6 network error, retry with IPv4 address resolution
+          if (sendErr && sendErr.code === 'ENETUNREACH') {
+            try {
+              const lookup = await dns.lookup(process.env.SMTP_HOST, { family: 4 });
+              if (lookup && lookup.address) {
+                if (NODE_ENV === 'development') {
+                  console.log('Retrying SMTP send using IPv4 address');
+                }
+                const ipv4Transporter = createTransport(lookup.address);
+                ipv4Transporter.options.tls = ipv4Transporter.options.tls || {};
+                ipv4Transporter.options.tls.servername = process.env.SMTP_HOST;
+                const info2 = await ipv4Transporter.sendMail(mailOptions);
+                if (NODE_ENV === 'development') {
+                  console.log('Email sent on IPv4 retry:', info2.messageId);
+                }
+              } else {
+                throw sendErr;
+              }
+            } catch (retryErr) {
+              console.error('Email retry failed:', retryErr.message);
             }
           } else {
-            throw sendErr;
+            // Log but don't crash - application is already submitted
+            console.error('Failed to send confirmation email, but application was received');
           }
-        } catch (retryErr) {
-          console.error('Email retry failed');
-          throw retryErr;
         }
-      } else {
-        throw sendErr;
+      } catch (err) {
+        // Silently log - user has already received success response
+        console.error('Background email task error:', err.message);
       }
-    }
+    })();
 
-    // Success response
+    // Immediate response to user - don't wait for email to complete
     res.json({ ok: true });
   } catch (err) {
     console.error('Submit error:', err.message);
