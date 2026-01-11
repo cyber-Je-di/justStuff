@@ -745,71 +745,82 @@
         
         sessionStorage.setItem('applicationFiles', JSON.stringify(fileInfo));
         
-        // Convert files to base64 and store in sessionStorage for persistence across page navigation
-        const fileDataForStorage = {
-            proofOfPayment: null,
-            resultsCert: null,
-            attachments: []
-        };
-        
-        // Helper function to convert File to base64 for storage
-        const fileToBase64 = (file) => new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve({
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                data: reader.result
-            });
-            reader.readAsArrayBuffer(file);
-        });
-        
-        // Convert and store each file
+        // Store files in IndexedDB (Blobs are serializable, unlike File objects)
+        // IndexedDB has 50MB+ quota vs sessionStorage's 5-10MB
         (async () => {
             try {
+                const db = await openIndexedDB();
+                const tx = db.transaction('applicationFiles', 'readwrite');
+                const store = tx.objectStore('applicationFiles');
+                
+                // Clear previous files
+                await store.clear();
+                
+                // Store proof of payment as Blob
                 if (proofOfPaymentFile) {
-                    fileDataForStorage.proofOfPayment = await fileToBase64(proofOfPaymentFile);
+                    await store.add({
+                        type: 'proofOfPayment',
+                        blob: proofOfPaymentFile.slice(0, proofOfPaymentFile.size, proofOfPaymentFile.type), // Convert File to Blob
+                        name: proofOfPaymentFile.name,
+                        mimeType: proofOfPaymentFile.type,
+                        size: proofOfPaymentFile.size
+                    });
                 }
+                
+                // Store results certificate as Blob
                 if (resultsCertFile) {
-                    fileDataForStorage.resultsCert = await fileToBase64(resultsCertFile);
+                    await store.add({
+                        type: 'resultsCert',
+                        blob: resultsCertFile.slice(0, resultsCertFile.size, resultsCertFile.type),
+                        name: resultsCertFile.name,
+                        mimeType: resultsCertFile.type,
+                        size: resultsCertFile.size
+                    });
                 }
-                for (const file of attachmentsFiles) {
-                    fileDataForStorage.attachments.push(await fileToBase64(file));
+                
+                // Store additional attachments as Blobs
+                for (let i = 0; i < attachmentsFiles.length; i++) {
+                    const file = attachmentsFiles[i];
+                    await store.add({
+                        type: 'attachment',
+                        index: i,
+                        blob: file.slice(0, file.size, file.type),
+                        name: file.name,
+                        mimeType: file.type,
+                        size: file.size
+                    });
                 }
                 
-                // Store as base64 in sessionStorage (for persistence across pages)
-                sessionStorage.setItem('applicationFileData', JSON.stringify(fileDataForStorage, (key, value) => {
-                    if (value && value.data instanceof ArrayBuffer) {
-                        return {
-                            name: value.name,
-                            type: value.type,
-                            size: value.size,
-                            data: Array.from(new Uint8Array(value.data))
-                        };
-                    }
-                    return value;
-                }));
-                
-                // Also store in window for immediate access (will be lost on page nav but serves as backup)
-                window.persistedApplicationFiles = {
-                    proofOfPayment: proofOfPaymentFile,
-                    resultsCert: resultsCertFile,
-                    attachments: attachmentsFiles
-                };
-                
-                console.log('Files stored. Payment receipt:', proofOfPaymentFile ? 'Yes' : 'No', 'School results:', resultsCertFile ? 'Yes' : 'No', 'Attachments:', attachmentsFiles.length);
+                console.log('Files stored in IndexedDB. Payment receipt:', proofOfPaymentFile ? 'Yes' : 'No', 'School results:', resultsCertFile ? 'Yes' : 'No', 'Attachments:', attachmentsFiles.length);
                 
                 window.formSubmitted = true;
                 window.currentFormData = data;
                 
-                // Redirect to review page (sessionStorage will persist)
+                // Redirect to review page (IndexedDB will persist)
                 window.location.href = 'review.html';
             } catch (err) {
-                console.error('Error storing files:', err);
-                alert('Error processing files. Please try uploading again.');
+                console.error('Error storing files in IndexedDB:', err);
+                alert('Error processing files. Please try uploading again. Error: ' + err.message);
                 window.formSubmitted = false;
             }
         })();
+    
+    // IndexedDB helper functions
+    function openIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('ApplicationDatabase', 1);
+            
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve(request.result);
+            
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('applicationFiles')) {
+                    db.createObjectStore('applicationFiles', { keyPath: 'id', autoIncrement: true });
+                }
+            };
+        });
+    }
     }
 
     // IndexedDB helper functions

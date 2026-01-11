@@ -226,7 +226,6 @@
             try {
                 const data = sessionStorage.getItem('applicationData');
                 const files = sessionStorage.getItem('applicationFiles');
-                const fileData = sessionStorage.getItem('applicationFileData');
                 
                 if (!data) {
                     // No data - redirect back to application form
@@ -237,52 +236,21 @@
                 applicationData = JSON.parse(data);
                 const fileInfo = files ? JSON.parse(files) : {};
                 
-                // Retrieve File objects from sessionStorage (converted from base64)
-                if (fileData) {
-                    try {
-                        const storedData = JSON.parse(fileData);
-                        
-                        // Helper function to convert base64 ArrayBuffer back to File
-                        const arrayBufferToFile = (buffer, name, type) => {
-                            const bytes = new Uint8Array(buffer);
-                            return new File([bytes], name, { type: type });
-                        };
-                        
-                        // Reconstruct File objects
-                        if (storedData.proofOfPayment) {
-                            const data = storedData.proofOfPayment.data;
-                            applicationFiles.proofOfPayment = arrayBufferToFile(
-                                data,
-                                storedData.proofOfPayment.name,
-                                storedData.proofOfPayment.type
-                            );
-                        }
-                        
-                        if (storedData.resultsCert) {
-                            const data = storedData.resultsCert.data;
-                            applicationFiles.resultsCert = arrayBufferToFile(
-                                data,
-                                storedData.resultsCert.name,
-                                storedData.resultsCert.type
-                            );
-                        }
-                        
-                        if (storedData.attachments && Array.isArray(storedData.attachments)) {
-                            applicationFiles.attachments = storedData.attachments.map(f => 
-                                arrayBufferToFile(f.data, f.name, f.type)
-                            );
-                        }
-                        
-                        console.log('Files retrieved from sessionStorage:', {
+                // Retrieve File objects from IndexedDB (stored as Blobs)
+                try {
+                    const dbFiles = await getFilesFromIndexedDB();
+                    if (dbFiles && (dbFiles.proofOfPayment || dbFiles.resultsCert || dbFiles.attachments.length > 0)) {
+                        applicationFiles = dbFiles;
+                        console.log('Files retrieved from IndexedDB:', {
                             hasPaymentReceipt: !!applicationFiles.proofOfPayment,
                             hasSchoolResults: !!applicationFiles.resultsCert,
                             attachmentCount: applicationFiles.attachments.length
                         });
-                    } catch (parseErr) {
-                        console.error('Error parsing stored file data:', parseErr);
+                    } else {
+                        console.warn('Warning: No files found in IndexedDB');
                     }
-                } else {
-                    console.warn('Warning: No file data found in sessionStorage');
+                } catch (dbErr) {
+                    console.error('Error retrieving files from IndexedDB:', dbErr);
                 }
                 
                 // Check if required files are present
@@ -299,6 +267,74 @@
                 console.error('Error loading application data:', err);
                 window.location.href = 'apply.html';
             }
+        }
+
+        // IndexedDB helper - retrieve files
+        function getFilesFromIndexedDB() {
+            return new Promise((resolve, reject) => {
+                try {
+                    const request = indexedDB.open('ApplicationDatabase', 1);
+                    
+                    request.onerror = () => reject(request.error);
+                    request.onsuccess = () => {
+                        const db = request.result;
+                        const tx = db.transaction('applicationFiles', 'readonly');
+                        const store = tx.objectStore('applicationFiles');
+                        const getAllRequest = store.getAll();
+                        
+                        getAllRequest.onerror = () => reject(getAllRequest.error);
+                        getAllRequest.onsuccess = () => {
+                            const records = getAllRequest.result;
+                            const files = {
+                                proofOfPayment: null,
+                                resultsCert: null,
+                                attachments: []
+                            };
+                            
+                            records.forEach(record => {
+                                if (record.type === 'proofOfPayment') {
+                                    // Convert Blob back to File
+                                    files.proofOfPayment = new File([record.blob], record.name, { type: record.mimeType });
+                                } else if (record.type === 'resultsCert') {
+                                    // Convert Blob back to File
+                                    files.resultsCert = new File([record.blob], record.name, { type: record.mimeType });
+                                } else if (record.type === 'attachment') {
+                                    // Convert Blob back to File
+                                    files.attachments.push(new File([record.blob], record.name, { type: record.mimeType }));
+                                }
+                            });
+                            
+                            resolve(files);
+                        };
+                    };
+                    
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains('applicationFiles')) {
+                            db.createObjectStore('applicationFiles', { keyPath: 'id', autoIncrement: true });
+                        }
+                    };
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
+        // IndexedDB helper - open database
+        function openIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('ApplicationDatabase', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('applicationFiles')) {
+                        db.createObjectStore('applicationFiles', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
         }
 
         // Render the review content
@@ -667,12 +703,21 @@
                     
                     document.getElementById('successModal').classList.remove('hidden');
                     
-                    // Clear session data
+                    // Clear session data and IndexedDB
                     sessionStorage.removeItem('applicationData');
                     sessionStorage.removeItem('applicationFiles');
                     sessionStorage.removeItem('applicationFileData');
                     applicationFiles = { proofOfPayment: null, resultsCert: null, attachments: [] };
                     window.persistedApplicationFiles = null;
+                    
+                    // Clear IndexedDB
+                    try {
+                        const db = await openIndexedDB();
+                        const tx = db.transaction('applicationFiles', 'readwrite');
+                        await tx.objectStore('applicationFiles').clear();
+                    } catch (e) {
+                        console.warn('Could not clear IndexedDB:', e);
+                    }
                 } else {
                     const error = await response.json().catch(() => ({}));
                     throw new Error(error.error || 'Submission failed');
