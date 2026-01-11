@@ -221,7 +221,7 @@
             setupEventListeners();
         });
 
-        // Load application data from session storage and IndexedDB
+        // Load application data from session storage
         async function loadApplicationData() {
             try {
                 const data = sessionStorage.getItem('applicationData');
@@ -236,20 +236,18 @@
                 applicationData = JSON.parse(data);
                 const fileInfo = files ? JSON.parse(files) : {};
                 
-                // Try to retrieve actual File objects from IndexedDB
-                try {
-                    const dbFiles = await getFilesFromIndexedDB();
-                    if (dbFiles && (dbFiles.proofOfPayment || dbFiles.resultsCert || dbFiles.attachments.length > 0)) {
-                        applicationFiles = dbFiles;
-                    } else if (window.persistedApplicationFiles) {
-                        // Fallback to window-stored files if IndexedDB didn't work
-                        applicationFiles = window.persistedApplicationFiles;
-                    }
-                } catch (dbErr) {
-                    console.warn('Could not retrieve files from IndexedDB:', dbErr);
-                    if (window.persistedApplicationFiles) {
-                        applicationFiles = window.persistedApplicationFiles;
-                    }
+                // Retrieve File objects from window (they were stored there during apply.html submission)
+                if (window.persistedApplicationFiles) {
+                    applicationFiles = window.persistedApplicationFiles;
+                    console.log('Files retrieved from memory:', {
+                        hasPaymentReceipt: !!applicationFiles.proofOfPayment,
+                        hasSchoolResults: !!applicationFiles.resultsCert,
+                        attachmentCount: applicationFiles.attachments.length
+                    });
+                } else {
+                    console.warn('Warning: Files not found in memory. User may have refreshed page.');
+                    // If page was refreshed, files are lost - this is expected behavior
+                    // User needs to go back to apply.html to re-upload
                 }
                 
                 // Check if required files are present
@@ -266,58 +264,6 @@
                 console.error('Error loading application data:', err);
                 window.location.href = 'apply.html';
             }
-        }
-
-        // IndexedDB helper - same as in apply.js for consistency
-        function openIndexedDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('ApplicationDatabase', 1);
-                
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve(request.result);
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains('applicationFiles')) {
-                        db.createObjectStore('applicationFiles', { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-            });
-        }
-
-        function getFilesFromIndexedDB() {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const db = await openIndexedDB();
-                    const tx = db.transaction('applicationFiles', 'readonly');
-                    const store = tx.objectStore('applicationFiles');
-                    const request = store.getAll();
-                    
-                    request.onerror = () => reject(request.error);
-                    request.onsuccess = () => {
-                        const records = request.result;
-                        const files = {
-                            proofOfPayment: null,
-                            resultsCert: null,
-                            attachments: []
-                        };
-                        
-                        records.forEach(record => {
-                            if (record.type === 'proofOfPayment') {
-                                files.proofOfPayment = record.file;
-                            } else if (record.type === 'resultsCert') {
-                                files.resultsCert = record.file;
-                            } else if (record.type === 'attachment') {
-                                files.attachments.push(record.file);
-                            }
-                        });
-                        
-                        resolve(files);
-                    };
-                } catch (err) {
-                    reject(err);
-                }
-            });
         }
 
         // Render the review content
@@ -622,19 +568,30 @@
                     }
                 });
                 
-                // Add actual files from applicationFiles variable (loaded from IndexedDB or window storage)
+                // Add actual files from applicationFiles variable (loaded from window.persistedApplicationFiles)
                 if (applicationFiles) {
+                    console.log('Adding files to FormData:', {
+                        proofOfPayment: !!applicationFiles.proofOfPayment,
+                        resultsCert: !!applicationFiles.resultsCert,
+                        attachments: applicationFiles.attachments.length
+                    });
+                    
                     if (applicationFiles.proofOfPayment) {
                         formData.append('attachments', applicationFiles.proofOfPayment);
+                        console.log('Added proofOfPayment:', applicationFiles.proofOfPayment.name);
                     }
                     if (applicationFiles.resultsCert) {
                         formData.append('attachments', applicationFiles.resultsCert);
+                        console.log('Added resultsCert:', applicationFiles.resultsCert.name);
                     }
                     if (applicationFiles.attachments && applicationFiles.attachments.length > 0) {
                         for (let i = 0; i < applicationFiles.attachments.length; i++) {
                             formData.append('attachments', applicationFiles.attachments[i]);
+                            console.log('Added attachment', i + 1, ':', applicationFiles.attachments[i].name);
                         }
                     }
+                } else {
+                    console.error('ERROR: applicationFiles object is empty or undefined');
                 }
 
                 // Update progress
@@ -679,15 +636,7 @@
                     sessionStorage.removeItem('applicationData');
                     sessionStorage.removeItem('applicationFiles');
                     applicationFiles = { proofOfPayment: null, resultsCert: null, attachments: [] };
-                    
-                    // Clear IndexedDB
-                    try {
-                        const db = await openIndexedDB();
-                        const tx = db.transaction('applicationFiles', 'readwrite');
-                        await tx.objectStore('applicationFiles').clear();
-                    } catch (e) {
-                        console.warn('Could not clear IndexedDB:', e);
-                    }
+                    window.persistedApplicationFiles = null;
                 } else {
                     const error = await response.json().catch(() => ({}));
                     throw new Error(error.error || 'Submission failed');

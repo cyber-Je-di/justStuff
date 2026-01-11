@@ -724,7 +724,7 @@
         const resultsCertFile = document.getElementById('resultsCert').files[0] || null;
         const attachmentsFiles = Array.from(document.getElementById('attachments').files || []);
         
-        // Store metadata for display on review page
+        // Store metadata for display on review page (serializable data only)
         const fileInfo = {
             proofOfPayment: proofOfPaymentFile ? {
                 name: proofOfPaymentFile.name,
@@ -745,57 +745,16 @@
         
         sessionStorage.setItem('applicationFiles', JSON.stringify(fileInfo));
         
-        // Convert files to Blobs and store in IndexedDB for persistence across page navigation
-        try {
-            const db = await openIndexedDB();
-            const tx = db.transaction('applicationFiles', 'readwrite');
-            const store = tx.objectStore('applicationFiles');
-            
-            // Clear previous files
-            await store.clear();
-            
-            // Store proof of payment
-            if (proofOfPaymentFile) {
-                await store.add({
-                    type: 'proofOfPayment',
-                    file: proofOfPaymentFile,
-                    name: proofOfPaymentFile.name,
-                    mimeType: proofOfPaymentFile.type
-                });
-            }
-            
-            // Store results certificate
-            if (resultsCertFile) {
-                await store.add({
-                    type: 'resultsCert',
-                    file: resultsCertFile,
-                    name: resultsCertFile.name,
-                    mimeType: resultsCertFile.type
-                });
-            }
-            
-            // Store additional attachments
-            for (let i = 0; i < attachmentsFiles.length; i++) {
-                const file = attachmentsFiles[i];
-                await store.add({
-                    type: 'attachment',
-                    index: i,
-                    file: file,
-                    name: file.name,
-                    mimeType: file.type
-                });
-            }
-            
-            await tx.done;
-        } catch (err) {
-            console.warn('IndexedDB storage failed, trying alternative storage:', err);
-            // Fallback: Store in window.persistedApplicationFiles (less reliable but works within session)
-            window.persistedApplicationFiles = {
-                proofOfPayment: proofOfPaymentFile,
-                resultsCert: resultsCertFile,
-                attachments: attachmentsFiles
-            };
-        }
+        // Store actual File objects in window for session-level persistence
+        // Note: File objects cannot be serialized to IndexedDB, so we keep them in memory
+        // This works within a single browser session (apply.html -> review.html)
+        window.persistedApplicationFiles = {
+            proofOfPayment: proofOfPaymentFile,
+            resultsCert: resultsCertFile,
+            attachments: attachmentsFiles
+        };
+        
+        console.log('Files stored in memory. Payment receipt:', proofOfPaymentFile ? 'Yes' : 'No', 'School results:', resultsCertFile ? 'Yes' : 'No', 'Attachments:', attachmentsFiles.length);
         
         window.formSubmitted = true;
         window.currentFormData = data;
