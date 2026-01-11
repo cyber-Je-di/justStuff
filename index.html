@@ -32,10 +32,11 @@
     <link rel="canonical" href="https://crawhammertradesschool.com/">
     <title>Craw Hammer Trades School | Forge Your Future</title>
 
-    <!-- Tailwind CSS for utility-first styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons (location, certificate, etc.) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Tailwind CSS for utility-first styling (deferred to prevent render blocking) -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <!-- Font Awesome for icons with async loading for faster text rendering -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"></noscript>
     <!-- Custom styles for animations, branding, and additional CSS -->
     <link href="css/site.css" rel="stylesheet">
     <!-- FAB Component Styles -->
@@ -53,7 +54,7 @@
     <!-- Hero/Header section - creates first impression with background image and key messaging -->
     <header id="main-content" class="relative bg-blue-900 py-16 sm:py-24 lg:py-32 overflow-hidden">
         <div class="absolute inset-0 opacity-40">
-            <img src="static/programs/parking.jpeg" class="w-full h-full object-cover grayscale">
+            <img src="static/programs/parking.jpeg" fetchpriority="high" class="w-full h-full object-cover grayscale" alt="School campus parking area">
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -124,7 +125,7 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="group glass-card rounded-3xl overflow-hidden">
-                    <img src="static/programs/metalFab.jpeg" alt="Metal Fabrication & Welding"
+                    <img src="static/programs/metalFab.jpeg" alt="Metal Fabrication & Welding" loading="lazy"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="p-8">
                         <div
@@ -143,7 +144,7 @@
                 </div>
 
                 <div class="group glass-card rounded-3xl overflow-hidden">
-                    <img src="static/programs/power.jpeg" alt="Power Electrical"
+                    <img src="static/programs/power.jpeg" alt="Power Electrical" loading="lazy"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="p-8">
                         <div
@@ -161,7 +162,7 @@
                 </div>
 
                 <div class="group glass-card rounded-3xl overflow-hidden">
-                    <img src="static/programs/carpentry.jpeg" alt="Carpentry & Joinery"
+                    <img src="static/programs/carpentry.jpeg" alt="Carpentry & Joinery" loading="lazy"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="p-8">
                         <div
@@ -180,7 +181,7 @@
                 </div>
 
                 <div class="group glass-card rounded-3xl overflow-hidden">
-                    <img src="static/programs/ict.jpeg" alt="ICT & Computer Studies"
+                    <img src="static/programs/ict.jpeg" alt="ICT & Computer Studies" loading="lazy"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="p-8">
                         <div
@@ -198,7 +199,7 @@
                 </div>
 
                 <div class="group glass-card rounded-3xl overflow-hidden">
-                    <img src="static/programs/auto.jpeg" alt="Automotive Mechanics"
+                    <img src="static/programs/auto.jpeg" alt="Automotive Mechanics" loading="lazy"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="p-8">
                         <div
@@ -217,7 +218,7 @@
                 </div>
 
                 <div class="group glass-card rounded-3xl overflow-hidden">
-                    <img src="static/programs/food.jpeg" alt="Food Production"
+                    <img src="static/programs/food.jpeg" alt="Food Production" loading="lazy"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="p-8">
                         <div
@@ -236,7 +237,7 @@
                 </div>
 
                 <div class="group glass-card rounded-3xl overflow-hidden">
-                    <img src="static/programs/design.jpeg" alt="Fashion & Design"
+                    <img src="static/programs/design.jpeg" alt="Fashion & Design" loading="lazy"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="p-8">
                         <div
@@ -339,7 +340,7 @@
                             </div>
                             <div
                                 class="rounded-2xl border-4 sm:border-8 border-white/10 overflow-hidden shadow-2xl rotate-1">
-                                <img src="static/first-building-1994.jpeg" alt="Craw Hammer Trades 1994"
+                                <img src="static/first-building-1994.jpeg" alt="Craw Hammer Trades 1994" loading="lazy"
                                     class="w-full h-48 sm:h-64 object-cover filter sepia-[0.3] hover:sepia-0 transition duration-500">
                             </div>
                             <p class="text-blue-300 text-xs mt-3 sm:mt-4 text-center italic">The original Craw Hammer
@@ -510,7 +511,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
 
     <!-- Structured Data (Schema.org) for better search engine understanding -->
     <script type="application/ld+json">

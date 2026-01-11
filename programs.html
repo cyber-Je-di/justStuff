@@ -11,8 +11,9 @@
     <meta property="og:url" content="https://crawhammertradesschool.com/programs.html">
     <link rel="canonical" href="https://crawhammertradesschool.com/programs.html">
     <title>Academic Programs | Craw Hammer Trades School</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"></noscript>
     <link href="css/site.css" rel="stylesheet">
     <!-- Programs Page Styles -->
     <link href="css/programs.css" rel="stylesheet">
@@ -25,7 +26,7 @@
 
     <header class="bg-blue-900 py-12 sm:py-16 lg:py-20 text-center text-white relative overflow-hidden">
         <div class="absolute inset-0 opacity-40 z-0">
-            <img src="static/programs/metalFab.jpeg" class="w-full h-full object-cover grayscale">
+            <img src="static/programs/metalFab.jpeg" class="w-full h-full object-cover grayscale" loading="lazy" alt="Metal Fabrication workshop">
             <div class="absolute inset-0 bg-gradient-to-b from-blue-900/60 to-blue-900"></div>
         </div>
         <div class="max-w-4xl mx-auto px-4 relative z-10">
@@ -410,6 +411,6 @@
             if (e.key === 'Escape') closeModal();
         });
     </script>
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
 </body>
 </html>

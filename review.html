@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Review Application | Craw Hammer Trades School</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"></noscript>
     <link href="css/site.css" rel="stylesheet">
     <style>
         @media (max-width: 640px) {
@@ -207,7 +208,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
     <script>
         let applicationData = {};
         let applicationFiles = { proofOfPayment: null, resultsCert: null, attachments: [] };
