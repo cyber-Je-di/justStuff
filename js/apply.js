@@ -745,22 +745,71 @@
         
         sessionStorage.setItem('applicationFiles', JSON.stringify(fileInfo));
         
-        // Store actual File objects in window for session-level persistence
-        // Note: File objects cannot be serialized to IndexedDB, so we keep them in memory
-        // This works within a single browser session (apply.html -> review.html)
-        window.persistedApplicationFiles = {
-            proofOfPayment: proofOfPaymentFile,
-            resultsCert: resultsCertFile,
-            attachments: attachmentsFiles
+        // Convert files to base64 and store in sessionStorage for persistence across page navigation
+        const fileDataForStorage = {
+            proofOfPayment: null,
+            resultsCert: null,
+            attachments: []
         };
         
-        console.log('Files stored in memory. Payment receipt:', proofOfPaymentFile ? 'Yes' : 'No', 'School results:', resultsCertFile ? 'Yes' : 'No', 'Attachments:', attachmentsFiles.length);
+        // Helper function to convert File to base64 for storage
+        const fileToBase64 = (file) => new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                data: reader.result
+            });
+            reader.readAsArrayBuffer(file);
+        });
         
-        window.formSubmitted = true;
-        window.currentFormData = data;
-        
-        // Redirect to review page
-        window.location.href = 'review.html';
+        // Convert and store each file
+        (async () => {
+            try {
+                if (proofOfPaymentFile) {
+                    fileDataForStorage.proofOfPayment = await fileToBase64(proofOfPaymentFile);
+                }
+                if (resultsCertFile) {
+                    fileDataForStorage.resultsCert = await fileToBase64(resultsCertFile);
+                }
+                for (const file of attachmentsFiles) {
+                    fileDataForStorage.attachments.push(await fileToBase64(file));
+                }
+                
+                // Store as base64 in sessionStorage (for persistence across pages)
+                sessionStorage.setItem('applicationFileData', JSON.stringify(fileDataForStorage, (key, value) => {
+                    if (value && value.data instanceof ArrayBuffer) {
+                        return {
+                            name: value.name,
+                            type: value.type,
+                            size: value.size,
+                            data: Array.from(new Uint8Array(value.data))
+                        };
+                    }
+                    return value;
+                }));
+                
+                // Also store in window for immediate access (will be lost on page nav but serves as backup)
+                window.persistedApplicationFiles = {
+                    proofOfPayment: proofOfPaymentFile,
+                    resultsCert: resultsCertFile,
+                    attachments: attachmentsFiles
+                };
+                
+                console.log('Files stored. Payment receipt:', proofOfPaymentFile ? 'Yes' : 'No', 'School results:', resultsCertFile ? 'Yes' : 'No', 'Attachments:', attachmentsFiles.length);
+                
+                window.formSubmitted = true;
+                window.currentFormData = data;
+                
+                // Redirect to review page (sessionStorage will persist)
+                window.location.href = 'review.html';
+            } catch (err) {
+                console.error('Error storing files:', err);
+                alert('Error processing files. Please try uploading again.');
+                window.formSubmitted = false;
+            }
+        })();
     }
 
     // IndexedDB helper functions

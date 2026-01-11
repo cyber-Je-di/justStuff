@@ -226,6 +226,7 @@
             try {
                 const data = sessionStorage.getItem('applicationData');
                 const files = sessionStorage.getItem('applicationFiles');
+                const fileData = sessionStorage.getItem('applicationFileData');
                 
                 if (!data) {
                     // No data - redirect back to application form
@@ -236,18 +237,52 @@
                 applicationData = JSON.parse(data);
                 const fileInfo = files ? JSON.parse(files) : {};
                 
-                // Retrieve File objects from window (they were stored there during apply.html submission)
-                if (window.persistedApplicationFiles) {
-                    applicationFiles = window.persistedApplicationFiles;
-                    console.log('Files retrieved from memory:', {
-                        hasPaymentReceipt: !!applicationFiles.proofOfPayment,
-                        hasSchoolResults: !!applicationFiles.resultsCert,
-                        attachmentCount: applicationFiles.attachments.length
-                    });
+                // Retrieve File objects from sessionStorage (converted from base64)
+                if (fileData) {
+                    try {
+                        const storedData = JSON.parse(fileData);
+                        
+                        // Helper function to convert base64 ArrayBuffer back to File
+                        const arrayBufferToFile = (buffer, name, type) => {
+                            const bytes = new Uint8Array(buffer);
+                            return new File([bytes], name, { type: type });
+                        };
+                        
+                        // Reconstruct File objects
+                        if (storedData.proofOfPayment) {
+                            const data = storedData.proofOfPayment.data;
+                            applicationFiles.proofOfPayment = arrayBufferToFile(
+                                data,
+                                storedData.proofOfPayment.name,
+                                storedData.proofOfPayment.type
+                            );
+                        }
+                        
+                        if (storedData.resultsCert) {
+                            const data = storedData.resultsCert.data;
+                            applicationFiles.resultsCert = arrayBufferToFile(
+                                data,
+                                storedData.resultsCert.name,
+                                storedData.resultsCert.type
+                            );
+                        }
+                        
+                        if (storedData.attachments && Array.isArray(storedData.attachments)) {
+                            applicationFiles.attachments = storedData.attachments.map(f => 
+                                arrayBufferToFile(f.data, f.name, f.type)
+                            );
+                        }
+                        
+                        console.log('Files retrieved from sessionStorage:', {
+                            hasPaymentReceipt: !!applicationFiles.proofOfPayment,
+                            hasSchoolResults: !!applicationFiles.resultsCert,
+                            attachmentCount: applicationFiles.attachments.length
+                        });
+                    } catch (parseErr) {
+                        console.error('Error parsing stored file data:', parseErr);
+                    }
                 } else {
-                    console.warn('Warning: Files not found in memory. User may have refreshed page.');
-                    // If page was refreshed, files are lost - this is expected behavior
-                    // User needs to go back to apply.html to re-upload
+                    console.warn('Warning: No file data found in sessionStorage');
                 }
                 
                 // Check if required files are present
@@ -568,26 +603,26 @@
                     }
                 });
                 
-                // Add actual files from applicationFiles variable (loaded from window.persistedApplicationFiles)
+                // Add actual files from applicationFiles variable (loaded from sessionStorage)
                 if (applicationFiles) {
-                    console.log('Adding files to FormData:', {
-                        proofOfPayment: !!applicationFiles.proofOfPayment,
-                        resultsCert: !!applicationFiles.resultsCert,
+                    console.log('Preparing files for submission:', {
+                        proofOfPayment: applicationFiles.proofOfPayment ? `${applicationFiles.proofOfPayment.name} (${applicationFiles.proofOfPayment.size} bytes)` : 'null',
+                        resultsCert: applicationFiles.resultsCert ? `${applicationFiles.resultsCert.name} (${applicationFiles.resultsCert.size} bytes)` : 'null',
                         attachments: applicationFiles.attachments.length
                     });
                     
                     if (applicationFiles.proofOfPayment) {
                         formData.append('attachments', applicationFiles.proofOfPayment);
-                        console.log('Added proofOfPayment:', applicationFiles.proofOfPayment.name);
+                        console.log('✓ Added proofOfPayment:', applicationFiles.proofOfPayment.name);
                     }
                     if (applicationFiles.resultsCert) {
                         formData.append('attachments', applicationFiles.resultsCert);
-                        console.log('Added resultsCert:', applicationFiles.resultsCert.name);
+                        console.log('✓ Added resultsCert:', applicationFiles.resultsCert.name);
                     }
                     if (applicationFiles.attachments && applicationFiles.attachments.length > 0) {
                         for (let i = 0; i < applicationFiles.attachments.length; i++) {
                             formData.append('attachments', applicationFiles.attachments[i]);
-                            console.log('Added attachment', i + 1, ':', applicationFiles.attachments[i].name);
+                            console.log('✓ Added attachment', i + 1, ':', applicationFiles.attachments[i].name);
                         }
                     }
                 } else {
@@ -635,6 +670,7 @@
                     // Clear session data
                     sessionStorage.removeItem('applicationData');
                     sessionStorage.removeItem('applicationFiles');
+                    sessionStorage.removeItem('applicationFileData');
                     applicationFiles = { proofOfPayment: null, resultsCert: null, attachments: [] };
                     window.persistedApplicationFiles = null;
                 } else {
