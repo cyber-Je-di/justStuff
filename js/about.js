@@ -1,52 +1,110 @@
-// Gallery Modal Functions for About Page
-const galleryImages = [
-    { src: 'static/programs/parking.jpeg', caption: 'School Parking' },
-    { src: 'static/programs/surrounding.jpeg', caption: 'Campus Surroundings' },
-    { src: 'static/programs/surrounding2.jpeg', caption: 'Campus View' },
-    { src: 'static/programs/reception.jpeg', caption: 'Reception Area' },
-    { src: 'static/programs/lecture.jpeg', caption: 'Lecture Facilities' },
-    { src: 'static/programs/outside.jpeg', caption: 'School Exterior' },
-    { src: 'static/programs/surrounding3.jpeg', caption: 'Campus Facilities' },
-    { src: 'static/programs/male.jpeg', caption: 'Student Portrait' },
-    { src: 'static/programs/female.jpeg', caption: 'Student Portrait' }
-];
-let currentGalleryIndex = 0;
+// Carousel Functionality for Facilities Section
+let currentSlideIndex = 0;
+const totalSlides = 9;
+let autoplayInterval;
+let isAutoplayActive = true;
 
-function openGalleryModal(element) {
-    const imgSrc = element.querySelector('img').src;
-    currentGalleryIndex = galleryImages.findIndex(img => img.src === imgSrc);
-    displayGalleryImage();
-    document.getElementById('galleryModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+function updateCarousel() {
+    const track = document.getElementById('carousel-track');
+    const offset = -currentSlideIndex * 100;
+    track.style.transform = `translateX(${offset}%)`;
+    
+    // Update counter
+    document.getElementById('current-slide').textContent = currentSlideIndex + 1;
+    
+    // Update indicators
+    const indicators = document.querySelectorAll('.indicator');
+    indicators.forEach((indicator, index) => {
+        if (index === currentSlideIndex) {
+            indicator.classList.remove('bg-slate-300', 'hover:bg-slate-400');
+            indicator.classList.add('bg-orange-500', 'w-8');
+        } else {
+            indicator.classList.remove('bg-orange-500', 'w-8');
+            indicator.classList.add('bg-slate-300', 'hover:bg-slate-400', 'w-3');
+        }
+    });
 }
 
-function closeGalleryModal() {
-    document.getElementById('galleryModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
+function nextSlide() {
+    currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+    updateCarousel();
 }
 
-function displayGalleryImage() {
-    const image = galleryImages[currentGalleryIndex];
-    document.getElementById('galleryImage').src = image.src;
-    document.getElementById('galleryCaption').textContent = image.caption;
+function prevSlide() {
+    currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+    updateCarousel();
 }
 
-function nextGalleryImage() {
-    currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
-    displayGalleryImage();
+function goToSlide(index) {
+    currentSlideIndex = index;
+    updateCarousel();
 }
 
-function previousGalleryImage() {
-    currentGalleryIndex = (currentGalleryIndex - 1 + galleryImages.length) % galleryImages.length;
-    displayGalleryImage();
+function startAutoplay() {
+    autoplayInterval = setInterval(nextSlide, 4000); // Change slide every 4 seconds
 }
 
-// Keyboard navigation
+function stopAutoplay() {
+    clearInterval(autoplayInterval);
+}
+
+function toggleAutoplay() {
+    isAutoplayActive = !isAutoplayActive;
+    const icon = document.getElementById('autoplay-icon');
+    const text = document.getElementById('autoplay-text');
+    
+    if (isAutoplayActive) {
+        startAutoplay();
+        icon.classList.remove('fa-play');
+        icon.classList.add('fa-pause');
+        text.textContent = 'Pause Auto-play';
+    } else {
+        stopAutoplay();
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-play');
+        text.textContent = 'Resume Auto-play';
+    }
+}
+
+// Initialize carousel when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    updateCarousel();
+    startAutoplay();
+    
+    // Pause autoplay on hover
+    const carouselContainer = document.querySelector('#carousel-track').parentElement;
+    carouselContainer.addEventListener('mouseenter', stopAutoplay);
+    carouselContainer.addEventListener('mouseleave', () => {
+        if (isAutoplayActive) startAutoplay();
+    });
+});
+
+// Keyboard navigation for carousel
 document.addEventListener('keydown', (e) => {
-    if (document.getElementById('galleryModal').classList.contains('hidden')) return;
-    if (e.key === 'ArrowRight') nextGalleryImage();
-    if (e.key === 'ArrowLeft') previousGalleryImage();
-    if (e.key === 'Escape') closeGalleryModal();
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+});
+
+// Touch/Swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('carousel-track');
+    
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) nextSlide(); // Swipe left
+        if (touchEndX > touchStartX + 50) prevSlide(); // Swipe right
+    }
 });
 
 // Contact Modal Functions

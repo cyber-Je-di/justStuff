@@ -69,24 +69,23 @@ function initializeMobileMenu() {
         menuBtn.setAttribute('aria-expanded', 'false');
         
         const openMenu = () => {
-            // reveal then animate open
             mobileMenu.classList.remove('hidden');
-            requestAnimationFrame(() => mobileMenu.classList.add('open'));
-            if (menuIcon) { menuIcon.classList.remove('fa-bars'); menuIcon.classList.add('fa-times'); }
+            // Force a reflow so the transition works
+            void mobileMenu.offsetWidth;
+            mobileMenu.classList.add('open');
+            if (menuIcon) { menuIcon.classList.replace('fa-bars', 'fa-times'); }
             menuBtn.setAttribute('aria-expanded', 'true');
         };
 
         const closeMenu = () => {
             mobileMenu.classList.remove('open');
-            // after transition ends, hide to remove from flow
-            const onEnd = (ev) => {
-                if (ev.propertyName === 'max-height' || ev.propertyName === 'opacity') {
+            // Hide after animation finishes
+            setTimeout(() => {
+                if (!mobileMenu.classList.contains('open')) {
                     mobileMenu.classList.add('hidden');
-                    mobileMenu.removeEventListener('transitionend', onEnd);
                 }
-            };
-            mobileMenu.addEventListener('transitionend', onEnd);
-            if (menuIcon) { menuIcon.classList.remove('fa-times'); menuIcon.classList.add('fa-bars'); }
+            }, 200);
+            if (menuIcon) { menuIcon.classList.replace('fa-times', 'fa-bars'); }
             menuBtn.setAttribute('aria-expanded', 'false');
         };
 
