@@ -9,7 +9,7 @@ const navbarTemplate = `
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20 items-center">
             <div class="flex items-center">
-                <a href="index.html" class="flex items-center gap-3 group">
+                <a href="index.html" class="flex items-center gap-3 group no-underline hover:no-underline">
                     <div class="relative">
                         <img src="static/logo.png" alt="Craw Hammer Trades Logo" loading="lazy"
                             class="h-14 w-14 rounded-full aspect-square object-cover border-2 border-white shadow-md group-hover:border-orange-500 group-hover:scale-110 transition-all duration-300">
@@ -176,12 +176,16 @@ async function loadNavbar() {
 
         navLinks.forEach(link => {
             const linkPage = link.getAttribute('href').split('/').pop() || 'index.html';
+            const linkHref = link.getAttribute('href');
 
             if (currentPage === linkPage) {
-                // Exclude the "APPLY NOW" button from text link styling
-                if (!link.classList.contains('bg-orange-600')) {
-                    link.classList.remove('text-slate-600', 'hover:text-orange-500');
-                    link.classList.add('text-blue-900', 'font-bold', 'border-b-2', 'border-orange-500');
+                // Exclude logo, "APPLY NOW" button, and gradient buttons from active styling
+                const isLogo = link.querySelector('img');
+                const isApplyBtn = link.classList.contains('btn-glow') || link.classList.contains('bg-gradient-to-r');
+                
+                if (!isLogo && !isApplyBtn) {
+                    link.classList.remove('text-slate-600', 'text-slate-700', 'hover:text-orange-500', 'hover:text-orange-600');
+                    link.classList.add('text-orange-600', 'font-bold', 'bg-orange-50');
                 }
             }
         });

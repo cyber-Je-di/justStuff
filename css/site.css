@@ -52,6 +52,19 @@ html, body, input, button, textarea, select {
   -webkit-touch-callout: none;
 }
 
+/* Remove underlines from logo and specific links */
+.no-underline,
+nav a.group,
+a.group {
+  text-decoration: none !important;
+}
+
+.no-underline:hover,
+nav a.group:hover,
+a.group:hover {
+  text-decoration: none !important;
+}
+
 /* ============ GLOWING & BUTTON ANIMATIONS ============
    These animations make buttons and CTAs more visually engaging and draw attention */
 
